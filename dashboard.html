@@ -31,20 +31,22 @@
                     <li id="Tramite" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            Tramite
+                            Trámite
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="Operador" style="display: none;"><a class="dropdown-item" href="createTramite.html">Crear Tramite</a></li>
-                            </li>
-                            <li id="Analista" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Listado de Turnados</a></li>
-                            </li>
-                        </ul>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="createTramite.html">Crear Trámite</a></li>
                     </li>
-                    <!-- Cerrar sesión -->
-                    <li>
-                        <a class='nav-link' href="#"
-                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a>
+                    <li id="Analista" style="display: none;"><a class="dropdown-item"
+                            href="listadoTurnados.html">Listado de Turnados</a></li>
                     </li>
+                </ul>
+                </li>
+                <!-- Cerrar sesión -->
+                <li>
+                    <a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
+                        Sesión</a>
+                </li>
                 </ul>
             </div>
         </div>
@@ -60,7 +62,7 @@
                 <option value="Todos">Todos</option>
                 <option value="Creado">Creado</option>
                 <option value="Turnado">Turnado</option>
-                <option value="Observaciones">Observaciones</option>
+                <option value="Devuelto">Devuelto</option>
                 <option value="RegistradoSAP">Registrado SAP</option>
                 <option value="VoBO">Revisión por Dirección</option>
                 <option value="OrdenesPago">Turnado Ordenes de Pago</option>
@@ -77,13 +79,15 @@
                         <th>Mes</th>
                         <th>Fecha de Recepcion</th>
                         <th>TipoTramite</th>
-                        <th>Dependencia</th>
+                        <th>Intitución</th>
                         <th>Proveedor</th>
                         <th>Concepto</th>
                         <th>Importe</th>
                         <th>AnalistaTurnado</th>
                         <th>Estatus</th>
                         <th>Comentarios</th>
+                        <th>Fondo</th>
+                        <th>Fecha Limite</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>

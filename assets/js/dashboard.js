@@ -140,6 +140,10 @@ function actualizarTablaTramites(data, tableId) {
         // Determinar si el botón "VoBO" debe mostrarse
         const mostrarBotonVoBO = item.Estatus === 'VoBO';
         // Determinar si el botón "Eliminar" debe mostrarse
+        // Determinar si el botón "CrearRemesa" debe mostrarse
+        const mostrarBotonCrearRemesa = item.Estatus === 'RegistradoSAP';
+
+
         // Obtener el usuario desde localStorage
         const usuario = JSON.parse(localStorage.getItem('usuario'));
         const mostrarBotonEliminar = usuario.RolUser === 'Admin';
@@ -155,6 +159,8 @@ function actualizarTablaTramites(data, tableId) {
             <td>${item.AnalistaTurnado || ''}</td>
             <td>${item.Estatus || ''}</td>
             <td>${item.Comentarios || ''}</td>
+            <td>${item.Fondo || ''}</td>
+            <td>${item.FechaLimite || ''}</td>
             <td>
                 ${mostrarBotonTurnar 
                     ? `<button class="btn btn-primary" onclick="turnarTramite(${item.ID_CONTRATO})">Turnar</button>` 
@@ -162,9 +168,13 @@ function actualizarTablaTramites(data, tableId) {
                 ${mostrarBotonEliminar 
                     ? `<button class="btn btn-danger" onclick="eliminarTramite(${item.ID_CONTRATO})">Eliminar</button>` 
                     : ''}
+                ${mostrarBotonCrearRemesa 
+                        ? `<button class="btn btn-primary" onclick="createRemesa(${item.ID_CONTRATO})">Crear Remesa</button>` 
+                        : ''}
                 ${mostrarBotonVoBO 
-                    ? `<button class="btn btn-primary" onclick="editarTramite(${item.ID_CONTRATO})">VoBO</button>` 
+                    ? `<button class="btn btn-primary" onclick="(${item.ID_CONTRATO})">VoBO</button>` 
                     : ''}
+                
             </td>
         `;
     });
@@ -197,8 +207,7 @@ function actualizarTablaTurnados(data, tableId) {
         const newRow = tbBody.insertRow();
         // Determinar si el botón "Actualizar Estado" debe mostrarse
         const mostrarBotonActualizarEstado = item.Estatus === 'Observaciones' || item.Estatus === 'Turnado';
-        // Determinar si el botón "CrearRemesa" debe mostrarse
-        const mostrarBotonCrearRemesa = item.Estatus === 'RegistradoSAP';
+        
         newRow.innerHTML = `
             <td>${item.ID_CONTRATO || ''}</td>
             <td>${item.Mes || ''}</td>
@@ -214,9 +223,6 @@ function actualizarTablaTurnados(data, tableId) {
             <td>
                 ${mostrarBotonActualizarEstado 
                     ? `<button class="btn btn-primary" onclick="editarTramite(${item.ID_CONTRATO})">Actualizar Estado</button>` 
-                    : ''}
-                ${mostrarBotonCrearRemesa 
-                    ? `<button class="btn btn-primary" onclick="editarTramite(${item.ID_CONTRATO})">Crear Remesa</button>` 
                     : ''}
             </td>
         `;
@@ -299,4 +305,8 @@ function eliminarTramite(id) {
 
 
 }
-
+// Crear Remesa por id
+function createRemesa(id) {
+    // console.log('Crear Remesa:', id);
+    window.location.href = `createRemesa.html?id=${id}`;
+}

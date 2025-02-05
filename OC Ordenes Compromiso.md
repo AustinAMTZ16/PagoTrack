@@ -74,6 +74,8 @@ POST
         - AnalistaTurnado
         - Estatus
         - Comentarios
+        - Fondo
+        - FechaLimite
     - createRemesa(data)
         - DepartamentoTurnado
         - NumeroRemesa

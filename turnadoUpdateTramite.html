@@ -30,20 +30,22 @@
                     <li id="Tramite" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            Tramite
+                            Trámite
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="Operador" style="display: none;"><a class="dropdown-item" href="createTramite.html">Crear Tramite</a></li>
-                            </li>
-                            <li id="Analista" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Listado de Turnados</a></li>
-                            </li>
-                        </ul>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="createTramite.html">Crear Trámite</a></li>
                     </li>
-                    <!-- Cerrar sesión -->
-                    <li>
-                        <a class='nav-link' href="#"
-                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a>
+                    <li id="Analista" style="display: none;"><a class="dropdown-item"
+                            href="listadoTurnados.html">Listado de Turnados</a></li>
                     </li>
+                </ul>
+                </li>
+                <!-- Cerrar sesión -->
+                <li>
+                    <a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
+                        Sesión</a>
+                </li>
                 </ul>
             </div>
         </div>
@@ -56,7 +58,7 @@
         <form id="formUpdateTramite" method="post">
             <input type="text" id="ID_CONTRATO" name="ID_CONTRATO" placeholder="ID del Contrato" readonly>
             <select name="Estatus" id="Estatus" placeholder="Estatus" required>
-                <option value="Observaciones">Observaciones</option>
+                <option value="Devuelto">Devuelto</option>
                 <option value="RegistradoSAP">Registrado SAP</option>
             </select>
             <input type="text" id="Comentarios" name="Comentarios" placeholder="Comentarios" required>

@@ -30,20 +30,22 @@
                     <li id="Tramite" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            Tramite
+                            Trámite
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="Operador" style="display: none;"><a class="dropdown-item" href="createTramite.html">Crear Tramite</a></li>
-                            </li>
-                            <li id="Analista" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Listado de Turnados</a></li>
-                            </li>
-                        </ul>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="createTramite.html">Crear Trámite</a></li>
                     </li>
-                    <!-- Cerrar sesión -->
-                    <li>
-                        <a class='nav-link' href="#"
-                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a>
+                    <li id="Analista" style="display: none;"><a class="dropdown-item"
+                            href="listadoTurnados.html">Listado de Turnados</a></li>
                     </li>
+                </ul>
+                </li>
+                <!-- Cerrar sesión -->
+                <li>
+                    <a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
+                        Sesión</a>
+                </li>
                 </ul>
             </div>
         </div>
@@ -58,7 +60,7 @@
             <select name="Estatus" id="Estatus" placeholder="Estatus" disabled>
                 <option value="Turnado" selected>Turnado</option>
                 <option value="Procesando">Procesando</option>
-                <option value="Observaciones">Observaciones</option>
+                <option value="Devuelto">Devuelto</option>
                 <option value="Terminado">Terminado</option>
             </select>
             <!-- Campo oculto para enviar el valor -->
@@ -68,21 +70,21 @@
                 <option value="Maria Blanca Soriano Rojas">Maria Blanca Soriano Rojas</option>
                 <option value="Xochil Cuatepitzi Torres">Xochil Cuatepitzi Torres</option>
                 <option value="Maria De Lourdes Gutierrez Castañeda">Maria De Lourdes Gutierrez Castañeda</option>
-                <option value="Isabel Cristina	Pavón Nava">Isabel Cristina	Pavón Nava</option>
-                <option value="Roberta Marcela	Uvera Saucedo">Roberta Marcela	Uvera Saucedo</option>
+                <option value="Isabel Cristina	Pavón Nava">Isabel Cristina Pavón Nava</option>
+                <option value="Roberta Marcela	Uvera Saucedo">Roberta Marcela Uvera Saucedo</option>
                 <option value="Maria De Lourdes Molina Quiroz">Maria De Lourdes Molina Quiroz</option>
                 <option value="Isabel Cortes Varillas">Isabel Cortes Varillas</option>
                 <option value="Ariadna Michel Sánchez Rodríguez">Ariadna Michel Sánchez Rodríguez</option>
                 <option value="Michelle Córdova Torres">Michelle Córdova Torres</option>
                 <option value="Daniel Rodríguez Cardenas">Daniel Rodríguez Cardenas</option>
-                <option value="Antonio	Castañon Ruiz">Antonio	Castañon Ruiz</option>
+                <option value="Antonio	Castañon Ruiz">Antonio Castañon Ruiz</option>
                 <option value="Maria Valeria Corro Stefanoni">Maria Valeria Corro Stefanoni</option>
                 <option value="Maria Del Carmen Damian Aguilar">Maria Del Carmen Damian Aguilar</option>
                 <option value="Ofelia Olguin Aguilar">Ofelia Olguin Aguilar</option>
                 <option value="Francisco Javier Rivera Castillo">Francisco Javier Rivera Castillo</option>
                 <option value="Maria Isabel Marín León">Maria Isabel Marín León</option>
                 <option value="Ariosto Emilio Lechuga Aparicio">Ariosto Emilio Lechuga Aparicio</option>
-                <option value="Gonzalo	Ochoa Huerta">Gonzalo	Ochoa Huerta</option>
+                <option value="Gonzalo	Ochoa Huerta">Gonzalo Ochoa Huerta</option>
                 <option value="Laura Alatriste Torres">Laura Alatriste Torres</option>
             </select>
             <input type="text" id="Comentarios" name="Comentarios" placeholder="Comentarios" required>

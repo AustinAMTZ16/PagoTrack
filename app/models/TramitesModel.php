@@ -10,8 +10,8 @@ class TramitesModel {
 
     // Crear un nuevo trámite
     public function create($data) {
-        $query = "INSERT INTO ConsentradoGeneralTramites (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, AnalistaTurnado, Estatus, Comentarios) 
-                  VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :AnalistaTurnado, :Estatus, :Comentarios)";
+        $query = "INSERT INTO ConsentradoGeneralTramites (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, AnalistaTurnado, Estatus, Comentarios, Fondo, FechaLimite) 
+                  VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :AnalistaTurnado, :Estatus, :Comentarios, :Fondo, :FechaLimite)";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':Mes', $data['Mes']);
@@ -23,6 +23,8 @@ class TramitesModel {
         $stmt->bindParam(':AnalistaTurnado', $data['AnalistaTurnado']);
         $stmt->bindParam(':Estatus', $data['Estatus']);
         $stmt->bindParam(':Comentarios', $data['Comentarios']);
+        $stmt->bindParam(':Fondo', $data['Fondo']);
+        $stmt->bindParam(':FechaLimite', $data['FechaLimite']);
 
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -38,22 +40,6 @@ class TramitesModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    // // Actualizar un trámite
-    // public function update($data) {
-    //     $query = "UPDATE ConsentradoGeneralTramites SET Estatus = :Estatus, Comentarios = :Comentarios, AnalistaTurnado = :AnalistaTurnado WHERE ID_CONTRATO = :ID_CONTRATO";
-    //     $stmt = $this->conn->prepare($query);
-
-    //     $stmt->bindParam(':ID_CONTRATO', $data['ID_CONTRATO']);
-    //     $stmt->bindParam(':Estatus', $data['Estatus']);
-    //     $stmt->bindParam(':Comentarios', $data['Comentarios']);
-    //     $stmt->bindParam(':AnalistaTurnado', $data['AnalistaTurnado']);
-    //     if ($stmt->execute()) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
 
     // Actualizar un trámite
     public function update($data) {

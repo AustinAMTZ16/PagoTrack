@@ -43,12 +43,21 @@ document.addEventListener("DOMContentLoaded", function() {
     const formUpdateTramite = document.getElementById('formUpdateTramite');
     if (formUpdateTramite) {
         formUpdateTramite.addEventListener("submit", function (e) {
+            const btn = document.activeElement; // Obtiene el botón que activó el envío
+            
+            if (!btn || btn.id !== "btnGuardar") {
+                e.preventDefault(); // Evita el envío si no es "Guardar Tramite"
+                return;
+            }
+
             e.preventDefault(); // Evita la recarga de la página
+
             const formData = new FormData(formUpdateTramite);
             const data = {};
             formData.forEach((value, key) => {
                 data[key] = value;
             });
+
             updateTramite(data);
         });
     }

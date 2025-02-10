@@ -122,30 +122,31 @@
             <input type="text" name="Proveedor" id="Proveedor" placeholder="Proveedor" required>
             <input type="text" name="Concepto" id="Concepto" placeholder="Concepto" required>
             <input type="number" name="Importe" id="Importe" placeholder="Importe" required step="0.01">
-            <select name="AnalistaTurnado" id="AnalistaTurnado" placeholder="Analista Turnado" disabled>
-                <option value="Juan Carlos García Tagle" selected>Juan Carlos García Tagle</option>
-                <option value="Maria Blanca Soriano Rojas">Maria Blanca Soriano Rojas</option>
-                <option value="Xochil Cuatepitzi Torres">Xochil Cuatepitzi Torres</option>
-                <option value="Maria De Lourdes Gutierrez Castañeda">Maria De Lourdes Gutierrez Castañeda</option>
-                <option value="Isabel Cristina	Pavón Nava">Isabel Cristina Pavón Nava</option>
-                <option value="Roberta Marcela	Uvera Saucedo">Roberta Marcela Uvera Saucedo</option>
-                <option value="Maria De Lourdes Molina Quiroz">Maria De Lourdes Molina Quiroz</option>
-                <option value="Isabel Cortes Varillas">Isabel Cortes Varillas</option>
-                <option value="Ariadna Michel Sánchez Rodríguez">Ariadna Michel Sánchez Rodríguez</option>
-                <option value="Michelle Córdova Torres">Michelle Córdova Torres</option>
-                <option value="Daniel Rodríguez Cardenas">Daniel Rodríguez Cardenas</option>
-                <option value="Antonio	Castañon Ruiz">Antonio Castañon Ruiz</option>
-                <option value="Maria Valeria Corro Stefanoni">Maria Valeria Corro Stefanoni</option>
-                <option value="Maria Del Carmen Damian Aguilar">Maria Del Carmen Damian Aguilar</option>
-                <option value="Ofelia Olguin Aguilar">Ofelia Olguin Aguilar</option>
-                <option value="Francisco Javier Rivera Castillo">Francisco Javier Rivera Castillo</option>
-                <option value="Maria Isabel Marín León">Maria Isabel Marín León</option>
-                <option value="Ariosto Emilio Lechuga Aparicio">Ariosto Emilio Lechuga Aparicio</option>
-                <option value="Gonzalo	Ochoa Huerta">Gonzalo Ochoa Huerta</option>
-                <option value="Laura Alatriste Torres">Laura Alatriste Torres</option>
+            <select name="AnalistaID" id="AnalistaID" placeholder="Analista Turnado" disabled>
+                <option value="4" selected>Juan Carlos	García Tagle</option>
+                <option value="8">Isabel Cristina	Pavón Nava</option>
+                <option value="11">Isabel Cortes Varillas</option>
+                <option value="20">Maria Isabel Marín León</option>
+                <option value="21">Ariosto Emilio Lechuga Aparicio</option>
+                <option value="22">Gonzalo	Ochoa Huerta</option>
+                <option value="23">Laura Alatriste Torres</option>
+                <option value="5">Maria Blanca Soriano Rojas</option>
+                <option value="1">Agustín	Arenas Martinez</option>
+                <option value="17">Maria Del Carmen Damian Aguilar</option>
+                <option value="10">Maria De Lourdes Molina Quiroz</option>
+                <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
+                <option value="16">Maria Valeria Corro Stefanoni</option>
+                <option value="12">Ariadna Michel Sánchez Rodríguez</option>
+                <option value="13">Michelle Córdova Torres</option>
+                <option value="19">Francisco Javier Rivera Castillo</option>
+                <option value="15">Antonio	Castañon Ruiz</option>
+                <option value="18">Ofelia	Olguin Aguilar</option>
+                <option value="6">Xochil	Cuatepitzi Torres</option>
+                <option value="14">Daniel	Rodríguez Cardenas</option>
+                <option value="9">Roberta Marcela	Uvera Saucedo</option>
             </select>
             <!-- Campo oculto para enviar el valor -->
-            <input type="hidden" name="AnalistaTurnado" id="AnalistaTurnado" value="Juan Carlos García Tagle">
+            <input type="hidden" name="AnalistaID" id="AnalistaID" value="4">
             <select name="Estatus" id="Estatus" placeholder="Estatus" disabled>
                 <!-- <option value="" disabled selected>Estatus</option> -->
                 <option value="Creado" selected>Creado</option>
@@ -159,7 +160,7 @@
 
             <input type="text" name="Comentarios" id="Comentarios" placeholder="Comentarios"
                 value="Proceso de Revisión de la Orden de Compra Por Juan Carlos García Tagle" readonly>
-            <input type="number" name="Fondo" id="Fondo" placeholder="Ejemplo:10050" required>
+            <input type="text" name="Fondo" id="Fondo" placeholder="Ejemplo:10050" required>
             <input type="date" name="FechaLimite" id="FechaLimite" required>
 
             <button type="submit">Crear Trámite</button>

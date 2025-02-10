@@ -156,7 +156,7 @@ function actualizarTablaTramites(data, tableId) {
             <td>${item.Proveedor || ''}</td>
             <td>${item.Concepto || ''}</td>
             <td>${item.Importe || ''}</td>
-            <td>${item.AnalistaTurnado || ''}</td>
+            <td>${item.NombreUser +  item.ApellidoUser || ''}</td>
             <td>${item.Estatus || ''}</td>
             <td>${item.Comentarios || ''}</td>
             <td>${item.Fondo || ''}</td>
@@ -206,7 +206,7 @@ function actualizarTablaTurnados(data, tableId) {
     data.forEach(item => {
         const newRow = tbBody.insertRow();
         // Determinar si el botón "Actualizar Estado" debe mostrarse
-        const mostrarBotonActualizarEstado = item.Estatus === 'Observaciones' || item.Estatus === 'Turnado';
+        const mostrarBotonActualizarEstado = item.Estatus === 'Devuelto' || item.Estatus === 'Turnado';
         
         newRow.innerHTML = `
             <td>${item.ID_CONTRATO || ''}</td>
@@ -217,7 +217,7 @@ function actualizarTablaTurnados(data, tableId) {
             <td>${item.Proveedor || ''}</td>
             <td>${item.Concepto || ''}</td>
             <td>${item.Importe || ''}</td>
-            <td>${item.AnalistaTurnado || ''}</td>
+            <td>${item.NombreUser +  item.ApellidoUser || ''}</td>
             <td>${item.Estatus || ''}</td>
             <td>${item.Comentarios || ''}</td>
             <td>
@@ -242,10 +242,11 @@ function filtrarTramites(status) {
 function estadoTurnado() {
     // Obtener el usuario desde localStorage
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    // Obtener el rol del usuario y su departamento
-    const nombreCompletoUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;
+    // Obtener el id del usuario
+    const idUser = usuario.InicioSesionID;
+    console.log('Usuario:', idUser);
     // Filtrar los trámites por el AnalistaTurnado
-    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaTurnado === nombreCompletoUser);
+    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser);
     // En caso de que el usuario.RolUser sea igual a 'Admin' debera mostrar todos los trámites
     if(usuario.RolUser === 'Admin'){
         actualizarTablaTurnados(tramitesArray, 'tableTurnados');

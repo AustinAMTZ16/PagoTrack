@@ -10,8 +10,8 @@ class TramitesModel {
 
     // Crear un nuevo trámite
     public function create($data) {
-        $query = "INSERT INTO ConsentradoGeneralTramites (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, AnalistaTurnado, Estatus, Comentarios, Fondo, FechaLimite) 
-                  VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :AnalistaTurnado, :Estatus, :Comentarios, :Fondo, :FechaLimite)";
+        $query = "INSERT INTO ConsentradoGeneralTramites (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Comentarios, Fondo, FechaLimite, AnalistaID) 
+                  VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Comentarios, :Fondo, :FechaLimite, :AnalistaID)";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':Mes', $data['Mes']);
@@ -20,11 +20,11 @@ class TramitesModel {
         $stmt->bindParam(':Proveedor', $data['Proveedor']);
         $stmt->bindParam(':Concepto', $data['Concepto']);
         $stmt->bindParam(':Importe', $data['Importe']);
-        $stmt->bindParam(':AnalistaTurnado', $data['AnalistaTurnado']);
         $stmt->bindParam(':Estatus', $data['Estatus']);
         $stmt->bindParam(':Comentarios', $data['Comentarios']);
         $stmt->bindParam(':Fondo', $data['Fondo']);
         $stmt->bindParam(':FechaLimite', $data['FechaLimite']);
+        $stmt->bindParam(':AnalistaID', $data['AnalistaID']);
 
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -35,7 +35,9 @@ class TramitesModel {
 
     // Obtener todos los trámites
     public function getAll() {
-        $query = "SELECT * FROM ConsentradoGeneralTramites";
+        $query = "SELECT  ISS.NombreUser, ISS.ApellidoUser, CT.* FROM ConsentradoGeneralTramites CT
+                    INNER JOIN InicioSesion ISS 
+                    ON CT.AnalistaID = ISS.InicioSesionID;";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -43,8 +45,11 @@ class TramitesModel {
 
     // Actualizar un trámite
     public function update($data) {
+        date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
+        $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
+
         // Paso 1: Obtener el registro actual
-        $querySelect = "SELECT Estatus, Comentarios, AnalistaTurnado FROM ConsentradoGeneralTramites WHERE ID_CONTRATO = :ID_CONTRATO";
+        $querySelect = "SELECT Estatus, Comentarios, AnalistaID FROM ConsentradoGeneralTramites WHERE ID_CONTRATO = :ID_CONTRATO";
         $stmtSelect = $this->conn->prepare($querySelect);
         $stmtSelect->bindParam(':ID_CONTRATO', $data['ID_CONTRATO']);
         $stmtSelect->execute();
@@ -58,16 +63,17 @@ class TramitesModel {
         // Paso 2: Usar los valores actuales como predeterminados
         $estatus = isset($data['Estatus']) && $data['Estatus'] !== '' ? $data['Estatus'] : $currentData['Estatus'];
         $comentarios = isset($data['Comentarios']) && $data['Comentarios'] !== '' ? $data['Comentarios'] : $currentData['Comentarios'];
-        $analistaTurnado = isset($data['AnalistaTurnado']) && $data['AnalistaTurnado'] !== '' ? $data['AnalistaTurnado'] : $currentData['AnalistaTurnado'];
+        $AnalistaID = isset($data['AnalistaID']) && $data['AnalistaID'] !== '' ? $data['AnalistaID'] : $currentData['AnalistaID'];
 
         // Paso 3: Actualizar el registro
-        $queryUpdate = "UPDATE ConsentradoGeneralTramites SET Estatus = :Estatus, Comentarios = :Comentarios, AnalistaTurnado = :AnalistaTurnado WHERE ID_CONTRATO = :ID_CONTRATO";
+        $queryUpdate = "UPDATE ConsentradoGeneralTramites SET Estatus = :Estatus, Comentarios = :Comentarios, FechaTurnado = :FechaTurnado,AnalistaID = :AnalistaID WHERE ID_CONTRATO = :ID_CONTRATO";
         $stmtUpdate = $this->conn->prepare($queryUpdate);
 
         $stmtUpdate->bindParam(':ID_CONTRATO', $data['ID_CONTRATO']);
         $stmtUpdate->bindParam(':Estatus', $estatus);
         $stmtUpdate->bindParam(':Comentarios', $comentarios);
-        $stmtUpdate->bindParam(':AnalistaTurnado', $analistaTurnado);
+        $stmtUpdate->bindParam(':AnalistaID', $AnalistaID);
+        $stmtUpdate->bindParam(':FechaTurnado', $fechaActual, PDO::PARAM_STR);
 
         if ($stmtUpdate->execute()) {
             return true;

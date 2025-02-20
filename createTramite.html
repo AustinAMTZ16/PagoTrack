@@ -35,17 +35,63 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Operador" style="display: none;"><a class="dropdown-item"
                                     href="createTramite.html">Crear Trámite</a></li>
+                            <li id="Analista" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Listado de Turnados</a></li>
+                        </ul>
                     </li>
-                    <li id="Analista" style="display: none;"><a class="dropdown-item"
-                            href="listadoTurnados.html">Listado de Turnados</a></li>
+
+                    <li id="Pagos" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Ordenes de Pago
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Pagos" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                        </ul>
                     </li>
-                </ul>
-                </li>
-                <!-- Cerrar sesión -->
-                <li>
-                    <a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
-                        Sesión</a>
-                </li>
+
+                    <li id="Suficiencias" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Suficiencias
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoSuficiencias.html">Suficiencias</a></li>       
+                        </ul>
+                    </li>
+
+                    <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Indicadores de Rendimiento
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            
+                        </ul>
+                    </li>
+
+                    <li id="Oficios" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Correspondencia y Oficios
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item" href="correspondencia.html">Correspondencia</a></li>       
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item" href="oficios.html">Oficios</a></li>       
+                        </ul>
+                    </li>
+
+                    <!-- Cerrar sesión -->
+                    <li>
+                        <a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
+                            Sesión</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -78,9 +124,13 @@
                 <option value="OP">OP Órdenes de Pago</option>
                 <option value="SRF">SRF Solicitud de Recurso Financieros</option>
                 <option value="CRF">CRF Comprobación de Recurso Financieros</option>
+                <option value="JA">Juntas Auxiliares</option>
+                <option value="IPS">Inspectorías</option>
+                <option value="OCO">Ordenes Compromiso Obras</option>
+                <option value="OPO">Ordenes Pago Obras</option>
             </select>
             <select name="Dependencia" id="Dependencia" placeholder="Institución" required>
-                <option value="" disabled selected>Intitución</option>
+                <option value="" disabled selected>Institución</option>
                 <option value="Coordinación de las Regidurias">Coordinación de las Regidurias</option>
                 <option value="Oficina de Presidencia">Oficina de Presidencia</option>
                 <option value="Sindicatura Municipal">Sindicatura Municipal</option>
@@ -122,31 +172,10 @@
             <input type="text" name="Proveedor" id="Proveedor" placeholder="Proveedor" required>
             <input type="text" name="Concepto" id="Concepto" placeholder="Concepto" required>
             <input type="number" name="Importe" id="Importe" placeholder="Importe" required step="0.01">
-            <select name="AnalistaID" id="AnalistaID" placeholder="Analista Turnado" disabled>
-                <option value="4" selected>Juan Carlos	García Tagle</option>
-                <option value="8">Isabel Cristina	Pavón Nava</option>
-                <option value="11">Isabel Cortes Varillas</option>
-                <option value="20">Maria Isabel Marín León</option>
-                <option value="21">Ariosto Emilio Lechuga Aparicio</option>
-                <option value="22">Gonzalo	Ochoa Huerta</option>
-                <option value="23">Laura Alatriste Torres</option>
-                <option value="5">Maria Blanca Soriano Rojas</option>
-                <option value="1">Agustín	Arenas Martinez</option>
-                <option value="17">Maria Del Carmen Damian Aguilar</option>
-                <option value="10">Maria De Lourdes Molina Quiroz</option>
-                <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
-                <option value="16">Maria Valeria Corro Stefanoni</option>
-                <option value="12">Ariadna Michel Sánchez Rodríguez</option>
-                <option value="13">Michelle Córdova Torres</option>
-                <option value="19">Francisco Javier Rivera Castillo</option>
-                <option value="15">Antonio	Castañon Ruiz</option>
-                <option value="18">Ofelia	Olguin Aguilar</option>
-                <option value="6">Xochil	Cuatepitzi Torres</option>
-                <option value="14">Daniel	Rodríguez Cardenas</option>
-                <option value="9">Roberta Marcela	Uvera Saucedo</option>
+            <select name="AnalistaID" id="AnalistaID">
+                <option value="4">Juan Carlos García Tagle</option>
+                <option value="22">Gonzalo Ochoa Huerta</option>
             </select>
-            <!-- Campo oculto para enviar el valor -->
-            <input type="hidden" name="AnalistaID" id="AnalistaID" value="4">
             <select name="Estatus" id="Estatus" placeholder="Estatus" disabled>
                 <!-- <option value="" disabled selected>Estatus</option> -->
                 <option value="Creado" selected>Creado</option>
@@ -159,8 +188,8 @@
             <input type="hidden" name="Estatus" id="Estatus" value="Creado">
 
             <input type="text" name="Comentarios" id="Comentarios" placeholder="Comentarios"
-                value="Proceso de Revisión de la Orden de Compra Por Juan Carlos García Tagle" readonly>
-            <input type="text" name="Fondo" id="Fondo" placeholder="Ejemplo:10050" required>
+                value="Proceso de Revisión de la Orden.">
+            <input type="text" name="Fondo" id="Fondo" placeholder="Ejemplo:10050, 100500" required>
             <input type="date" name="FechaLimite" id="FechaLimite" required>
 
             <button type="submit">Crear Trámite</button>

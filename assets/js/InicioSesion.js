@@ -50,6 +50,15 @@ function inicioSesion(CorreoUserForm, ClaveUserForm){
                 case 'Analista' :
                     window.location.href = 'listadoTurnados.html';
                     break;
+                case 'Pagos' :
+                    window.location.href = 'seguimientoOrdenesPago.html';
+                    break;
+                case 'Suficiencias' :
+                    window.location.href = 'seguimientoSuficiencias.html';
+                    break;  
+                case 'KPI' :
+                    window.location.href = 'kpi.html';
+                    break;
             }
         } else {
             console.error('Error en la respuesta:', result.message);

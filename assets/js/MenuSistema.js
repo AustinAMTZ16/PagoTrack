@@ -18,7 +18,12 @@ function gestionarMenu(rolUsuario, departamentoUsuario) {
     // Configuración del menú por departamento
     const departamentos = {
         'Tramite': '#Tramite',
-        'Admin': '#Admin'
+        'Admin': '#Admin',
+        'Ordenes': '#Ordenes',
+        'Pagos': '#Pagos',
+        'Suficiencias': '#Suficiencias',
+        'KPI': '#KPI',
+        'Oficios': '#Oficios'
     };
     // Inicialmente ocultar todos los menús y submenús
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -51,6 +56,26 @@ function gestionarMenu(rolUsuario, departamentoUsuario) {
         }
         if (rolUsuario === 'Operador' || rolUsuario === 'Admin') {
             document.querySelectorAll(`${selectorBase}#Operador`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'Pagos' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#Pagos`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'Suficiencias' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#Suficiencias`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'KPI' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#KPI`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'Oficios' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#Oficios`).forEach(item => {
                 item.style.display = 'block';
             });
         }

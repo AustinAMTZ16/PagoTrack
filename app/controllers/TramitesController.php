@@ -31,5 +31,23 @@ class TramitesController {
         $result = $this->model->delete($data);
         return $result;
     }
+
+    // Obtener el seguimiento de trámites
+    public function getSeguimientoTramites() {
+        $result = $this->model->getSeguimientoTramites();
+        return $result;
+    }
+
+    // Obtener el conteo de estatus
+    public function getConteoEstatus() {
+        $result = $this->model->getConteoEstatus();
+        return $result;
+    }
+
+    // Obtener el reporte de estatus de comentarios
+    public function getReporteEstatusComentarios() {
+        $result = $this->model->getReporteEstatusComentarios();
+        return $result;
+    }   
 }
 ?>

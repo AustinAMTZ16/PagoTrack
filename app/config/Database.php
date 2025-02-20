@@ -1,12 +1,12 @@
 <?php
 class Database {
-    private $host = 'localhost';
-    private $user = 'root';
-    private $password = '';
+    // private $host = 'localhost';
+    // private $user = 'root';
+    // private $password = '';
 
-    // private $host = '24.144.89.231';
-    // private $user = 'engranetmx';
-    // private $password = 'huaweiP20!';
+    private $host = '24.144.89.231';
+    private $user = 'engranetmx';
+    private $password = 'huaweiP20!';
 
     private $dbname = 'system_recepcion_pagos_dependencias';
     public $conn;

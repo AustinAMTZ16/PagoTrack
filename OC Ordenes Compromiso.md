@@ -193,3 +193,121 @@ Terminado
 
 
 'Creado','Turnado','Procesando','Observaciones','Terminado'
+
+
+
+
+
+
+
+
+
+
+
+
+
+•	SuficienciasID: Clave primaria que se autoincrementa automáticamente.
+•	PersonaQuienSolicita: Nombre de la persona que solicita la suficiencia.
+•	Dependencia: Dependencia que realiza la solicitud.
+•	CentroGestor: Código del centro gestor.
+•	AreaFuncional: Código del área funcional.
+•	NoOficioSolicitud: Número de oficio de la solicitud.
+•	FechaSolicitud: Fecha en que se realizó la solicitud.
+•	FechaRecepcion: Fecha en que se recibió la solicitud.
+•	NoOficioContestacion: Número de oficio de contestación.
+•	Tipo: Tipo de suficiencia (en este caso, "ORIGEN", “MULTIANUAL”,”ACTUALIZACION”).
+•	FechaContestacion: Fecha en que se contestó la solicitud.
+•	SolpedCompromisoGasto: Número de SOLPED o compromiso de gasto.
+•	ServicioSolicitado: Descripción del servicio solicitado.
+•	FuenteFinanciamiento: Código de la fuente de financiamiento.
+•	PosPrecog: Posición presupuestaria.
+•	Requisito: Requisito. Según el PosPrecog
+•	Concepto: Descripción del concepto de la suficiencia.
+•	MontoSuficienciaPresupuestal2024: Monto de la suficiencia presupuestal.
+•	Conac: Código CONAC.
+•	Cuenta: Número de cuenta.
+•	Folio: Número de folio.
+•	Foja: Número de Hojas scaneadas del archivo fisico (puede ser nulo).
+•	NoticiaAdministrativa: Noticia administrativa solo si afecta el presupuesto (true/false).
+•	NoContabilizarConsecutivo: Consecutivo ligado a la noticia administrativa(puede ser nulo).
+•	ConsecutivoMes: Consecutivo del mes (puede ser nulo).
+•	Mes: Mes correspondiente.
+•	Observaciones: Observaciones adicionales.
+
+
+
+
+SELECT R.ID_CONTRATO, R.AnalistaID, I.NombreUser, I.ApellidoUser FROM ConsentradoGeneralTramites R 
+INNER JOIN InicioSesion I
+ON R.AnalistaID = I.InicioSesionID
+WHERE R.ID_CONTRATO = 337
+
+
+
+
+
+CREATE TABLE Suficiencias (
+    SuficienciasID INT PRIMARY KEY AUTO_INCREMENT,
+    PersonaQuienSolicita VARCHAR(255) NOT NULL,
+    Dependencia VARCHAR(255) NOT NULL,  --CATALOGO
+    CentroGestor VARCHAR(50) NOT NULL,  --CATALOGO
+    AreaFuncional VARCHAR(50) NOT NULL, --CATALOGO
+    NoOficioSolicitud VARCHAR(100) NOT NULL,
+    FechaSolicitud DATE NOT NULL,
+    FechaRecepcion DATE NOT NULL,
+    NoOficioContestacion VARCHAR(100) NOT NULL,
+    Tipo ENUM('ORIGEN', 'MULTIANUAL', 'ACTUALIZACION') NOT NULL,
+    FechaContestacion DATE NOT NULL,
+    SolpedCompromisoGasto VARCHAR(50) NOT NULL,
+    ServicioSolicitado VARCHAR(255) NOT NULL,
+    FuenteFinanciamiento VARCHAR(50) NOT NULL,  --CATALOGO
+    PosPrecog VARCHAR(50) NOT NULL,  --CATALOGO 
+    Requisito VARCHAR(100) NOT NULL,  --CATALOGO
+    Concepto TEXT NOT NULL,
+    MontoSuficienciaPresupuestal2024 DECIMAL(15, 2) NOT NULL,
+    Conac INT NOT NULL,
+    Cuenta INT NOT NULL,
+    Folio INT NOT NULL,
+    Foja INT,
+    NoticiaAdministrativa BIT DEFAULT 0,
+    NoContabilizarConsecutivo INT,
+    ConsecutivoMes INT,
+    Mes ENUM('ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE') NOT NULL,
+    Observaciones TEXT
+);
+
+
+INSERT INTO Suficiencias (
+    PersonaQuienSolicita, Dependencia, CentroGestor, AreaFuncional, NoOficioSolicitud, 
+    FechaSolicitud, FechaRecepcion, NoOficioContestacion, Tipo, FechaContestacion, 
+    SolpedCompromisoGasto, ServicioSolicitado, FuenteFinanciamiento, PosPrecog, Requisito, 
+    Concepto, MontoSuficienciaPresupuestal2024, Conac, Cuenta, Folio, Foja, 
+    NoticiaAdministrativa, NoContabilizarConsecutivo, ConsecutivoMes, Mes, Observaciones
+) VALUES (
+    'ALICIA SANCHEZ GONZALEZ', 
+    'SECRETARÍA DE SERVICIOS PÚBLICOS',  -- Dependencia (CATALOGO)
+    '428040000',  -- CentroGestor (CATALOGO)
+    'E13013307070325B',  -- AreaFuncional (CATALOGO)
+    'SECATI-DPVA-EA-SSP-008/2025',  -- NoOficioSolicitud
+    '2025-01-13',  -- FechaSolicitud
+    '2025-01-13',  -- FechaRecepcion
+    'SP/0065',  -- NoOficioContestacion
+    'ORIGEN',  -- Tipo (ENUM: ORIGEN, MULTIANUAL, ACTUALIZACION)
+    '2025-01-13',  -- FechaContestacion
+    '336227',  -- SolpedCompromisoGasto
+    'SUFICIENCIA CON COMPROMISO DE GASTO',  -- ServicioSolicitado
+    '10050',  -- FuenteFinanciamiento (CATALOGO)
+    '31101',  -- PosPrecog (CATALOGO)
+    'NO APLICA',  -- Requisito (CATALOGO)
+    'REALIZAR EL PAGO MENSUAL CORRESPONDIENTE A LA FACTURA EMITIDA',  -- Concepto
+    179753372.00,  -- MontoSuficienciaPresupuestal2024
+    11,  -- Conac
+    3069,  -- Cuenta
+    57,  -- Folio
+    NULL,  -- Foja (puede ser NULL)
+    0,  -- NoticiaAdministrativa (BIT: 0 o 1)
+    NULL,  -- NoContabilizarConsecutivo (puede ser NULL)
+    NULL,  -- ConsecutivoMes (puede ser NULL)
+    'ENERO',  -- Mes (ENUM: ENERO, FEBRERO, ..., DICIEMBRE)
+    'SE SUSTITUYÓ SU SOLICITUD, PORQUE EL MONTO ESTABA MAL Y SU CONCEPTO'  -- Observaciones
+);

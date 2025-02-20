@@ -35,17 +35,63 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Operador" style="display: none;"><a class="dropdown-item"
                                     href="createTramite.html">Crear Trámite</a></li>
+                            <li id="Analista" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Listado de Turnados</a></li>
+                        </ul>
                     </li>
-                    <li id="Analista" style="display: none;"><a class="dropdown-item"
-                            href="listadoTurnados.html">Listado de Turnados</a></li>
+
+                    <li id="Pagos" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Ordenes de Pago
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Pagos" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                        </ul>
                     </li>
-                </ul>
-                </li>
-                <!-- Cerrar sesión -->
-                <li>
-                    <a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
-                        Sesión</a>
-                </li>
+
+                    <li id="Suficiencias" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Suficiencias
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoSuficiencias.html">Suficiencias</a></li>       
+                        </ul>
+                    </li>
+
+                    <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Indicadores de Rendimiento
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            
+                        </ul>
+                    </li>
+
+                    <li id="Oficios" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Correspondencia y Oficios
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item" href="correspondencia.html">Correspondencia</a></li>       
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item" href="oficios.html">Oficios</a></li>       
+                        </ul>
+                    </li>
+
+                    <!-- Cerrar sesión -->
+                    <li>
+                        <a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
+                            Sesión</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -60,6 +106,8 @@
             <select name="Estatus" id="Estatus" placeholder="Estatus" required>
                 <option value="Devuelto">Devuelto</option>
                 <option value="RegistradoSAP">Registrado SAP</option>
+                <option value="JuntasAuxiliares">Juntas Auxiliares</option>
+                <option value="Inspectoria">Inspectoria</option>
             </select>
             <input type="text" id="Comentarios" name="Comentarios" placeholder="Comentarios" required>
             <button type="submit" id="btnGuardar">Guardar Tramite</button>

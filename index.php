@@ -4,11 +4,12 @@
     include_once 'app/controllers/TramitesController.php';
     include_once 'app/controllers/RemesaController.php';
     include_once 'app/controllers/LoginController.php'; 
+    include_once 'app/controllers/KpiController.php';
     // Instanciamos el controlador
     $controllerTramite = new TramitesController();
     $controllerRemesa = new RemesaController();
     $controllerLogin = new LoginController();
-
+    $controllerKpi = new KpiController();
     //Obtener el método de la solicitud HTTP
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -186,6 +187,71 @@
                 }
                 exit;
                 break;
+            case 'getSeguimientoTramites':
+                // Declarar como global
+                global $controllerTramite;
+                $respuesta = $controllerTramite->getSeguimientoTramites();
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Listado de seguimiento de trámites.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron seguimiento de trámites.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;  
+            case 'getConteoEstatus':
+                // Declarar como global
+                global $controllerTramite;
+                $respuesta = $controllerTramite->getConteoEstatus();
+                if ($respuesta) {
+                    http_response_code(200);    
+                    echo json_encode(array('message' => 'Listado de conteo de estatus.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron conteo de estatus.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+            case 'getReporteEstatusComentarios':
+                // Declarar como global
+                global $controllerTramite;
+                $respuesta = $controllerTramite->getReporteEstatusComentarios();
+                if ($respuesta) {
+                    http_response_code(200);    
+                    echo json_encode(array('message' => 'Listado de reporte de estatus de comentarios.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron reporte de estatus de comentarios.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+            case 'getRemesasWithTramites':
+                // Declarar como global
+                global $controllerRemesa;
+                $respuesta = $controllerRemesa->getRemesasWithTramites();
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Listado de remesas con trámites.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron remesas con trámites.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+            case 'obtenerKPI':
+                // Declarar como global
+                global $controllerKpi;
+                $respuesta = $controllerKpi->obtenerKPI();
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Data de KPI.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron KPI.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción GET desconocida.'], JSON_UNESCAPED_UNICODE);
@@ -267,6 +333,23 @@
                 }
                 exit;
                 break;
+            case 'updateTramiteRemesa':
+                if(!empty($data)){
+                    global $controllerRemesa;
+                    $respuesta = $controllerRemesa->updateTramiteRemesa((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Tramite y remesa modificados.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'Tramite y remesa no modificados.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;  
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción PATCH desconocida.'], JSON_UNESCAPED_UNICODE);

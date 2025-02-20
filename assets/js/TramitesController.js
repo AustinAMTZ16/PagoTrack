@@ -88,6 +88,12 @@ function createTramite(data){
 }
 // Función para turnar un trámite
 function turnarTramite(data){
+    // Obtener la fecha y hora actual en formato ISO
+    const fechaActual = new Date().toISOString().slice(0, 19).replace("T", " ");
+
+    // Agregar la fecha al objeto data
+    data.FechaTurnado = fechaActual;
+
     fetch(URL_BASE + 'updateTramite', {
         method: 'PATCH', 
         headers: {

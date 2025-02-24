@@ -38,3 +38,47 @@ Obra Ordenes Pago Anticipo
 Obra Ordenes Pago de la Estimaciones
     Obra Ordenes Pago Convenios DIF 
     Obra Ordenes Pago Convenios CMIC
+
+
+
+
+
+
+-- Tabla Beneficiarios
+CREATE TABLE Beneficiarios (
+    Beneficiario_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    RFC VARCHAR(13) NOT NULL,
+    Cargo VARCHAR(50)
+);
+
+-- Tabla Transacciones
+CREATE TABLE Transacciones (
+    ID_Transaccion INT AUTO_INCREMENT PRIMARY KEY,
+    Tipo_Documento ENUM('Orden Compromiso', 'Orden de Pago', 'Solicitud', 'Comprobación') NOT NULL,
+    Folio_Integra VARCHAR(20) NOT NULL,
+    Importe_Total DECIMAL(12,2) NOT NULL,
+    Importe_Letra VARCHAR(255) NOT NULL,
+    Concepto VARCHAR(255) NOT NULL,
+    Num_Acreedor VARCHAR(20) NOT NULL,
+    Beneficiario_ID INT NOT NULL,
+    Autorizacion_Titular VARCHAR(255) NOT NULL,
+    Fecha_Emision DATETIME NOT NULL,
+    Clave_Presupuestal VARCHAR(20) NOT NULL,
+    Elemento_PEP VARCHAR(50),
+    Doc_SAP VARCHAR(20),
+    Cuenta_Pagadora VARCHAR(30),
+    Deducciones DECIMAL(12,2),
+    Reintegro DECIMAL(12,2),
+    Banco VARCHAR(50),
+    CLABE VARCHAR(18),
+    FOREIGN KEY (Beneficiario_ID) REFERENCES Beneficiarios(Beneficiario_ID)
+);
+
+-- Tabla Documentos_Vinculados
+CREATE TABLE Documentos_Vinculados (
+    ID_Transaccion_Origen INT,
+    ID_Transaccion_Destino INT,
+    FOREIGN KEY (ID_Transaccion_Origen) REFERENCES Transacciones(ID_Transaccion),
+    FOREIGN KEY (ID_Transaccion_Destino) REFERENCES Transacciones(ID_Transaccion)
+);

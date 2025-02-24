@@ -17,15 +17,10 @@ class LoginModel {
     public function __construct() {
         $this->conn = (new Database())->conn;
     }
-
     // Iniciar sesión
     public function login($data) {
         $query = "SELECT InicioSesionID, NickUser, NombreUser, ApellidoUser, CorreoUser, RolUser, DepartamentoUser FROM InicioSesion WHERE CorreoUser = :CorreoUser AND ClaveUser = :ClaveUser";
         $stmt = $this->conn->prepare($query);
-
-        // Limpia y filtra los datos antes de insertarlos en la base de datos
-        $this->CorreoUser = htmlspecialchars(strip_tags($this->CorreoUser));
-        $this->ClaveUser = htmlspecialchars(strip_tags($this->ClaveUser));
 
         $stmt->bindParam(':CorreoUser', $data['CorreoUser']);
         $stmt->bindParam(':ClaveUser', $data['ClaveUser']);
@@ -37,20 +32,10 @@ class LoginModel {
             throw new Exception("Error al iniciar sesión.");
         }
     }
-
     // Registrar un nuevo usuario
     public function register($data) {
         $query = "INSERT INTO InicioSesion (NickUser, NombreUser, ApellidoUser, CorreoUser, ClaveUser, RolUser, DepartamentoUser) VALUES (:NickUser, :NombreUser, :ApellidoUser, :CorreoUser, :ClaveUser, :RolUser, :DepartamentoUser)";
         $stmt = $this->conn->prepare($query);
-
-        // Limpia y filtra los datos antes de insertarlos en la base de datos
-        $this->NickUser = htmlspecialchars(strip_tags($this->NickUser));
-        $this->NombreUser = htmlspecialchars(strip_tags($this->NombreUser));
-        $this->ApellidoUser = htmlspecialchars(strip_tags($this->ApellidoUser));
-        $this->CorreoUser = htmlspecialchars(strip_tags($this->CorreoUser));
-        $this->ClaveUser = htmlspecialchars(strip_tags($this->ClaveUser));
-        $this->RolUser = htmlspecialchars(strip_tags($this->RolUser));
-        $this->DepartamentoUser = htmlspecialchars(strip_tags($this->DepartamentoUser));
 
         $stmt->bindParam(':NickUser', $data['NickUser']);
         $stmt->bindParam(':NombreUser', $data['NombreUser']);
@@ -66,18 +51,10 @@ class LoginModel {
             throw new Exception("Error al registrar el usuario.");
         }
     }
-
     // Modificar un usuario
     public function update($data) {
         $query = "UPDATE InicioSesion SET NickUser = :NickUser, NombreUser = :NombreUser, ApellidoUser = :ApellidoUser, CorreoUser = :CorreoUser WHERE InicioSesionID = :InicioSesionID";
         $stmt = $this->conn->prepare($query);
-
-        // Limpia y filtra los datos antes de insertarlos en la base de datos
-        $this->InicioSesionID = htmlspecialchars(strip_tags($this->InicioSesionID));
-        $this->NickUser = htmlspecialchars(strip_tags($this->NickUser));
-        $this->NombreUser = htmlspecialchars(strip_tags($this->NombreUser));
-        $this->ApellidoUser = htmlspecialchars(strip_tags($this->ApellidoUser));
-        $this->CorreoUser = htmlspecialchars(strip_tags($this->CorreoUser));
 
         $stmt->bindParam(':InicioSesionID', $data['InicioSesionID']);
         $stmt->bindParam(':NickUser', $data['NickUser']);
@@ -90,14 +67,10 @@ class LoginModel {
             return false;
         }
     }
-
     // Eliminar un usuario
     public function delete($data) {
         $query = "DELETE FROM InicioSesion WHERE InicioSesionID = :InicioSesionID";
         $stmt = $this->conn->prepare($query);
-
-        // Limpia y filtra los datos antes de insertarlos en la base de datos
-        $this->InicioSesionID = htmlspecialchars(strip_tags($this->InicioSesionID));
 
         $stmt->bindParam(':InicioSesionID', $data['InicioSesionID']);
         $stmt->execute();
@@ -108,15 +81,10 @@ class LoginModel {
             return false;
         }
     }
-
     // Recuperar contraseña
     public function recoverPassword($data) {
         $query = "UPDATE InicioSesion SET ClaveUser = :ClaveUser WHERE CorreoUser = :CorreoUser";
         $stmt = $this->conn->prepare($query);
-
-        // Limpia y filtra los datos antes de insertarlos en la base de datos
-        $this->ClaveUser = htmlspecialchars(strip_tags($this->ClaveUser));
-        $this->CorreoUser = htmlspecialchars(strip_tags($this->CorreoUser));
 
         $stmt->bindParam(':ClaveUser', $data['ClaveUser']);
         $stmt->bindParam(':CorreoUser', $data['CorreoUser']);
@@ -128,13 +96,10 @@ class LoginModel {
             return false;
         }
     }
-
     // Verificar si el usuario existe
     public function checkUserExists($data) {
         $query = "SELECT * FROM InicioSesion WHERE CorreoUser = :CorreoUser";
         $stmt = $this->conn->prepare($query);
-        // Limpia y filtra los datos antes de insertarlos en la base de datos
-        $this->CorreoUser = htmlspecialchars(strip_tags($this->CorreoUser));
         $stmt->bindParam(':CorreoUser', $data['CorreoUser']);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);

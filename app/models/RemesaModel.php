@@ -3,11 +3,9 @@ include_once 'app/config/Database.php';
 
 class RemesaModel {
     private $conn;
-
     public function __construct() {
         $this->conn = (new Database())->conn;
     }
-
     // Crear una nueva remesa
     public function create($data) {
         try {
@@ -87,7 +85,6 @@ class RemesaModel {
         //     throw new Exception("Error al registrar el cliente.");
         // }
     }
-
     // Obtener todas las remesas
     public function getAll() {
         $query = "SELECT * FROM Remesas";
@@ -95,7 +92,6 @@ class RemesaModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
     // Actualizar una remesa
     public function update($data) {
         try {
@@ -139,7 +135,6 @@ class RemesaModel {
             return false;
         }
     }
-
     //Lista de remesas con tramites para el seguimiento de ordenes de pago
     public function getRemesasWithTramites() {
         $query = "SELECT 
@@ -239,7 +234,5 @@ class RemesaModel {
             throw new Exception("Error al actualizar trámite y remesa: " . $e->getMessage());
         }
     }
-    
- 
 }
 ?>

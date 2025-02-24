@@ -5,11 +5,13 @@
     include_once 'app/controllers/RemesaController.php';
     include_once 'app/controllers/LoginController.php'; 
     include_once 'app/controllers/KpiController.php';
+    include_once 'app/controllers/SuficienciaController.php';
     // Instanciamos el controlador
     $controllerTramite = new TramitesController();
     $controllerRemesa = new RemesaController();
     $controllerLogin = new LoginController();
     $controllerKpi = new KpiController();
+    $controllerSuficiencia = new SuficienciaController();
     //Obtener el método de la solicitud HTTP
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -249,6 +251,19 @@
                 } else {
                     http_response_code(404);
                     echo json_encode(array('message' => 'No se encontraron KPI.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+            case 'getSuficiencias':
+                // Declarar como global
+                global $controllerSuficiencia;
+                $respuesta = $controllerSuficiencia->getSuficiencias();
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Listado de suficiencias.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron suficiencias.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;

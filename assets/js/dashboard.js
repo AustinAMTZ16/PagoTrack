@@ -288,7 +288,7 @@ function actualizarTablaTramites(data, tableId) {
         pageLength: 10, // Número de filas por página
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[0, "asc"]],
+        order: [[0, "DESC"]],
     });
 }
 // Función para actualizar la tabla de trámites turnados
@@ -366,7 +366,11 @@ function actualizarTablaTurnados(data, tableId) {
                 sortAscending: ": Activar para ordenar la columna de manera ascendente",
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
-        }
+        },
+        pageLength: 10, // Número de filas por página
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        responsive: true,
+        order: [[0, "DESC"]],
     });
 }
 // Filtrar trámites por estado

@@ -2,7 +2,6 @@
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
 const URL_BASE = `${URL_B}index.php?action=`;
-
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
     // Obtener el parámetro "id" de la URL
@@ -13,29 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputField = document.getElementById('ID_CONTRATO');
         inputField.value = id;
     }
-    // Evento para actualizar un trámite y Remesa
-    const formUpdateTramiteRemesa = document.getElementById('formUpdateTramiteRemesa');
-    if (formUpdateTramiteRemesa) {
-        formUpdateTramiteRemesa.addEventListener("submit", function (e) {
-            const btn = document.activeElement; // Obtiene el botón que activó el envío
-            
-            if (!btn || btn.id !== "btnGuardar") {
-                e.preventDefault(); // Evita el envío si no es "Guardar Tramite"
-                return;
-            }
-
-            e.preventDefault(); // Evita la recarga de la página
-
-            const formData = new FormData(formUpdateTramiteRemesa);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-            /* console.log('Datos del formulario:', data); */
-            updateTramiteRemesa(data);
-        });
+    // Función para generar y descargar el archivo Excel
+    function exportToExcel() {
+        const table = document.querySelector("#tramitesTable2"); // Selecciona la tabla por su ID
+        if (table) { // Verifica si la tabla existe
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" }); // Convierte la tabla en un libro de Excel
+            XLSX.writeFile(wb, "datos_oficios.xlsx"); // Descarga el archivo Excel con el nombre especificado
+        } else {
+            console.error("La tabla no existe en el DOM.");
+        }
     }
-
+    // Verifica si el botón existe antes de agregar el listener
+    const downloadButton = document.getElementById("downloadExcelTramites");
+    if (downloadButton) {
+        downloadButton.addEventListener("click", exportToExcel);
+    }
     // Obtener las remesas con trámites
     getRemesasWithTramites();
 });
@@ -68,7 +59,6 @@ const formatoMoneda = new Intl.NumberFormat("es-MX", {
     currency: "MXN",
     minimumFractionDigits: 2,
 });
-
 function renderTable2(data) {
     const tableId = "tramitesTable2"; // ID de la tabla
     const table = document.getElementById(tableId);
@@ -161,10 +151,9 @@ function renderTable2(data) {
         pageLength: 10,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[0, "asc"]],
+        order: [[0, "DESC"]],
     });
 }
-
 // Función de ejemplo para actualizar un registro
 function actualizarRegistro(row) {
     window.location.href = `updateOrdenesPago.html?id=${row.ID_CONTRATO}`;

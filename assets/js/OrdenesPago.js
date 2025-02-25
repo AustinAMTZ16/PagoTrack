@@ -51,14 +51,15 @@ function getRemesasWithTramites() {
         })
         .catch(error => {
             console.error('Error al obtener las remesas con trámites:', error.message);
-        }); 
-} 
+        });
+}
 // Función para formatear el importe como moneda (MXN - Peso Mexicano)
 const formatoMoneda = new Intl.NumberFormat("es-MX", {
     style: "currency",
     currency: "MXN",
     minimumFractionDigits: 2,
 });
+
 function renderTable2(data) {
     const tableId = "tramitesTable2"; // ID de la tabla
     const table = document.getElementById(tableId);
@@ -99,7 +100,17 @@ function renderTable2(data) {
             // Si es la columna "Importe", formatear como moneda
             if (col === "Importe") {
                 td.textContent = row[col] ? formatoMoneda.format(row[col]) : "$0.00";
-            } else {
+            }
+            // Si es la columna "Comentarios", agregar el botón para ver comentario
+            else if (col === "Comentarios") {
+                const comentarioEscapado = encodeURIComponent(row[col]);
+                td.innerHTML = `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+            }  
+            else if (col === "ComentariosRemesa") {
+                const comentarioEscapado = encodeURIComponent(row[col]);
+                td.innerHTML = `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+            }  
+            else {
                 td.textContent = row[col] || 0; // Si no hay valor, muestra 0
             }
 
@@ -159,25 +170,43 @@ function actualizarRegistro(row) {
     window.location.href = `updateOrdenesPago.html?id=${row.ID_CONTRATO}`;
 }
 // Función para actualizar un trámite y remesa
-function updateTramiteRemesa(data){
+function updateTramiteRemesa(data) {
     fetch(URL_BASE + 'updateTramiteRemesa', {
-        method: 'PATCH', 
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     })
-    .then(async (response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
-        }
-        return await response.json();
-    })
-    .then(result => {
-        alert(result.message);
-        window.location.href = 'seguimientoOrdenesPago.html';
-    })
-    .catch(error => {
-        console.error('Error al actualizar el trámite y remesa:', error.message);
-    });
+        .then(async (response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+            }
+            return await response.json();
+        })
+        .then(result => {
+            alert(result.message);
+            window.location.href = 'seguimientoOrdenesPago.html';
+        })
+        .catch(error => {
+            console.error('Error al actualizar el trámite y remesa:', error.message);
+        });
+}
+//
+function mostrarComentario(comentario) {
+    // Decodificar el comentario
+    var comentarioDecoded = decodeURIComponent(comentario);
+
+    // Intentar convertir el comentario a formato JSON con identación
+    try {
+        var comentarioJson = JSON.parse(comentarioDecoded);
+        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);  // 4 es el número de espacios para sangría
+    } catch (e) {
+        // Si no es JSON válido, no hacemos nada
+        console.error('El comentario no es un JSON válido:', e);
+    }
+
+    // Mostrar el comentario con un formato de texto en el modal
+    $('#comentarioModal .modal-body').html('<pre>' + comentarioDecoded + '</pre>');
+    $('#comentarioModal').modal('show');
 }

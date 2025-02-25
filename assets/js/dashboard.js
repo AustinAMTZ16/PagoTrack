@@ -235,7 +235,14 @@ function actualizarTablaTramites(data, tableId) {
             },
             { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
             { data: "Estatus" },
-            { data: "Comentarios" },
+            {
+                data: "Comentarios",
+                render: function(data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            },            
             { data: "Fondo" },
             { data: "FechaLimite" },
             {
@@ -327,7 +334,14 @@ function actualizarTablaTurnados(data, tableId) {
             },
             { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
             { data: "Estatus" },
-            { data: "Comentarios" },
+            {
+                data: "Comentarios",
+                render: function(data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            },   
             { data: "Fondo" },
             { data: "FechaLimite" },
             {
@@ -587,3 +601,22 @@ function renderTable(data) {
         order: [[0, "asc"]],
     });
 }
+//
+function mostrarComentario(comentario) {
+    // Decodificar el comentario
+    var comentarioDecoded = decodeURIComponent(comentario);
+
+    // Intentar convertir el comentario a formato JSON con identación
+    try {
+        var comentarioJson = JSON.parse(comentarioDecoded);
+        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);  // 4 es el número de espacios para sangría
+    } catch (e) {
+        // Si no es JSON válido, no hacemos nada
+        console.error('El comentario no es un JSON válido:', e);
+    }
+
+    // Mostrar el comentario con un formato de texto en el modal
+    $('#comentarioModal .modal-body').html('<pre>' + comentarioDecoded + '</pre>');
+    $('#comentarioModal').modal('show');
+}
+

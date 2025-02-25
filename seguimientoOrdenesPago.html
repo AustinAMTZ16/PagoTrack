@@ -41,7 +41,8 @@
                                     href="createTramite.html">Crear Trámite</a></li>
                             <li id="Analista" style="display: none;"><a class="dropdown-item"
                                     href="listadoTurnados.html">Listado de Turnados</a></li>
-                            <li id="Operador" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
                         </ul>
                     </li>
 
@@ -51,7 +52,8 @@
                             Ordenes de Pago
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="Pagos" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            <li id="Pagos" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
                         </ul>
                     </li>
 
@@ -62,7 +64,9 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
-                                    href="seguimientoSuficiencias.html">Suficiencias</a></li>       
+                                    href="seguimientoSuficiencias.html">Suficiencias</a></li>
+                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
+                                    href="crearSuficiencias.html">Crear Suficiencia</a></li>
                         </ul>
                     </li>
 
@@ -73,10 +77,13 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Tramites</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
-                            
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Turnado</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+
                         </ul>
                     </li>
 
@@ -86,8 +93,10 @@
                             Correspondencia y Oficios
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="Oficios" style="display: none;"><a class="dropdown-item" href="correspondencia.html">Correspondencia</a></li>       
-                            <li id="Oficios" style="display: none;"><a class="dropdown-item" href="oficios.html">Oficios</a></li>       
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="correspondencia.html">Correspondencia</a></li>
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="oficios.html">Oficios</a></li>
                         </ul>
                     </li>
 
@@ -102,10 +111,10 @@
         </div>
     </nav>
 
-    <h1>Seguimiento de Trámites Turnados</h1>
-    <button id="downloadExcelTramites" class="btn btn-primary toggleButton">Descargar Excel</button>
     <div class="contenedor">
         <div class="table-container">
+            <h1>Seguimiento de Trámites Turnados</h1>
+            <button id="downloadExcelTramites" class="btn btn-primary toggleButton">Descargar Excel</button>
             <h2 style="text-align: center;">Listado de Trámites...</h2>
             <table id="tramitesTable2">
                 <thead>
@@ -158,6 +167,26 @@
         </div>
     </div>
 
+    <!-- Modal para mostrar el comentario completo -->
+    <div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="comentarioModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="comentarioModalLabel">Comentario Completo</h5>
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> -->
+                </div>
+                <div class="modal-body">
+                    <!-- El comentario completo se insertará aquí -->
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

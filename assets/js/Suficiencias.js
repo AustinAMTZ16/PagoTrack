@@ -2,8 +2,15 @@
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
 const URL_BASE = `${URL_B}index.php?action=`;
+// Declarar una variable global
+let respuestaGlobal;
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
+    getSuficiencias();
+
+    //Obtener el ID del URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const suficienciaID = urlParams.get('id');
     // Verifica si el botón existe antes de agregar el listener
     const downloadButton = document.getElementById("downloadExcelSuficiencias");
     if (downloadButton) {
@@ -19,7 +26,40 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("La tabla no existe en el DOM.");
         }
     }
-    getSuficiencias();
+    /// Evento para validar el formulario de creación de suficiencias
+    const formCrearSuficiencias = document.getElementById("formCrearSuficiencias");
+    if (formCrearSuficiencias) {
+        formCrearSuficiencias.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(formCrearSuficiencias);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            registrarSuficiencia(data);
+        });
+    }
+    /// Evento para validar el formulario de actualización de suficiencias  
+    const formActualizarSuficiencias = document.getElementById("formActualizarSuficiencias");
+    if (formActualizarSuficiencias) {
+        llenarformActualizarSuficiencias(suficienciaID);
+        formActualizarSuficiencias.addEventListener("submit", function(e) {
+            e.preventDefault(); // Evita que se recargue la página          
+            const formData = new FormData(formActualizarSuficiencias); // Obtiene los datos del formulario
+            const data = {}; // Objeto para almacenar los datos 
+            formData.forEach((value, key) => { // Recorre los datos del formulario
+                data[key] = value; // Almacena los datos en el objeto
+            });
+            actualizarSuficiencia(data); // Llama a la función para actualizar la suficiencia
+        });
+    }
+
+
+
+
+
+
+
 });
 
 function getSuficiencias() {
@@ -36,9 +76,8 @@ function getSuficiencias() {
         return await response.json();
     })
     .then(result => {
-        console.log('Respuesta de la API:', result.data);
         llenarTablaSuficiencias(result.data);
-        
+        return result.data;
     })
     .catch(error => {
         console.error('Error al obtener las remesas con trámites:', error.message);
@@ -64,6 +103,23 @@ function llenarTablaSuficiencias(data) {
     $(`#${tableId}`).DataTable({
         data: data,
         columns: [
+            {
+                data: null,
+                render: function (data) {
+                    let botones = "";
+                    const usuario = JSON.parse(localStorage.getItem("usuario"));
+                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Suficiencias") {
+                        botones += `<button class="btn btn-primary" onclick="window.location.href='actualizarSuficiencias.html?id=' + ${data.SuficienciasID}">Actualizar</button>`;
+                    }
+                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Suficiencias") {
+                        botones += `<button class="btn btn-success" onclick="window.location.href='detallesSuficiencias.html?id=' + ${data.SuficienciasID}">Detalles</button> `;
+                    }
+                    if (usuario && usuario.RolUser === "Admin") {
+                        botones += `<button class="btn btn-danger" onclick="eliminarSuficiencia(${data.SuficienciasID})">Eliminar</button>`;
+                    }
+                    return botones;
+                }
+            },
             { data: "SuficienciasID" },
             { data: "PersonaQuienSolicita" },
             { data: "Dependencia" },
@@ -95,27 +151,8 @@ function llenarTablaSuficiencias(data) {
             { data: "NoContabilizarConsecutivo" },
             { data: "ConsecutivoMes" },
             { data: "Mes" },
-            { data: "Observaciones" },
-            {
-                data: null,
-                render: function (data) {
-                    let botones = "";
-                    if (data.Estatus === "Creado") {
-                        botones += `<button class="btn btn-primary" onclick="turnarTramite(${data.ID_CONTRATO})">Turnar</button> `;
-                    }
-                    if (data.Estatus === "VoBO") {
-                        botones += `<button class="btn btn-success" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
-                    }
-                    if (data.Estatus === "RegistradoSAP") {
-                        botones += `<button class="btn btn-info" onclick="createRemesa(${data.ID_CONTRATO})">Crear Remesa</button> `;
-                    }
-                    const usuario = JSON.parse(localStorage.getItem("usuario"));
-                    if (usuario && usuario.RolUser === "Admin") {
-                        botones += `<button class="btn btn-danger" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
-                    }
-                    return botones;
-                }
-            }
+            { data: "Observaciones" }
+            
         ],
         paging: true,
         searching: true,
@@ -149,4 +186,144 @@ function llenarTablaSuficiencias(data) {
     });
 }
 
+function registrarSuficiencia(data){
+    console.log('registrarSuficienciaData: ',data);
+    fetch(URL_BASE + 'registrarSuficiencia', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(async (response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
+        return await response.json();
+    })
+    .then(result => {
+        alert(result.message);
+        // window.location.href = 'seguimientoSuficiencias.html';
+    })
+    .catch(error => {
+        console.error('Error al obtener las remesas con trámites:', error.message);
+    });
+}
 
+function llenarformActualizarSuficiencias(suficienciaID) {
+    fetch(URL_BASE + 'getSuficiencias', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(async (response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
+        return await response.json();
+    })
+    .then(result => {
+        console.log(result.data);
+        // Esperar que los datos se hayan cargado y luego buscar la suficiencia con el ID correspondiente
+        const suficiencia = result.data.find(suficiencia => suficiencia.SuficienciasID == suficienciaID);
+
+        
+        // Solo proceder si se encuentra la suficiencia
+        if (suficiencia) {
+            // Asignar los valores a los campos del formulario
+            document.getElementById("PersonaQuienSolicita").value = suficiencia.PersonaQuienSolicita;
+            document.getElementById("Dependencia").value = suficiencia.Dependencia;
+            document.getElementById("CentroGestor").value = suficiencia.CentroGestor;
+            document.getElementById("AreaFuncional").value = suficiencia.AreaFuncional;
+            document.getElementById("NoOficioSolicitud").value = suficiencia.NoOficioSolicitud;
+            document.getElementById("FechaSolicitud").value = suficiencia.FechaSolicitud;
+            document.getElementById("FechaRecepcion").value = suficiencia.FechaRecepcion;
+            document.getElementById("NoOficioContestacion").value = suficiencia.NoOficioContestacion;
+            document.getElementById("Tipo").value = suficiencia.Tipo;
+            document.getElementById("FechaContestacion").value = suficiencia.FechaContestacion;
+            document.getElementById("SolpedCompromisoGasto").value = suficiencia.SolpedCompromisoGasto;
+            document.getElementById("ServicioSolicitado").value = suficiencia.ServicioSolicitado;
+            document.getElementById("FuenteFinanciamiento").value = suficiencia.FuenteFinanciamiento;
+            document.getElementById("PosPrecog").value = suficiencia.PosPrecog;
+            document.getElementById("Requisito").value = suficiencia.Requisito;
+            document.getElementById("Concepto").value = suficiencia.Concepto;
+            document.getElementById("MontoSuficienciaPresupuestal2024").value = suficiencia.MontoSuficienciaPresupuestal2024;
+            document.getElementById("Conac").value = suficiencia.Conac;
+            document.getElementById("Cuenta").value = suficiencia.Cuenta;
+            document.getElementById("Folio").value = suficiencia.Folio;
+            document.getElementById("Mes").value = suficiencia.Mes;
+            document.getElementById("Foja").value = suficiencia.Foja;
+            document.getElementById("NoticiaAdministrativa").value = suficiencia.NoticiaAdministrativa;
+            document.getElementById("NoContabilizarConsecutivo").value = suficiencia.NoContabilizarConsecutivo;
+            document.getElementById("ConsecutivoMes").value = suficiencia.ConsecutivoMes;
+            document.getElementById("Observaciones").value = suficiencia.Observaciones;
+        } else {
+            console.error('No se encontró la suficiencia con ID:', suficienciaID);
+        }
+    })
+    .catch(error => {
+        console.error('Error al obtener las suficiencias:', error.message);
+    });
+}
+
+function actualizarSuficiencia(data){
+    //Obtener el ID del URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const SuficienciasID = urlParams.get('id');
+    console.log('actualizarSuficiencia', SuficienciasID);
+
+    // Agregar el campo SuficienciasID a data
+    data.SuficienciasID = SuficienciasID;
+
+
+    fetch(URL_BASE + 'actualizarSuficiencia', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(async (response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
+        return await response.json();
+    })
+    .then(result => {
+        alert(result.message);
+        // window.location.href = 'seguimientoSuficiencias.html';
+    })
+    .catch(error => {
+        console.error('Error al obtener las remesas con trámites:', error.message);
+    });
+}
+
+function eliminarSuficiencia(SuficienciasID){
+    // Confirmación del usuario antes de eliminar
+    const confirmDelete = confirm("¿Estás seguro de que deseas eliminar la Suficiencia?");
+    if (!confirmDelete) {
+        return; // Si el usuario cancela, salimos de la función
+    }
+    const data = {
+        SuficienciasID: SuficienciasID
+    };
+    fetch(URL_BASE + 'eliminarSuficiencia', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+        return response.json();
+    })  
+    .then(result => {
+        alert("Suficiencia eliminada con éxito.");
+        window.location.reload();  // Recargar la página
+    })
+    .catch(error => {
+        console.error('Error al eliminar usuario:', error);
+    }); 
+}

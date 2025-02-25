@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de control</title>
+    <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="./assets/js/SesionUser.js"></script>
+    <script src="./assets/js/MenuSistema.js"></script>
+    <script src="./assets/js/Suficiencias.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li id="Operador" style="display: none;" class="nav-item">
+                        <a class='nav-link' href="dashboard.html">Inicio</a>
+                    </li>
+                    <!-- Sección para el Tramite -->
+                    <li id="Tramite" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Trámite
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="createTramite.html">Crear Trámite</a></li>
+                            <li id="Analista" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Listado de Turnados</a></li>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="Pagos" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Ordenes de Pago
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Pagos" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="Suficiencias" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Suficiencias
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoSuficiencias.html">Suficiencias</a></li>
+                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
+                                    href="crearSuficiencias.html">Crear Suficiencia</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Indicadores de Rendimiento
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Turnado</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+
+                        </ul>
+                    </li>
+
+                    <li id="Oficios" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Correspondencia y Oficios
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="correspondencia.html">Correspondencia</a></li>
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="oficios.html">Oficios</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Cerrar sesión -->
+                    <li>
+                        <a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
+                            Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="table-container">
+            <form id="formCrearSuficiencias" method="POST">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="PersonaQuienSolicita" class="form-label">Persona quien solicita</label>
+                        <input type="text" class="form-control" id="PersonaQuienSolicita" name="PersonaQuienSolicita"
+                            value="Juan Pérez">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Dependencia" class="form-label">Dependencia</label>
+                        <input type="text" class="form-control" id="Dependencia" name="Dependencia"
+                            value="Secretaría de Finanzas">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="CentroGestor" class="form-label">Centro Gestor</label>
+                        <input type="text" class="form-control" id="CentroGestor" name="CentroGestor" value="CG-001">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="AreaFuncional" class="form-label">Área Funcional</label>
+                        <input type="text" class="form-control" id="AreaFuncional" name="AreaFuncional"
+                            value="Planeación">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="NoOficioSolicitud" class="form-label">No. Oficio Solicitud</label>
+                        <input type="text" class="form-control" id="NoOficioSolicitud" name="NoOficioSolicitud"
+                            value="OF-9876">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="FechaSolicitud" class="form-label">Fecha Solicitud</label>
+                        <input type="date" class="form-control" id="FechaSolicitud" name="FechaSolicitud"
+                            value="2024-02-01">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="FechaRecepcion" class="form-label">Fecha Recepción</label>
+                        <input type="date" class="form-control" id="FechaRecepcion" name="FechaRecepcion"
+                            value="2024-02-02">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="NoOficioContestacion" class="form-label">No. Oficio Contestación</label>
+                        <input type="text" class="form-control" id="NoOficioContestacion" name="NoOficioContestacion"
+                            value="OF-5432">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Tipo" class="form-label">Tipo</label>
+                        <select class="form-select" id="Tipo" name="Tipo">
+                            <option value="ORIGEN" selected>Origen</option>
+                            <option value="MULTIANUAL">Multianul</option>
+                            <option value="ACTUALIZACION">Actualización</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="FechaContestacion" class="form-label">Fecha Contestación</label>
+                        <input type="date" class="form-control" id="FechaContestacion" name="FechaContestacion"
+                            value="2024-02-05">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="SolpedCompromisoGasto" class="form-label">Solped Compromiso Gasto</label>
+                        <input type="text" class="form-control" id="SolpedCompromisoGasto" name="SolpedCompromisoGasto"
+                            value="SOL-001">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="ServicioSolicitado" class="form-label">Servicio Solicitado</label>
+                        <input type="text" class="form-control" id="ServicioSolicitado" name="ServicioSolicitado"
+                            value="Consultoría">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="FuenteFinanciamiento" class="form-label">Fuente Financiamiento</label>
+                        <input type="text" class="form-control" id="FuenteFinanciamiento" name="FuenteFinanciamiento"
+                            value="Fondo Estatal">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="PosPrecog" class="form-label">Pos. Precog</label>
+                        <input type="text" class="form-control" id="PosPrecog" name="PosPrecog" value="PP-4567">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Requisito" class="form-label">Requisito</label>
+                        <input type="text" class="form-control" id="Requisito" name="Requisito" value="Certificación">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label for="Observaciones" class="form-label">Concepto</label>
+                        <textarea class="form-control" id="Concepto" name="Concepto" rows="3" readonly></textarea>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="MontoSuficienciaPresupuestal2024" class="form-label">Monto Suficiencia</label>
+                        <input type="number" class="form-control" id="MontoSuficienciaPresupuestal2024"
+                            name="MontoSuficienciaPresupuestal2024" step="0.01" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Conac" class="form-label">CONAC</label>
+                        <input type="text" class="form-control" id="Conac" name="Conac" readonly>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="Cuenta" class="form-label">Cuenta</label>
+                        <input type="text" class="form-control" id="Cuenta" name="Cuenta" value="123456789">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Folio" class="form-label">Folio</label>
+                        <input type="text" class="form-control" id="Folio" name="Folio" value="2024001">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Folio" class="form-label">Mes</label>
+                        <input type="text" class="form-control" id="Mes" name="Mes" value="Enero">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="Cuenta" class="form-label">Foja</label>
+                        <input type="text" class="form-control" id="Foja" name="Foja" value="123456789">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Folio" class="form-label">NoticiaAdministrativa</label>
+                        <input type="text" class="form-control" id="NoticiaAdministrativa" name="NoticiaAdministrativa"
+                            value="1">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="Cuenta" class="form-label">NoContabilizarConsecutivo</label>
+                        <input type="text" class="form-control" id="NoContabilizarConsecutivo"
+                            name="NoContabilizarConsecutivo" value="129">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Folio" class="form-label">ConsecutivoMes</label>
+                        <input type="text" class="form-control" id="ConsecutivoMes" name="ConsecutivoMes"
+                            value="2024001">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label for="Observaciones" class="form-label">Observaciones</label>
+                        <textarea class="form-control" id="Observaciones" name="Observaciones"
+                            rows="3">No hay observaciones adicionales.</textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="submit">Registrar Suficiencia</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

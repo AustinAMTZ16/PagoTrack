@@ -138,6 +138,24 @@
                 }
                 exit;
                 break;
+            case 'registrarSuficiencia':
+                if(!empty($data)){
+                    // Declarar como global
+                    global $controllerSuficiencia;
+                    $respuesta = $controllerSuficiencia->registrarSuficiencia((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Suficiencia registrada.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'Suficiencia no registrada.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción POST desconocida.'], JSON_UNESCAPED_UNICODE);
@@ -365,6 +383,23 @@
                 }
                 exit;
                 break;  
+            case 'actualizarSuficiencia':
+                if(!empty($data)){
+                    global $controllerSuficiencia;
+                    $respuesta = $controllerSuficiencia->actualizarSuficiencia((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Suficiencia modificados.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'Suficiencia no modificados.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break; 
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción PATCH desconocida.'], JSON_UNESCAPED_UNICODE);
@@ -424,6 +459,23 @@
                 } else {
                     http_response_code(404);
                     echo json_encode(array('message' => 'Usuario no eliminado.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;  
+            case 'eliminarSuficiencia':
+                if(!empty($data)){
+                    global $controllerSuficiencia;
+                    $respuesta = $controllerSuficiencia->eliminarSuficiencia((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Suficiencia eliminada.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'Suficiencia no eliminada.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;  

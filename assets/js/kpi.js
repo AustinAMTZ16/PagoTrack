@@ -73,20 +73,107 @@ function obtenerKPI() {
     });
 }
 
-function rellenarTabla(idTabla, tramites) {
-    const tabla = document.getElementById(idTabla);
-    tabla.innerHTML = ''; // Limpiar la tabla antes de llenarla
+function rellenarTabla(tableId, tramites) {
+    if (!Array.isArray(tramites)) {
+        console.error("Error: Los datos no son un array válido.", tramites);
+        alert("Error: Datos inválidos.");
+        return;
+    }
 
-    tramites.forEach(tramite => {
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-            <td>${tramite.ID_CONTRATO}</td>
-            <td>${tramite.Estatus}</td>
-            <td>${tramite.FechaLimite}</td>
-            <td>${tramite.NombreUser} ${tramite.ApellidoUser}</td>
-        `;
-        tabla.appendChild(fila);
+    // Verificar si la tabla existe en el DOM
+    if ($(`#${tableId}`).length === 0) {
+        console.error(`Error: No se encontró la tabla con ID ${tableId}`);
+        return;
+    }
+
+    // Verificar si la tabla ya está inicializada y destruirla antes de actualizar
+    if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+        $(`#${tableId}`).DataTable().clear().destroy();
+        $(`#${tableId}`).find("thead").empty();
+        $(`#${tableId}`).find("tbody").empty();
+    }
+
+    // Restaurar el encabezado
+    let theadHTML = `
+        <tr>
+            <th>ID</th>
+            <th>Tipo Tramite</th>
+            <th>Estatus</th>
+            <th>Fecha Recepción</th>
+            <th>Fecha Límite</th>
+            <th>Analista</th>
+            <th>Comentarios</th>
+        </tr>`;
+    $(`#${tableId} thead`).html(theadHTML);
+    
+    // Formato de moneda
+    const formatoMoneda = new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN",
+        minimumFractionDigits: 2,
+    });
+
+    // Inicializar DataTable con los datos
+    $(`#${tableId}`).DataTable({
+        data: tramites,
+        columns: [
+            { data: "ID_CONTRATO", visible: true }, 
+            {data: "TipoTramite"},
+            { data: "Estatus" },
+            { data: "FechaRecepcion" },
+            { data: "FechaLimite" },
+            { data: null, render: function (data) { return `${data.NombreUser} ${data.ApellidoUser}`; } },
+            { 
+                data: "Comentarios",
+                render: function (data) {
+                    var comentarioEscapado = encodeURIComponent(data || "Sin comentario");
+                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            }
+        ],
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            infoFiltered: "(filtrado de _MAX_ registros totales)",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "No hay datos disponibles en la tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        responsive: true,
+        order: [[0, "DESC"]],
     });
 }
 
+function mostrarComentario(comentario) {
+    // Decodificar el comentario
+    var comentarioDecoded = decodeURIComponent(comentario);
+
+    // Intentar convertir el comentario a formato JSON con identación
+    try {
+        var comentarioJson = JSON.parse(comentarioDecoded);
+        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);  // 4 es el número de espacios para sangría
+    } catch (e) {
+        // Si no es JSON válido, no hacemos nada
+        console.error('El comentario no es un JSON válido:', e);
+    }
+
+    // Mostrar el comentario con un formato de texto en el modal
+    $('#comentarioModal .modal-body').html('<pre>' + comentarioDecoded + '</pre>');
+    $('#comentarioModal').modal('show');
+}
 

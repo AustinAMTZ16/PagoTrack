@@ -27,6 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (downloadButton) {
         downloadButton.addEventListener("click", exportToExcel);
     }
+    const formUpdateTramiteRemesa = document.getElementById("formUpdateTramiteRemesa");
+    if (formUpdateTramiteRemesa) {
+        formUpdateTramiteRemesa.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(formUpdateTramiteRemesa);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            updateTramiteRemesa(data);
+        });
+    }
     // Obtener las remesas con trámites
     getRemesasWithTramites();
 });
@@ -105,11 +117,11 @@ function renderTable2(data) {
             else if (col === "Comentarios") {
                 const comentarioEscapado = encodeURIComponent(row[col]);
                 td.innerHTML = `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
-            }  
+            }
             else if (col === "ComentariosRemesa") {
                 const comentarioEscapado = encodeURIComponent(row[col]);
                 td.innerHTML = `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
-            }  
+            }
             else {
                 td.textContent = row[col] || 0; // Si no hay valor, muestra 0
             }
@@ -171,6 +183,7 @@ function actualizarRegistro(row) {
 }
 // Función para actualizar un trámite y remesa
 function updateTramiteRemesa(data) {
+    console.log('updateTramiteRemesa: ', data)
     fetch(URL_BASE + 'updateTramiteRemesa', {
         method: 'PATCH',
         headers: {

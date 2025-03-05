@@ -106,6 +106,18 @@ function renderTable2(data) {
     data.forEach(row => {
         const tr = document.createElement("tr");
 
+        // Celda de acciones
+        const tdAcciones = document.createElement("td");
+        const btnActualizar = document.createElement("button");
+        btnActualizar.textContent = "Actualizar";
+        btnActualizar.classList.add("btn", "btn-primary");
+        btnActualizar.onclick = function () {
+            actualizarRegistro(row);
+        };
+        tdAcciones.appendChild(btnActualizar);
+        tr.appendChild(tdAcciones);
+
+
         columns.forEach(col => {
             const td = document.createElement("td");
 
@@ -129,17 +141,7 @@ function renderTable2(data) {
             tr.appendChild(td);
         });
 
-        // Celda de acciones
-        const tdAcciones = document.createElement("td");
-        const btnActualizar = document.createElement("button");
-        btnActualizar.textContent = "Actualizar";
-        btnActualizar.classList.add("btn", "btn-primary");
-        btnActualizar.onclick = function () {
-            actualizarRegistro(row);
-        };
-        tdAcciones.appendChild(btnActualizar);
-        tr.appendChild(tdAcciones);
-
+        
         tableBody.appendChild(tr);
     });
 
@@ -171,10 +173,10 @@ function renderTable2(data) {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        pageLength: 10,
+        pageLength: 20,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[0, "DESC"]],
+        order: [[3, "DESC"]],
     });
 }
 // Función de ejemplo para actualizar un registro

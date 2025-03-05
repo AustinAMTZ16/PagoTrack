@@ -255,10 +255,13 @@ function actualizarTablaTramites(data, tableId) {
                     if (data.Estatus === "VoBO") {
                         botones += `<button class="btn btn-success" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
                     }
-                    if (data.Estatus === "RegistradoSAP") {
+                    if (data.Estatus === "Registrado SAP") {
                         botones += `<button class="btn btn-info" onclick="createRemesa(${data.ID_CONTRATO})">Crear Remesa</button> `;
                     }
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
+                    if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "Operador") || usuario.RolUser === "KPI") {
+                        botones += `<button class="btn btn-success" onclick="modificarTramite(${data.ID_CONTRATO})">Modificar</button>`;
+                    }
                     if (usuario && usuario.RolUser === "Admin") {
                         botones += `<button class="btn btn-danger" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
                     }
@@ -595,10 +598,10 @@ function renderTable(data) {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        pageLength: 10, // Número de filas por página
+        pageLength: 20, // Número de filas por página
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[0, "asc"]],
+        order: [[11, "DESC"]],
     });
 }
 //
@@ -606,17 +609,29 @@ function mostrarComentario(comentario) {
     // Decodificar el comentario
     var comentarioDecoded = decodeURIComponent(comentario);
 
-    // Intentar convertir el comentario a formato JSON con identación
     try {
+        // Intentar convertir el comentario a formato JSON con indentación
         var comentarioJson = JSON.parse(comentarioDecoded);
-        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);  // 4 es el número de espacios para sangría
+
+        // Si existe el campo "Comentario", aplicar saltos de línea automáticos
+        if (comentarioJson.Comentario) {
+            comentarioJson.Comentario = comentarioJson.Comentario.replace(/(.{50})/g, "$1\n");
+        }
+
+        // Convertir nuevamente a JSON con formato
+        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);
     } catch (e) {
-        // Si no es JSON válido, no hacemos nada
         console.error('El comentario no es un JSON válido:', e);
     }
 
-    // Mostrar el comentario con un formato de texto en el modal
-    $('#comentarioModal .modal-body').html('<pre>' + comentarioDecoded + '</pre>');
+    // Mostrar el comentario en el modal con formato adecuado
+    $('#comentarioModal .modal-body').html('<pre style="white-space: pre-wrap; word-wrap: break-word;">' + comentarioDecoded + '</pre>');
     $('#comentarioModal').modal('show');
+}
+
+// Modificar tramite por id
+function modificarTramite(id) {
+    console.log('Editar tramite:', id);
+    window.location.href = `updateTramiteCompleto.html?id=${id}`;
 }
 

@@ -19,11 +19,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     // Obtener el parámetro "id" de la URL
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
+    const ID_CONTRATO = urlParams.get('id');
     // Mostrar el ID en el campo de entrada
-    if (id) {
+    if (ID_CONTRATO) {
         const inputField = document.getElementById('ID_CONTRATO');
-        inputField.value = id;
+        inputField.value = ID_CONTRATO;
     }
     // Evento para turnar un trámite
     const formTurnarTramite = document.getElementById('formTurnarTramite');
@@ -61,7 +61,21 @@ document.addEventListener("DOMContentLoaded", function() {
             updateTramite(data);
         });
     }
-
+    // Evento para Actualizat todo el un trámite
+    const formUpdateTramiteCompleto = document.getElementById("formUpdateTramiteCompleto");
+    if (formUpdateTramiteCompleto) {
+        obtenerTramite(ID_CONTRATO);
+        formUpdateTramiteCompleto.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(formUpdateTramiteCompleto);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            // Llamar la función con el objeto 'data'
+            updateTramiteCompleto(data);
+        });
+    }
 });
 // Función para crear un trámite
 function createTramite(data){
@@ -136,5 +150,79 @@ function updateTramite(data){
     })
     .catch(error => {
         console.error('Error al crear el trámite:', error.message);
+    });
+}
+// Función Actualizar Tramite Completo
+async function updateTramiteCompleto(data) {
+    return fetch(URL_BASE + 'updateTramiteCompleto', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        try {
+            alert(result.message);
+            window.location.href = 'dashboard.html';
+        } catch (error) {
+            console.error("Error al actualizar el trámite:", error);
+        }
+    })
+    .catch(error => {
+        console.error('Error al actualizar el trámite:', error);
+        throw error; // Importante para que el error se propague y pueda ser capturado
+    });
+}
+// Función para obtener un trámite
+async function obtenerTramite(ID_CONTRATO) {
+    console.log('ID_CONTRATO: ', ID_CONTRATO);
+    return fetch(URL_BASE + 'getTramites', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log('idTramite: ', ID_CONTRATO);
+        try {
+            const tramite = result.data.find(tramite => tramite.ID_CONTRATO == ID_CONTRATO);
+            console.log('Tramite obtenido:', tramite);
+
+            if (tramite) {
+                document.getElementById("ID_CONTRATO").value = tramite.ID_CONTRATO || "";
+                document.getElementById("Mes").value = tramite.Mes || "";
+                document.getElementById("FechaRecepcion").value = tramite.FechaRecepcion ? tramite.FechaRecepcion.split(" ")[0] : new Date().toISOString().split("T")[0];
+                document.getElementById("TipoTramite").value = tramite.TipoTramite || "";
+                document.getElementById("Dependencia").value = tramite.Dependencia || "";
+                document.getElementById("Proveedor").value = tramite.Proveedor || "";
+                document.getElementById("Concepto").value = tramite.Concepto || "";
+                document.getElementById("Importe").value = tramite.Importe || "";
+                document.getElementById("Estatus").value = tramite.Estatus || "";
+                document.getElementById("Comentarios").value = tramite.Comentarios || "";
+                document.getElementById("Fondo").value = tramite.Fondo || "";
+                document.getElementById("FechaLimite").value = tramite.FechaLimite ? tramite.FechaLimite.split(" ")[0] : "";
+                document.getElementById("FechaTurnado").value = tramite.FechaTurnado ? tramite.FechaTurnado.split(" ")[0] : new Date().toISOString().split("T")[0];
+                document.getElementById("FechaTurnadoEntrega").value = tramite.FechaTurnadoEntrega ? tramite.FechaTurnadoEntrega.split(" ")[0] : new Date().toISOString().split("T")[0];
+                document.getElementById("FechaDevuelto").value = tramite.FechaDevuelto ? tramite.FechaDevuelto.split(" ")[0] : new Date().toISOString().split("T")[0];
+                document.getElementById("AnalistaID").value = tramite.AnalistaID || "";
+            } else {
+                console.error("Trámite no encontrado");
+            }
+        } catch (error) {
+            console.error("Error en obtenerTramite:", error);
+        }
+    })
+    .catch(error => {
+        console.error('Error al obtener lista de trámites:', error);
+        throw error; 
     });
 }

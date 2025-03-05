@@ -48,6 +48,12 @@ class TramitesController {
     public function getReporteEstatusComentarios() {
         $result = $this->model->getReporteEstatusComentarios();
         return $result;
-    }   
+    } 
+
+    // Función Actualizar Tramite Completo  
+    public function updateTramiteCompleto($data) {
+        $result = $this->model->updateTramiteCompleto($data);
+        return $result;
+    }
 }
 ?>

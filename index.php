@@ -400,6 +400,24 @@
                 }
                 exit;
                 break; 
+            case 'updateTramiteCompleto':
+                    if(!empty($data)){
+                        global $controllerTramite;
+                        $respuesta = $controllerTramite->updateTramiteCompleto((array) $data);
+                    }else{
+                        echo "Datos no proporcionados";
+                        exit;
+                    }
+                    if ($respuesta) {
+                        http_response_code(200);
+                        echo json_encode(array('message' => 'Tramite modificados.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    } else {
+                        http_response_code(404);
+                        echo json_encode(array('message' => 'Tramite no modificados.'), JSON_UNESCAPED_UNICODE);
+                    }
+                    exit;
+                    break; 
+                
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción PATCH desconocida.'], JSON_UNESCAPED_UNICODE);

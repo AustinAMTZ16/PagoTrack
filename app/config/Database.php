@@ -1,8 +1,8 @@
 <?php
 class Database {
-    // private $host = 'localhost';
-    // private $user = 'root';
-    // private $password = '';
+    /* private $host = 'localhost';
+    private $user = 'root';
+    private $password = ''; */
 
     private $host = '24.144.89.231';
     private $user = 'engranetmx';

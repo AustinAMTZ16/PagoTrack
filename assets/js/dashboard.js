@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("La tabla no existe en el DOM.");
         }
     }
+    
     // Verifica si el botón existe antes de agregar el listener
     const downloadButton = document.getElementById("downloadExcelTramites");
     if (downloadButton) {
@@ -222,7 +223,24 @@ function actualizarTablaTramites(data, tableId) {
         columns: [
             { data: "ID_CONTRATO", visible: true }, // Campo oculto
             { data: "Mes" },
-            { data: "FechaRecepcion" },
+            {
+                data: "FechaRecepcion",
+                render: function(data) {
+                    if (!data) return "";
+                    const [fecha] = data.split(" ");
+                    const [año, mes, dia] = fecha.split("-");
+                    return `${dia}-${mes}-${año}`; // Formato DD-MM-YYYY
+                }
+            },                                                                                          
+            { 
+                data: "FechaLimite",
+                render: function(data) {
+                    if (!data) return "";
+                    const [fecha] = data.split(" ");
+                    const [año, mes, dia] = fecha.split("-");
+                    return `${dia}-${mes}-${año}`; // Formato DD-MM-YYYY
+                }
+            },  
             { data: "TipoTramite" },
             { data: "Dependencia" },
             { data: "Proveedor" },
@@ -234,17 +252,8 @@ function actualizarTablaTramites(data, tableId) {
                 }
             },
             { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
-            { data: "Estatus" },
-            {
-                data: "Comentarios",
-                render: function(data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
-                }
-            },            
-            { data: "Fondo" },
-            { data: "FechaLimite" },
+            { data: "Estatus" },          
+            { data: "Fondo" },   
             {
                 data: null,
                 render: function (data) {
@@ -267,7 +276,16 @@ function actualizarTablaTramites(data, tableId) {
                     }
                     return botones;
                 }
-            }
+            },       
+            {
+                data: "Comentarios",
+                render: function(data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            } 
+            
         ],
         paging: true,
         searching: true,
@@ -295,8 +313,8 @@ function actualizarTablaTramites(data, tableId) {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        pageLength: 10, // Número de filas por página
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        pageLength: 30, // Número de filas por página
+        lengthMenu: [[30, 50, 100, -1], [30, 50, 100, "Todos"]],
         responsive: true,
         order: [[0, "DESC"]],
     });
@@ -324,7 +342,20 @@ function actualizarTablaTurnados(data, tableId) {
         columns: [
             { data: "ID_CONTRATO", visible: true }, // Campo oculto
             { data: "Mes" },
-            { data: "FechaRecepcion" },
+            { 
+                data: "FechaRecepcion", 
+                render: function (data) {
+                    // Mostrar la fecha y la hora de la fechaLimite
+                    return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' + new Date(data).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "";
+                }
+            },
+            { 
+                data: "FechaLimite",
+                render: function (data) {
+                    //mostrar solo la fecha de la fechaLimite 
+                    return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) : "";
+                }
+            },  
             { data: "TipoTramite" },
             { data: "Dependencia" },
             { data: "Proveedor" },
@@ -336,17 +367,8 @@ function actualizarTablaTurnados(data, tableId) {
                 }
             },
             { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
-            { data: "Estatus" },
-            {
-                data: "Comentarios",
-                render: function(data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
-                }
-            },   
-            { data: "Fondo" },
-            { data: "FechaLimite" },
+            { data: "Estatus" }, 
+            { data: "Fondo" }, 
             {
                 data: null,
                 render: function (data) {
@@ -355,6 +377,14 @@ function actualizarTablaTurnados(data, tableId) {
                         botones += `<button class="btn btn-primary" onclick="editarTramite(${data.ID_CONTRATO})">Actualizar Estado</button> `;
                     }
                     return botones;
+                }
+            },
+            {
+                data: "Comentarios",
+                render: function(data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
                 }
             }
         ],

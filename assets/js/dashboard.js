@@ -254,6 +254,9 @@ function actualizarTablaTramites(data, tableId) {
             { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
             { data: "Estatus" },          
             { data: "Fondo" },   
+            { data: "RemesaNumero" },
+            { data: "DocSAP" },
+            { data: "IntegraSAP" },
             {
                 data: null,
                 render: function (data) {
@@ -368,13 +371,16 @@ function actualizarTablaTurnados(data, tableId) {
             },
             { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
             { data: "Estatus" }, 
-            { data: "Fondo" }, 
+            { data: "Fondo" },  
+            { data: "RemesaNumero" },
+            { data: "DocSAP" },
+            { data: "IntegraSAP" },
             {
                 data: null,
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Devuelto" || data.Estatus === "Turnado") {
-                        botones += `<button class="btn btn-primary" onclick="editarTramite(${data.ID_CONTRATO})">Actualizar Estado</button> `;
+                        botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}')">Actualizar Estado</button> `;
                     }
                     return botones;
                 }
@@ -503,9 +509,9 @@ function turnarTramite(id) {
     window.location.href = `turnarTramite.html?id=${id}`;
 }
 // Editar tramite por id
-function editarTramite(id) {
-    console.log('Editar tramite:', id);
-    window.location.href = `turnadoUpdateTramite.html?id=${id}`;
+function editarTramite(id, proveedor, concepto, importe) {
+    console.log('Editar tramite:', id, proveedor, concepto, importe);
+    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${proveedor}&concepto=${concepto}&importe=${importe}`;
 }
 // Eliminar tramite por id
 function eliminarTramite(id) {

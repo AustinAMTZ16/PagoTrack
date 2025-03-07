@@ -142,7 +142,10 @@ class TramitesModel {
             } if ($estatus === 'Turnado') {
                 $queryUpdate .= ", FechaTurnado = :FechaTurnado";
             } if ($estatus === 'RegistradoSAP' || $estatus === 'JuntasAuxiliares' || $estatus === 'Inspectoria') {
-                $queryUpdate .= ", FechaTurnadoEntrega = :FechaTurnadoEntrega";
+                $queryUpdate .= ", FechaTurnadoEntrega = :FechaTurnadoEntrega,
+                                RemesaNumero = :RemesaNumero,
+                                DocSAP = :DocSAP,
+                                IntegraSAP = :IntegraSAP";
             }
     
             $queryUpdate .= " WHERE ID_CONTRATO = :ID_CONTRATO";
@@ -160,8 +163,16 @@ class TramitesModel {
                 $stmtUpdate->bindParam(':FechaDevuelto', $fechaActual, PDO::PARAM_STR);
             } if ($estatus === 'Turnado') {
                 $stmtUpdate->bindParam(':FechaTurnado', $fechaActual, PDO::PARAM_STR);
-            } if ($estatus === 'RegistradoSAP' || $estatus === 'JuntasAuxiliares' || $estatus === 'Inspectoria') {
+            } if ($estatus === 'RegistradoSAP') {
                 $stmtUpdate->bindParam(':FechaTurnadoEntrega', $fechaActual, PDO::PARAM_STR);
+                $stmtUpdate->bindParam(':RemesaNumero', $data['RemesaNumero']);
+                $stmtUpdate->bindParam(':DocSAP', $data['DocSAP']);
+                $stmtUpdate->bindParam(':IntegraSAP', $data['IntegraSAP']);
+            }if ($estatus === 'JuntasAuxiliares' || $estatus === 'Inspectoria') {
+                $stmtUpdate->bindParam(':FechaTurnadoEntrega', $fechaActual, PDO::PARAM_STR);
+                $stmtUpdate->bindParam(':RemesaNumero', $data['RemesaNumero']);
+                $stmtUpdate->bindParam(':DocSAP', $data['DocSAP']);
+                $stmtUpdate->bindParam(':IntegraSAP', $data['IntegraSAP']);
             }
     
             // Ejecutar la actualización y devolver el resultado

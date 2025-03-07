@@ -20,10 +20,25 @@ document.addEventListener("DOMContentLoaded", function() {
     // Obtener el parámetro "id" de la URL
     const urlParams = new URLSearchParams(window.location.search);
     const ID_CONTRATO = urlParams.get('id');
+    const Proveedor = urlParams.get('proveedor');
+    const Concepto = urlParams.get('concepto');
+    const Importe = urlParams.get('importe');
     // Mostrar el ID en el campo de entrada
     if (ID_CONTRATO) {
         const inputField = document.getElementById('ID_CONTRATO');
         inputField.value = ID_CONTRATO;
+    }
+    if (Proveedor) {
+        const inputField = document.getElementById('Proveedor');
+        inputField.value = Proveedor;
+    }
+    if (Concepto) {
+        const inputField = document.getElementById('Concepto');
+        inputField.value = Concepto;
+    }
+    if (Importe) {
+        const inputField = document.getElementById('Importe');
+        inputField.value = Importe;
     }
     // Evento para turnar un trámite
     const formTurnarTramite = document.getElementById('formTurnarTramite');
@@ -174,7 +189,7 @@ async function updateTramiteCompleto(data) {
         }
     })
     .catch(error => {
-        console.error('Error al actualizar el trámite:', error);
+        alert('Error al actualizar el trámite. Asegurese de que el numero de remesa sea unico.', error.message);
         throw error; // Importante para que el error se propague y pueda ser capturado
     });
 }
@@ -214,6 +229,9 @@ async function obtenerTramite(ID_CONTRATO) {
                 document.getElementById("FechaTurnadoEntrega").value = tramite.FechaTurnadoEntrega ? tramite.FechaTurnadoEntrega.split(" ")[0] : new Date().toISOString().split("T")[0];
                 document.getElementById("FechaDevuelto").value = tramite.FechaDevuelto ? tramite.FechaDevuelto.split(" ")[0] : new Date().toISOString().split("T")[0];
                 document.getElementById("AnalistaID").value = tramite.AnalistaID || "";
+                document.getElementById("RemesaNumero").value = tramite.RemesaNumero || "";
+                document.getElementById("DocSAP").value = tramite.DocSAP || "";
+                document.getElementById("IntegraSAP").value = tramite.IntegraSAP || "";
             } else {
                 console.error("Trámite no encontrado");
             }

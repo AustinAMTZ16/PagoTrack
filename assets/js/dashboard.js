@@ -471,8 +471,14 @@ function estadoTurnado() {
     const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser);
     // En caso de que el usuario.RolUser sea igual a 'Admin' debera mostrar todos los trámites
     if (usuario.RolUser === 'Admin') {
+        // Funcion para obtener KPI'S 
+        obtenerSemaforoTurnado(tramitesArray);
+        // Actualizar la tabla de trámites
         actualizarTablaTurnados(tramitesArray, 'tableTurnados');
     } else {
+        // Funcion para obtener KPI'S 
+        obtenerSemaforoTurnado(tramitesTurnados);
+        // Filtrar los trámites por el AnalistaTurnado
         actualizarTablaTurnados(tramitesTurnados, 'tableTurnados');
     }
 }
@@ -664,10 +670,56 @@ function mostrarComentario(comentario) {
     $('#comentarioModal .modal-body').html('<pre style="white-space: pre-wrap; word-wrap: break-word;">' + comentarioDecoded + '</pre>');
     $('#comentarioModal').modal('show');
 }
-
 // Modificar tramite por id
 function modificarTramite(id) {
     console.log('Editar tramite:', id);
     window.location.href = `updateTramiteCompleto.html?id=${id}`;
+}
+// Funcion para obtener KPI'S  Total Hoy, Total Vencidos, Total a vencer
+function obtenerSemaforoTurnado(tramitesTurnados) {
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    const hoy = new Date();
+    const fechaActual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+
+    console.log('Fecha actual:', fechaActual); // Ejemplo: "2025-03-06"
+
+    // Obtener el total de trámites
+    const totalTramites = tramitesTurnados.length;
+    console.log('Total de trámites:', totalTramites);
+    
+    // Lista de estatus válidos
+    const estatusValidos = ['Turnado', 'Devuelto', 'DevueltoOrdenPago'];
+
+    // Trámites que vencen hoy
+    const tramitesHoy = tramitesTurnados.filter(tramite =>
+        estatusValidos.includes(tramite.Estatus) &&
+        obtenerFechaSinHora(tramite.FechaLimite) === fechaActual
+    );
+    const idsHoy = tramitesHoy.map(tramite => tramite.ID_CONTRATO);
+    console.log('Total de trámites en estado Turnado, Devuelto o DevueltoOrdenPago que vencen hoy:', idsHoy.length, idsHoy);
+    document.getElementById('total_hoy').textContent = idsHoy.length || 0;
+
+    // Trámites vencidos (FechaLimite < fecha actual)
+    const tramitesVencidos = tramitesTurnados.filter(tramite =>
+        estatusValidos.includes(tramite.Estatus) &&
+        obtenerFechaSinHora(tramite.FechaLimite) < fechaActual
+    );
+    const idsVencidos = tramitesVencidos.map(tramite => tramite.ID_CONTRATO);
+    console.log('Total de trámites vencidos:', idsVencidos.length, idsVencidos);
+    document.getElementById('total_vencidos').textContent = idsVencidos.length || 0;
+
+    // Trámites a vencer (FechaLimite > fecha actual)
+    const tramitesFuturos = tramitesTurnados.filter(tramite =>
+        estatusValidos.includes(tramite.Estatus) &&
+        obtenerFechaSinHora(tramite.FechaLimite) > fechaActual
+    );
+    const idsFuturos = tramitesFuturos.map(tramite => tramite.ID_CONTRATO);
+    console.log('Total de trámites a vencer:', idsFuturos.length, idsFuturos);
+    document.getElementById('total_futuros').textContent = idsFuturos.length || 0;
+}
+// Función para obtener solo la fecha en formato YYYY-MM-DD
+function obtenerFechaSinHora(fecha) {
+    const nuevaFecha = new Date(fecha);
+    return `${nuevaFecha.getFullYear()}-${String(nuevaFecha.getMonth() + 1).padStart(2, '0')}-${String(nuevaFecha.getDate()).padStart(2, '0')}`;
 }
 

@@ -6,7 +6,7 @@ const URL_BASE = `${URL_B}index.php?action=`;
 document.addEventListener('DOMContentLoaded', () => {
     obtenerKPI();
 });
-
+// Funcion para obtener los KPI'S
 function obtenerKPI() {
     fetch(URL_BASE + 'obtenerKPI', {
         method: 'GET',
@@ -72,7 +72,7 @@ function obtenerKPI() {
         console.error('Error al obtener las remesas con trámites:', error.message);
     });
 }
-
+// Funcion para rellenar la tabla de trámites
 function rellenarTabla(tableId, tramites) {
     if (!Array.isArray(tramites)) {
         console.error("Error: Los datos no son un array válido.", tramites);
@@ -158,22 +158,28 @@ function rellenarTabla(tableId, tramites) {
         order: [[0, "DESC"]],
     });
 }
-
+//Funcion para mostrar el comentario en el modal
 function mostrarComentario(comentario) {
     // Decodificar el comentario
     var comentarioDecoded = decodeURIComponent(comentario);
 
-    // Intentar convertir el comentario a formato JSON con identación
     try {
+        // Intentar convertir el comentario a formato JSON con indentación
         var comentarioJson = JSON.parse(comentarioDecoded);
-        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);  // 4 es el número de espacios para sangría
+
+        // Si existe el campo "Comentario", aplicar saltos de línea automáticos
+        if (comentarioJson.Comentario) {
+            comentarioJson.Comentario = comentarioJson.Comentario.replace(/(.{50})/g, "$1\n");
+        }
+
+        // Convertir nuevamente a JSON con formato
+        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);
     } catch (e) {
-        // Si no es JSON válido, no hacemos nada
         console.error('El comentario no es un JSON válido:', e);
     }
 
-    // Mostrar el comentario con un formato de texto en el modal
-    $('#comentarioModal .modal-body').html('<pre>' + comentarioDecoded + '</pre>');
+    // Mostrar el comentario en el modal con formato adecuado
+    $('#comentarioModal .modal-body').html('<pre style="white-space: pre-wrap; word-wrap: break-word;">' + comentarioDecoded + '</pre>');
     $('#comentarioModal').modal('show');
 }
 

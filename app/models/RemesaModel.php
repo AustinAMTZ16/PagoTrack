@@ -6,6 +6,97 @@ class RemesaModel {
     public function __construct() {
         $this->conn = (new Database())->conn;
     }
+
+    // Obtener lista de remesas
+    public function getListaRemesas() {
+        $query = "SELECT 
+                        SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
+                        COUNT(*) AS TotalRegistros
+                    FROM ConsentradoGeneralTramites
+                    WHERE RemesaNumero IS NOT NULL
+                    GROUP BY Grupo;
+                ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    // Obtener detalle de remesas
+    public function getDetalleRemesas($data) {
+        $consecutivo = $data['consecutivo'];
+        $query = "SELECT 
+                        SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
+                        CG.ID_CONTRATO,
+                        CG.OfPeticion,
+                        CG.FechaRecepcion,
+                        CG.IntegraSAP,
+                        CG.DocSAP,
+                        CG.TipoTramite,
+                        CG.NoTramite,
+                        CG.Dependencia,
+                        CG.Proveedor,
+                        CG.Concepto,
+                        CG.Importe,
+                        CG.DoctacionAnexo,
+                        CG.Fondo,
+                        CG.FechaRemesa,
+                        CONCAT(i.NombreUser, ' ', i.ApellidoUser) AS Analista,
+                        CG.Estatus
+                    FROM ConsentradoGeneralTramites CG
+                    inner join InicioSesion i on CG.AnalistaID = i.InicioSesionID
+                    WHERE RemesaNumero IS NOT null
+                    and CG.RemesaNumero like '$consecutivo%'
+                    ORDER BY Grupo, RemesaNumero;
+                 ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Crear una nueva remesa
     public function create($data) {
         try {

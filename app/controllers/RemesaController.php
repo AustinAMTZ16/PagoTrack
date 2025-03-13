@@ -8,6 +8,36 @@ class RemesaController {
         $this->model = new RemesaModel();
     }
 
+    // Obtener lista de remesas
+    public function getListaRemesas() {
+        $result = $this->model->getListaRemesas();
+        return $result;
+    }
+
+    // Obtener detalle de remesas
+    public function getDetalleRemesas($data) {
+        $result = $this->model->getDetalleRemesas($data);
+        return $result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Crear una nueva remesa
     public function createRemesa($data) {
         $result = $this->model->create($data);

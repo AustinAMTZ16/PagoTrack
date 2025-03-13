@@ -156,6 +156,19 @@
                 }
                 exit;
                 break;
+            case 'getDetalleRemesas':
+                // Declarar como global
+                global $controllerRemesa;
+                $respuesta = $controllerRemesa->getDetalleRemesas((array) $data);
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Listado de detalle de remesas.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron detalle de remesas.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción POST desconocida.'], JSON_UNESCAPED_UNICODE);
@@ -282,6 +295,19 @@
                 } else {
                     http_response_code(404);
                     echo json_encode(array('message' => 'No se encontraron suficiencias.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+            case 'getListaRemesas':
+                // Declarar como global
+                global $controllerRemesa;
+                $respuesta = $controllerRemesa->getListaRemesas();
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Listado de remesas.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron remesas.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;

@@ -212,8 +212,8 @@
             </div>
 
             <div class="input-group">
-                <label for="Importe">Importe</label>
-                <input type="text" name="Importe" id="Importe" placeholder="Ejemplo: 999999999.99" required step="0.01">
+                <label for="Importe">Importe <span class="small-text">(suma de los fondos automáticamente)</span></label>
+                <input type="text" name="Importe" id="Importe" placeholder="Ejemplo: 999999999.99" required step="0.01" readonly>
             </div>
 
             <div class="input-group">
@@ -403,6 +403,12 @@
         function actualizarCampoOculto() {
             document.getElementById('Fondo').value = JSON.stringify(importesFF);
             console.log(document.getElementById('Fondo').value);
+
+            // Convertimos los valores del objeto a números y sumamos
+            let sumaTotal = Object.values(importesFF).reduce((total, valor) => total + parseFloat(valor), 0);
+
+            // Asignamos el resultado al input con formato de 2 decimales
+            document.getElementById('Importe').value = sumaTotal.toFixed(2);
         }
 
         function limpiarInputs() {

@@ -353,40 +353,6 @@ class TramitesModel
             "tipo" => PDO::PARAM_STR
         ];
 
-        // // 5️⃣ Si hay cambios, construir y ejecutar la consulta UPDATE
-        // if (!empty($campos_actualizar)) {
-        //     $sql_update = "UPDATE ConsentradoGeneralTramites SET " . implode(", ", $campos_actualizar) . " WHERE ID_CONTRATO = ?";
-        //     $stmt_update = $this->conn->prepare($sql_update);
-
-        //     if (!$stmt_update) {
-        //         return ["error" => "Error en la preparación de la consulta: " . implode(" - ", $this->conn->errorInfo())];
-        //     }
-
-        //     // Binding de parámetros
-        //     foreach ($parametros as $index => $param) {
-        //         $stmt_update->bindValue($index + 1, $param["valor"], $param["tipo"]);
-        //     }
-
-        //     // Agregar ID_CONTRATO al final
-        //     $stmt_update->bindValue(count($parametros) + 1, $id_contrato, PDO::PARAM_INT);
-
-        //     if ($stmt_update->execute()) {
-        //         // 🔄 6️⃣ Volver a consultar el registro actualizado
-        //         $stmt = $this->conn->prepare($query);
-        //         $stmt->bindParam(1, $id_contrato, PDO::PARAM_INT);
-        //         $stmt->execute();
-        //         $registro_actualizado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        //         return [
-        //             $registro_actualizado
-        //         ];
-        //     } else {
-        //         return ["error" => "Error al actualizar: " . implode(" - ", $stmt_update->errorInfo())];
-        //     }
-        // } else {
-        //     return ["message" => "No hubo cambios en el trámite."];
-        // }
-
         // 5️⃣ Si hay cambios, construir y ejecutar la consulta UPDATE
         if (!empty($campos_actualizar)) {
             // Verificamos si el estatus es "Remesa" y, si es así, agregamos el campo FechaRemesa

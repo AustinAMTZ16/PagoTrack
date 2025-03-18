@@ -45,13 +45,19 @@ function obtenerKPI() {
                     });
 
                     // Asignar los valores a los elementos HTML
-                    document.getElementById('estatus_remesa').textContent = conteo_estatus.Remesa || 0;
-                    document.getElementById('estatus_devueltoOrdenesPago').textContent = conteo_estatus.DevueltoOrdenesPago || 0;
-                    document.getElementById('estatus_registradoSAP').textContent = conteo_estatus.RegistradoSAP || 0;
-                    document.getElementById('estatus_devuelto').textContent = conteo_estatus.Devuelto || 0;
-                    document.getElementById('estatus_cancelado').textContent = conteo_estatus.Cancelado || 0;
+                    document.getElementById('estatus_creado').textContent = conteo_estatus.Creado || 0;
                     document.getElementById('estatus_turnado').textContent = conteo_estatus.Turnado || 0;
+                    document.getElementById('estatus_devuelto').textContent = conteo_estatus.Devuelto || 0;
+                    document.getElementById('estatus_rechazado').textContent = conteo_estatus.Rechazado || 0;
                     document.getElementById('estatus_juntasAuxiliares').textContent = conteo_estatus.JuntasAuxiliares || 0;
+                    document.getElementById('estatus_inspectorias').textContent = conteo_estatus.Inspectoria || 0;
+                    document.getElementById('estatus_registradoSAP').textContent = conteo_estatus.RegistradoSAP || 0;
+                    document.getElementById('estatus_remesa').textContent = conteo_estatus.Remesa || 0;
+                    document.getElementById('estatus_revisionRemesa').textContent = conteo_estatus.RevisionRemesa || 0;
+                    document.getElementById('estatus_remesaAprobada').textContent = conteo_estatus.RemesaAprobada || 0;
+                    document.getElementById('estatus_ordenesPago').textContent = conteo_estatus.OrdenesPago || 0;
+                    document.getElementById('estatus_devueltoOrdenesPago').textContent = conteo_estatus.DevueltoOrdenesPago || 0;
+                    document.getElementById('estatus_cancelado').textContent = conteo_estatus.Cancelado || 0;
                 } else {
                     console.error("conteo_estatus no es un array:", data.conteo_estatus);
                 }
@@ -101,6 +107,10 @@ function rellenarTabla(tableId, tramites) {
             <th>Estatus</th>
             <th>Fecha Recepción</th>
             <th>Fecha Límite</th>
+            <th>Dependencia</th>
+            <th>Beneficiario</th>
+            <th>Concepto</th>
+            <th>Importe</th>
             <th>Analista</th>
             <th>Comentarios</th>
         </tr>`;
@@ -122,6 +132,14 @@ function rellenarTabla(tableId, tramites) {
             { data: "Estatus" },
             { data: "FechaRecepcion" },
             { data: "FechaLimite" },
+            { data: "Dependencia" },
+            { data: "Proveedor" },
+            { data: "Concepto" },
+            { data: "Importe", 
+                render: function (data) {
+                    return formatoMoneda.format(data);
+                }
+             },
             { data: null, render: function (data) { return `${data.NombreUser} ${data.ApellidoUser}`; } },
             { 
                 data: "Comentarios",

@@ -232,6 +232,9 @@ async function obtenerTramite(ID_CONTRATO) {
                 document.getElementById("RemesaNumero").value = tramite.RemesaNumero || "";
                 document.getElementById("DocSAP").value = tramite.DocSAP || "";
                 document.getElementById("IntegraSAP").value = tramite.IntegraSAP || "";
+                document.getElementById("OfPeticion").value = tramite.OfPeticion || "";
+                document.getElementById("NoTramite").value = tramite.NoTramite || "";
+                document.getElementById("DoctacionAnexo").value = tramite.DoctacionAnexo || "";
             } else {
                 console.error("Trámite no encontrado");
             }

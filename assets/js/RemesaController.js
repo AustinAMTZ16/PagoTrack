@@ -127,7 +127,7 @@ function mostrarRemesas(remesas) {
             <td>${index + 1}</td>
             <td>${remesa.ID_CONTRATO}</td>
             <td>${remesa.OfPeticion}</td>
-            <td>${remesa.FechaRecepcion}</td>
+            <td>${remesa.FechaRecepcion.split(" ")[0]}</td>
             <td>${remesa.IntegraSAP}</td>
             <td>${remesa.DocSAP}</td>
             <td>${remesa.TipoTramite}</td>
@@ -149,7 +149,7 @@ function mostrarRemesas(remesas) {
                 return `<td>${formatoMoneda(valorFondo)}</td>`;
             }).join('')}
             <td>${remesa.Analista}</td>
-            <td>______________</td>
+            <td><br><br>______________</td>
         `;
         tbody.appendChild(tr);
         

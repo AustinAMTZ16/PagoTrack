@@ -723,3 +723,61 @@ function obtenerFechaSinHora(fecha) {
     return `${nuevaFecha.getFullYear()}-${String(nuevaFecha.getMonth() + 1).padStart(2, '0')}-${String(nuevaFecha.getDate()).padStart(2, '0')}`;
 }
 
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const btnResumen = document.getElementById("generarResumen");
+
+    if (!btnResumen) {
+        console.error("❌ Error: No se encontró el botón 'generarResumen' en el DOM.");
+        return;
+    }
+
+    btnResumen.addEventListener("click", function () {
+        let tramites = [];
+        let dataTable = $('#tableTramites').DataTable(); // Acceder a DataTable
+
+        // Obtener TODAS las filas del DataTable, sin importar la paginación
+        let allRows = dataTable.rows().data(); 
+
+        allRows.each(function (row) { // Iterar sobre cada fila
+            tramites.push({
+                mes: row.Mes,
+                fechaRecepcion: row.FechaRecepcion,
+                fechaLimite: row.FechaLimite,
+                tipoTramite: row.TipoTramite,
+                institucion: row.Dependencia,
+                proveedor: row.Proveedor,
+                importe: row.Importe,
+                analista: `${row.NombreUser} ${row.ApellidoUser}`,
+                estatus: row.Estatus
+            });
+        });
+
+        if (tramites.length === 0) {
+            alert("No hay datos en la tabla para analizar.");
+            return;
+        }
+
+        // Enviar los datos al servidor PHP para análisis con ChatGPT
+        fetch(URL_B + 'api/gpt_request.php', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tramites })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById("resumenGPT").innerHTML = `<b>Error:</b> ${data.error}`;
+            } else {
+                document.getElementById("resumenGPT").innerHTML = `<b>Resumen GPT:</b><br>${data.choices[0].message.content}`;
+            }
+        })
+        .catch(error => {
+            console.error("Error en la solicitud:", error);
+            document.getElementById("resumenGPT").innerHTML = "<b>Error al generar el resumen.</b>";
+        });
+    });
+});
+

@@ -380,7 +380,7 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Devuelto" || data.Estatus === "Turnado") {
-                        botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}')">Actualizar Estado</button> `;
+                        botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}')">Actualizar Estado</button> `;
                     }
                     return botones;
                 }
@@ -515,9 +515,16 @@ function turnarTramite(id) {
     window.location.href = `turnarTramite.html?id=${id}`;
 }
 // Editar tramite por id
-function editarTramite(id, proveedor, concepto, importe) {
-    console.log('Editar tramite:', id, proveedor, concepto, importe);
-    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${proveedor}&concepto=${concepto}&importe=${importe}`;
+function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia) {
+    // Formatea las fechas eliminando la hora
+    const formatoFecha = (fecha) => fecha.split(' ')[0];
+
+    const fechaLimiteFormateada = formatoFecha(fechaLimite);
+    const fechaRecepcionFormateada = formatoFecha(fechaRecepcion);
+
+    console.log('Editar tramite:', id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia);
+    
+    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}`;
 }
 // Eliminar tramite por id
 function eliminarTramite(id) {
@@ -646,7 +653,7 @@ function renderTable(data) {
         order: [[11, "DESC"]],
     });
 }
-//
+// Mostrar comentario en modal
 function mostrarComentario(comentario) {
     // Decodificar el comentario
     var comentarioDecoded = decodeURIComponent(comentario);
@@ -722,10 +729,7 @@ function obtenerFechaSinHora(fecha) {
     const nuevaFecha = new Date(fecha);
     return `${nuevaFecha.getFullYear()}-${String(nuevaFecha.getMonth() + 1).padStart(2, '0')}-${String(nuevaFecha.getDate()).padStart(2, '0')}`;
 }
-
-
-
-
+// Generar resumen con ChatGPT
 document.addEventListener("DOMContentLoaded", function () {
     const btnResumen = document.getElementById("generarResumen");
 

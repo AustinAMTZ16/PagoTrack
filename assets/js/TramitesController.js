@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const Proveedor = urlParams.get('proveedor');
     const Concepto = urlParams.get('concepto');
     const Importe = urlParams.get('importe');
+    const FechaLimite = urlParams.get('fechaLimite');
+    const FechaRecepcion = urlParams.get('fechaRecepcion');
+    const Dependencia = urlParams.get('dependencia');
     // Mostrar el ID en el campo de entrada
     if (ID_CONTRATO) {
         const inputField = document.getElementById('ID_CONTRATO');
@@ -39,6 +42,18 @@ document.addEventListener("DOMContentLoaded", function() {
     if (Importe) {
         const inputField = document.getElementById('Importe');
         inputField.value = Importe;
+    }
+    if (FechaLimite) {
+        const inputField = document.getElementById('FechaLimite');
+        inputField.value = FechaLimite;
+    }
+    if (FechaRecepcion) {
+        const inputField = document.getElementById('FechaRecepcion');
+        inputField.value = FechaRecepcion;
+    }
+    if (Dependencia) {
+        const inputField = document.getElementById('Dependencia');
+        inputField.value = Dependencia;
     }
     // Evento para turnar un trámite
     const formTurnarTramite = document.getElementById('formTurnarTramite');

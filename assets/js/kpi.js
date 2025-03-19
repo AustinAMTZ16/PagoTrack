@@ -2,6 +2,8 @@
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
 const URL_BASE = `${URL_B}index.php?action=`;
+// Declaración global para almacenar datos parseados
+let parsedData = {};
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
     obtenerKPI();
@@ -26,7 +28,8 @@ function obtenerKPI() {
         // Verificar si 'result.data' es una cadena JSON válida antes de intentar parsearla
         try {
             const data = JSON.parse(result.data);
-            console.log('Datos parseados:', data);
+            parsedData = JSON.parse(result.data);
+            console.log('Datos parseados:', parsedData);
 
             // Verificar si 'totales' y 'tramites' existen en 'data'
             if (data) {
@@ -200,4 +203,37 @@ function mostrarComentario(comentario) {
     $('#comentarioModal .modal-body').html('<pre style="white-space: pre-wrap; word-wrap: break-word;">' + comentarioDecoded + '</pre>');
     $('#comentarioModal').modal('show');
 }
+// Generar resumen con ChatGPT
+document.addEventListener("DOMContentLoaded", function () {
+    const btnResumen = document.getElementById("generarResumen");
 
+    if (!btnResumen) {
+        console.error("❌ Error: No se encontró el botón 'generarResumen' en el DOM.");
+        return;
+    }
+
+    btnResumen.addEventListener("click", function () {
+        if (!parsedData || Object.keys(parsedData).length === 0) {
+            alert("No hay datos disponibles para generar el resumen.");
+            return;
+        }
+
+        fetch(URL_B + 'api/gpt_request.php', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ datos: parsedData })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById("resumenGPT").innerHTML = `<b>Error:</b> ${data.error}`;
+            } else {
+                document.getElementById("resumenGPT").innerHTML = `<b>Resumen Corporativo:</b><br>${data.choices[0].message.content}`;
+            }
+        })
+        .catch(error => {
+            console.error("Error en la solicitud:", error);
+            document.getElementById("resumenGPT").innerHTML = "<b>Error al generar el resumen.</b>";
+        });
+    });
+});

@@ -468,7 +468,7 @@ function estadoTurnado() {
     const idUser = usuario.InicioSesionID;
     // console.log('Usuario:', idUser);
     // Filtrar los trámites por el AnalistaTurnado
-    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser);
+    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser && (tramite.Estatus === 'Turnado' || tramite.Estatus === 'Devuelto' || tramite.Estatus === 'DevueltoOrdenPago' || tramite.Estatus === 'Rechazado' || tramite.Estatus === 'RegistradoSAP'));
     // En caso de que el usuario.RolUser sea igual a 'Admin' debera mostrar todos los trámites
     if (usuario.RolUser === 'Admin') {
         // Funcion para obtener KPI'S 

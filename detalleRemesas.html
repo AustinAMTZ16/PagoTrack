@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de control</title>
+    <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
+    <script src="./assets/js/SesionUser.js"></script>
+    <script src="./assets/js/MenuSistema.js"></script>
+    <script src="./assets/js/RemesaController.js"></script>
+
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 11in;
+            height: 8.5in;
+            margin: 0 auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .headertitulo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text-container {
+            flex: 3;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .logo-container img {
+            width: 200px;
+            margin: 0 10px;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .header div {
+            display: inline-block;
+            /* margin: 0 40px; */
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            /* table-layout: fixed; */
+            font-size: 8px;
+        }
+
+        thead {
+            background-color: #730104 !important;
+            color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 4px;
+            text-align: center;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+
+        .total-row {
+            background-color: #f0f0f0 !important;
+            font-weight: bold;
+        }
+
+        .firmas {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .firma-item {
+            min-width: 120px;
+        }
+
+        @media print {
+            thead {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                background-color: #730104 !important;
+                color: white !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="headertitulo">
+            <div class="logo-container">
+                <img src="./assets/images/lgtesoreria.jpeg" alt="Logo DGECP">
+            </div>
+            <div class="text-container">
+                Dirección de Egresos y Control Presupuestal<br>
+                Departamento de Presupuesto <br>
+                (pesos)
+            </div>
+        </div>
+
+        <div class="header">
+            <div id="FechaCreacion"></div>
+            <div id="Grupo">Remesa</div>
+        </div>
+
+        <table id="tablaRemesa">
+            <thead>
+                <tr>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Datos se insertarán aquí -->
+            </tbody>
+        </table>
+        <br><br><br>
+        <div class="firmas">
+            <!-- <div class="firma-item">
+                <div>Glosador</div><br><br><br><br>
+                <hr>
+                <div id="nombreGlosador"></div>
+            </div> -->
+            <div class="firma-item">
+                <div>Revisó</div><br><br><br><br>
+                <hr>
+                <div>María Concepción Soriano Tejeda</div>
+            </div>
+            <div class="firma-item">
+                <div>Validó</div><br><br><br><br>
+                <hr>
+                <div>Dora María Torres Herrera</div>
+            </div>
+            <div class="firma-item">
+                <div>Recibe en Órdenes de Pago</div><br><br><br><br>
+                <hr>
+                <div>Alan Michell Navarrete Flores</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

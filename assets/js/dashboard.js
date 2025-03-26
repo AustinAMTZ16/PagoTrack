@@ -12,13 +12,14 @@
  *    3.4. actualizarTablaTurnados - Renderizar la tabla de trámites turnados
  *    3.5. exportToExcel - Exportar trámites a un archivo Excel
  */
-
 // Obtener la URL base dinámicamente
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
 const URL_BASE = `${URL_B}index.php?action=`;
 // Variable global para almacenar la lista trámites
 let tramitesArray = [];
+
+
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
     // Referencia al Select de Estado
@@ -27,7 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableTramitesJS = document.getElementById('tableTramites');
     // Referencia a la tabla de trámites turnados
     const tableTurnadosJS = document.getElementById('tableTurnados');
-
+    // Referencia a la tabla de seguimiento de trámites por analista
+    const tramitesTableJS = document.getElementById('tramitesTable');
+    // Referencia al botón de generar resumen iA
+    const btnResumen = document.getElementById("generarResumen");
+    // Referencia al botón de limpiar filtros
+    const btnLimpiar = document.getElementById("btn-limpiar");
+    // Referencia al botón de filtrar trámites
+    const btnFiltrar = document.getElementById("btn-filtrar");
     // Obtener la lista de trámites
     if (tableTramitesJS) {
         getTramites();
@@ -50,28 +58,124 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    // Función para generar y descargar el archivo Excel
-    function exportToExcel() {
-        const table = document.querySelector("#tableTramites"); // Selecciona la tabla por su ID
-        if (table) { // Verifica si la tabla existe
-            const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" }); // Convierte la tabla en un libro de Excel
-            XLSX.writeFile(wb, "datos_oficios.xlsx"); // Descarga el archivo Excel con el nombre especificado
-        } else {
-            console.error("La tabla no existe en el DOM.");
-        }
-    }
-    
+    // Valida si existe la tabla de seguimiento de trámites por analista
+    if (tramitesTableJS) {
+        getSeguimientoTramites();
+    }    
     // Verifica si el botón existe antes de agregar el listener
     const downloadButton = document.getElementById("downloadExcelTramites");
     if (downloadButton) {
         downloadButton.addEventListener("click", exportToExcel);
     }
+    // Generar resumen con ChatGPT
+    if (btnResumen) {
+        btnResumen.addEventListener("click", function () {
+            let tramites = [];
+            let dataTable = $('#tableTramites').DataTable(); // Acceder a DataTable
+    
+            // Obtener TODAS las filas del DataTable, sin importar la paginación
+            let allRows = dataTable.rows().data(); 
+    
+            allRows.each(function (row) { // Iterar sobre cada fila
+                tramites.push({
+                    mes: row.Mes,
+                    fechaRecepcion: row.FechaRecepcion,
+                    fechaLimite: row.FechaLimite,
+                    tipoTramite: row.TipoTramite,
+                    institucion: row.Dependencia,
+                    proveedor: row.Proveedor,
+                    importe: row.Importe,
+                    analista: `${row.NombreUser} ${row.ApellidoUser}`,
+                    estatus: row.Estatus
+                });
+            });
+    
+            if (tramites.length === 0) {
+                alert("No hay datos en la tabla para analizar.");
+                return;
+            }
+    
+            // Enviar los datos al servidor PHP para análisis con ChatGPT
+            fetch(URL_B + 'api/gpt_request.php', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ tramites })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("resumenGPT").innerHTML = `<b>Error:</b> ${data.error}`;
+                } else {
+                    document.getElementById("resumenGPT").innerHTML = `<b>Resumen GPT:</b><br>${data.choices[0].message.content}`;
+                }
+            })
+            .catch(error => {
+                console.error("Error en la solicitud:", error);
+                document.getElementById("resumenGPT").innerHTML = "<b>Error al generar el resumen.</b>";
+            });
+        });
+    }
+    // Limpiar filtros
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', function () {
+            document.querySelectorAll('.filtro-select, .filtro-input, .filtro-date').forEach(element => {
+                if (element.tagName === 'SELECT') {
+                    element.value = 'Todos';
+                } else {
+                    element.value = '';
+                }
+            });
+            console.clear();
+            console.log('Filtros limpiados');
+        });
+    }   
+    // Filtrar trámites
+    if (btnFiltrar) {
+        btnFiltrar.addEventListener('click', function () {
+            // Definir todos los filtros con su tipo
+            const filterConfig = [
+                { id: 'estadoSelect', type: 'select' },
+                { id: 'mesSelect', type: 'select' },
+                { id: 'tipoTramiteSelect', type: 'select' },
+                { id: 'analistaSelect', type: 'select' },
+                { id: 'dependenciaSelect', type: 'select' },
+                { id: 'proveedorSelect', type: 'text' },
+                { id: 'conceptoSelect', type: 'text' },
+                { id: 'importeSelect', type: 'number' },
+                { id: 'remesaSelect', type: 'text' },
+                { id: 'integracionSAPSelect', type: 'text' },
+                { id: 'docSAPSelect', type: 'text' },
+                { id: 'numeroTramiteSelect', type: 'text' },
+                { id: 'fechaRecepcionSelect', type: 'date' },
+                { id: 'fechaVencimientoSelect', type: 'date' }
+            ];
 
-    // Obtener el seguimiento de trámites
-    getSeguimientoTramites();
-    /* getConteoEstatus();
-    getReporteEstatusComentarios(); */
+            // Objeto para almacenar los filtros aplicados
+            const appliedFilters = {};
+
+            filterConfig.forEach(config => {
+                const element = document.getElementById(config.id);
+                let value = element.value.trim();
+
+                // Manejar diferentes tipos de inputs
+                if (element.tagName === 'SELECT') {
+                    if (value !== 'Todos') {
+                        appliedFilters[config.id.replace('Select', '')] = value;
+                    }
+                } else {
+                    if (value !== '' && !(config.type === 'number' && isNaN(value))) {
+                        if (config.type === 'number') value = Number(value);
+                        appliedFilters[config.id.replace('Select', '')] = value;
+                    }
+                }
+            });
+
+            console.log('Filtros aplicados:', appliedFilters);
+        });
+    }
 });
+
+
 // Función para obtener la lista de trámites
 function getTramites() {
     fetch(URL_BASE + 'getTramites', {
@@ -90,6 +194,7 @@ function getTramites() {
             if (result.data && Array.isArray(result.data)) {
                 // Extraer el array dentro de 'data'
                 tramitesArray = result.data;
+                console.log('Trámites:', tramitesArray);
                 // console.log('Array de trámites:', tramitesArray);
                 //actualizarTablaTramites(tramitesArray, 'tableTramites'); // Pasar el array a la función
                 filtrarTramitesOperador();
@@ -117,7 +222,7 @@ function getSeguimientoTramites() {
             return await response.json();
         })
         .then(result => {
-            console.log('Result:', result);
+            // console.log('Result:', result);
             // Renderizar la tabla
             renderTable(result.data);
         })
@@ -257,6 +362,7 @@ function actualizarTablaTramites(data, tableId) {
             { data: "RemesaNumero" },
             { data: "DocSAP" },
             { data: "IntegraSAP" },
+            { data: "NoTramite" },
             {
                 data: null,
                 render: function (data) {
@@ -379,7 +485,7 @@ function actualizarTablaTurnados(data, tableId) {
                 data: null,
                 render: function (data) {
                     let botones = "";
-                    if (data.Estatus === "Devuelto" || data.Estatus === "Turnado") {
+                    if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
                         botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}')">Actualizar Estado</button> `;
                     }
                     return botones;
@@ -468,7 +574,7 @@ function estadoTurnado() {
     const idUser = usuario.InicioSesionID;
     // console.log('Usuario:', idUser);
     // Filtrar los trámites por el AnalistaTurnado
-    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser && (tramite.Estatus === 'Turnado' || tramite.Estatus === 'Devuelto' || tramite.Estatus === 'DevueltoOrdenPago' || tramite.Estatus === 'Rechazado' || tramite.Estatus === 'RegistradoSAP'));
+    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser && (tramite.Estatus === 'Turnado' || tramite.Estatus === 'Devuelto' || tramite.Estatus === 'Observaciones' || tramite.Estatus === 'DevueltoOrdenPago' || tramite.Estatus === 'Rechazado' || tramite.Estatus === 'RegistradoSAP'));
     // En caso de que el usuario.RolUser sea igual a 'Admin' debera mostrar todos los trámites
     if (usuario.RolUser === 'Admin') {
         // Funcion para obtener KPI'S 
@@ -729,59 +835,13 @@ function obtenerFechaSinHora(fecha) {
     const nuevaFecha = new Date(fecha);
     return `${nuevaFecha.getFullYear()}-${String(nuevaFecha.getMonth() + 1).padStart(2, '0')}-${String(nuevaFecha.getDate()).padStart(2, '0')}`;
 }
-// Generar resumen con ChatGPT
-document.addEventListener("DOMContentLoaded", function () {
-    const btnResumen = document.getElementById("generarResumen");
-
-    if (!btnResumen) {
-        console.error("❌ Error: No se encontró el botón 'generarResumen' en el DOM.");
-        return;
+// Función para generar y descargar el archivo Excel
+function exportToExcel() {
+    const table = document.querySelector("#tableTramites"); // Selecciona la tabla por su ID
+    if (table) { // Verifica si la tabla existe
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" }); // Convierte la tabla en un libro de Excel
+        XLSX.writeFile(wb, "datos_oficios.xlsx"); // Descarga el archivo Excel con el nombre especificado
+    } else {
+        console.error("La tabla no existe en el DOM.");
     }
-
-    btnResumen.addEventListener("click", function () {
-        let tramites = [];
-        let dataTable = $('#tableTramites').DataTable(); // Acceder a DataTable
-
-        // Obtener TODAS las filas del DataTable, sin importar la paginación
-        let allRows = dataTable.rows().data(); 
-
-        allRows.each(function (row) { // Iterar sobre cada fila
-            tramites.push({
-                mes: row.Mes,
-                fechaRecepcion: row.FechaRecepcion,
-                fechaLimite: row.FechaLimite,
-                tipoTramite: row.TipoTramite,
-                institucion: row.Dependencia,
-                proveedor: row.Proveedor,
-                importe: row.Importe,
-                analista: `${row.NombreUser} ${row.ApellidoUser}`,
-                estatus: row.Estatus
-            });
-        });
-
-        if (tramites.length === 0) {
-            alert("No hay datos en la tabla para analizar.");
-            return;
-        }
-
-        // Enviar los datos al servidor PHP para análisis con ChatGPT
-        fetch(URL_B + 'api/gpt_request.php', {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tramites })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                document.getElementById("resumenGPT").innerHTML = `<b>Error:</b> ${data.error}`;
-            } else {
-                document.getElementById("resumenGPT").innerHTML = `<b>Resumen GPT:</b><br>${data.choices[0].message.content}`;
-            }
-        })
-        .catch(error => {
-            console.error("Error en la solicitud:", error);
-            document.getElementById("resumenGPT").innerHTML = "<b>Error al generar el resumen.</b>";
-        });
-    });
-});
-
+}

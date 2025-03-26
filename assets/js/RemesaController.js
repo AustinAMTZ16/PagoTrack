@@ -3,7 +3,7 @@ const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^
 // Completar con la URI
 const URL_BASE = `${URL_B}index.php?action=`;
 
-
+let ltRemesas = [];
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -26,16 +26,87 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error al obtener el listado de remesas:", error.message);
         });
     }
-});
 
+    // Obtener el parámetro "ID_REMESA" de la URL
+    const ID_REMESA = urlParams.get('ID_REMESA');
+    const DepartamentoTurnado = urlParams.get('DepartamentoTurnado');
+    const rawFechaRemesa = urlParams.get('FechaRemesa');
+    const FechaRemesa = rawFechaRemesa ? rawFechaRemesa.split(' ')[0] : '';
+    const FKNumeroRemesa = urlParams.get('FKNumeroRemesa');
+    const rawFechaPago = urlParams.get('FechaPago');
+    const FechaPago = rawFechaPago ? rawFechaPago.split(' ')[0] : '';
+    const Estatus = urlParams.get('Estatus');
+    const Comentarios = urlParams.get('Comentarios');
+    if (document.getElementById('ID_REMESA')) {
+        document.getElementById('ID_REMESA').value = ID_REMESA;
+        document.getElementById('DepartamentoTurnado').value = DepartamentoTurnado;
+        document.getElementById('FechaRemesa').value = FechaRemesa;
+        document.getElementById('FKNumeroRemesa').value = FKNumeroRemesa;
+        document.getElementById('FechaPago').value = FechaPago;
+        document.getElementById('Estatus').value = Estatus;
+        document.getElementById('Comentarios').value = Comentarios && Comentarios.trim() !== '' ? Comentarios : 'Sin comentarios';
+    }
+
+    // Validar formConfigurarRemesa 
+    const formConfigurarRemesa = document.getElementById('formConfigurarRemesa');
+    if (formConfigurarRemesa) {
+        formConfigurarRemesa.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const data = {
+                ID_REMESA: document.getElementById('ID_REMESA').value,
+                DepartamentoTurnado: document.getElementById('DepartamentoTurnado').value,
+                FechaPago: document.getElementById('FechaPago').value,
+                Estatus: document.getElementById('Estatus').value,
+                Comentarios: document.getElementById('Comentarios').value
+            };
+            //updateRemesa
+            updateRemesa(data);
+        });
+    }
+
+
+});
 
 // Funcion para ver el detalle de las remesas
 function verDetalleRemesa(consecutivo) {
     window.location.href = 'detalleRemesas.html?consecutivo=' + consecutivo;
 }
+// Funcion para cambiar el estatus de los trámites de la remesa
+async function cambiarEstatusRemesa(consecutivo, estatus) {
+    await armarRemesa(consecutivo);
+
+    // Obtener solo los ID_CONTRATO en formato string separados por coma
+    const idsContrato = ltRemesas.map(remesa => remesa.ID_CONTRATO).join(',');
+
+    const data = { 
+        FKNumeroRemesa: consecutivo, 
+        estatus: estatus,
+        ID_CONTRATO: idsContrato // ✅ Aquí ya estás pasando todos los IDs
+    };
+
+    try {
+        const response = await fetch(URL_BASE + 'updateRemesaTramites', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        alert('Trámites actualizados correctamente' + result.message);
+    } catch (error) {
+        console.error('Error al actualizar los trámites:', error.message);
+    }
+}
+
 // Funcion para llenar la tabla con los datos de la remesa
 function llenarTablaRemesas(listadoRemesas) {
-    console.log('listadoRemesas:', listadoRemesas);
+    // console.log('listadoRemesas:', listadoRemesas);
     // Limpiar el contenido de la tabla
     tableListaRemesas.innerHTML = '';
 
@@ -56,13 +127,16 @@ function llenarTablaRemesas(listadoRemesas) {
             <td>${index + 1}</td>
             <td>${remesa.Grupo}</td>
             <td>${remesa.TotalRegistros}</td>
-            <td>
-                <button class="btn btn-primary" onclick="verDetalleRemesa('${remesa.Grupo}')">Ver</button>
+            <td>            
+                <button class="btn btn-secondary" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
+                <button class="btn btn-primary" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
+                <button class="btn btn-success" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
             </td>
         `;
         tableListaRemesas.appendChild(row);
     });
 }
+// Funcion para mostrar las remesas
 function mostrarRemesas(remesas) {
     // Mostrar el nombre del glosador
     // document.getElementById('nombreGlosador').innerHTML = remesas[0]?.Analista || 'N/A';
@@ -78,7 +152,10 @@ function mostrarRemesas(remesas) {
 
     // Mostrar la fecha formateada
     document.getElementById('FechaCreacion').innerHTML = formattedDate;
-    document.getElementById('Grupo').innerHTML = 'Remesa: '+remesas[0]?.Grupo || 'N/A';
+    document.getElementById('Grupo').innerHTML = 'Remesa: ' + remesas[0]?.Grupo || 'N/A';
+
+    // Mostrar los comentarios
+    document.getElementById('Comentarios').innerHTML = remesas[0]?.Comentarios || ' ';
 
     const tabla = document.getElementById('tablaRemesa');
     const thead = tabla.querySelector('thead tr');
@@ -139,20 +216,20 @@ function mostrarRemesas(remesas) {
             
 
             <td>${formatoMoneda(
-                Object.values(remesa.Fondo || {}).reduce((sum, val) => sum + (parseFloat(val) || 0), 0)
-            )}</td>
+            Object.values(remesa.Fondo || {}).reduce((sum, val) => sum + (parseFloat(val) || 0), 0)
+        )}</td>
 
 
             ${clavesFondos.map(clave => {
-                const valorFondo = parseFloat(remesa.Fondo?.[clave]) || 0;
-                totales.fondos[clave] += valorFondo;
-                return `<td>${formatoMoneda(valorFondo)}</td>`;
-            }).join('')}
+            const valorFondo = parseFloat(remesa.Fondo?.[clave]) || 0;
+            totales.fondos[clave] += valorFondo;
+            return `<td>${formatoMoneda(valorFondo)}</td>`;
+        }).join('')}
             <td>${remesa.Analista}</td>
             <td><br><br>______________</td>
         `;
         tbody.appendChild(tr);
-        
+
         // Sumar al gran total
         totales.granTotal += parseFloat(remesa.Importe) || 0;
     });
@@ -195,7 +272,7 @@ async function armarRemesa(consecutivo) {
             console.error("Error: La API no devolvió un array en 'data'");
             return;
         }
-        
+
         // Convertir Fondo a objeto si es necesario
         const remesas = result.data.map(remesa => {
             if (typeof remesa.Fondo === "string") {
@@ -207,9 +284,10 @@ async function armarRemesa(consecutivo) {
                 }
             }
             return remesa;
-        });  
-        
-        console.log('remesas:', remesas);
+        });
+
+        // console.log('remesas:', remesas);
+        ltRemesas = remesas;
         mostrarRemesas(remesas);
     } catch (error) {
         console.error('Error al obtener el listado de remesas:', error.message);
@@ -236,5 +314,59 @@ async function obtenerListaRemesas() {
         return [];  // Retorna un array vacío en caso de error
     }
 }
+// Funcion para crear una nueva remesa
+async function configurarRemesa(grupo) {
+    const data = {
+        DepartamentoTurnado: 'GLOSA',
+        FKNumeroRemesa: grupo,
+        Estatus: 'Pendiente',
+        Comentarios: ''
+    }
 
+    try {
+        const response = await fetch(URL_BASE + 'createRemesa', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        if (result.message === 'La remesa ya existe en el sistema.') {
+            window.location.href = 'configurarRemesa.html?ID_REMESA=' + result.data[0].ID_REMESA + '&DepartamentoTurnado=' + result.data[0].DepartamentoTurnado + '&FechaRemesa=' + result.data[0].FechaRemesa + '&FKNumeroRemesa=' + result.data[0].FKNumeroRemesa + '&FechaPago=' + result.data[0].FechaPago + '&Estatus=' + result.data[0].Estatus + '&Comentarios=' + result.data[0].Comentarios;
+        } else {
+            alert('Remesa creada correctamente');
+        }
+
+    } catch (error) {
+        console.error('Error al crear la remesa:', error.message);
+        return null;
+    }
+}
+// Funcion para actualizar la remesa
+async function updateRemesa(data) {
+    try {
+        const response = await fetch(URL_BASE + 'updateRemesa', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        alert('Remesa actualizada correctamente'+result.message);
+        window.location.href = 'seguimientoRemesas.html';
+    } catch (error) {
+        console.error('Error al actualizar la remesa:', error.message);
+    }
+}

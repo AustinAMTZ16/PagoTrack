@@ -82,7 +82,6 @@ class TramitesModel
             throw new Exception("Error al registrar el trámite: " . $e->getMessage());
         }
     }
-
     // Obtener todos los trámites
     public function getAll()
     {

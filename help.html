@@ -60,6 +60,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Inicio</a></li>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
                                     href="createTramite.html">Crear Trámite</a></li>
                             <li id="Analista" style="display: none;"><a class="dropdown-item"
                                     href="listadoTurnados.html">Listado de Turnados</a></li>
@@ -154,32 +156,30 @@
                     <tr>
                         <td>1</td>
                         <td>Creado</td>
-                        <td>El operador recibe el expediente y registra el trámite en el sistema.</td>
+                        <td>El operador recibe el expediente valida checklist de documentos y registra el trámite en el sistema.</td>
                         <td>Operador</td>
                         <td>Registrar el trámite en el sistema.</td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>Turnado</td>
-                        <td>El operador turna el trámite y entrega el expediente al analista para su validación.</td>
-                        <td>Operador</td>
-                        <td>Entregar el expediente al analista.</td>
+                        <td>El operador entrega el expediente al analista, quien valida el registro del trámite en el sistema PagoTrack.</td>
+                        <td>Operador/Analista</td>
+                        <td>Entregar el expediente al analista y validar el registro del trámite en el sistema PagoTrack.</td>
                     </tr>
                     <tr>
                         <td>3</td>
-                        <td>Procesando</td>
-                        <td>El analista recibe el expediente y valida el registro del trámite.</td>
+                        <td>Observaciones</td>
+                        <td>El analista detecta observaciones en el expediente, notifica a la institución y solicita correcciones inmediatas (deben solucionarse el mismo día).</td>
                         <td>Analista</td>
-                        <td>Validar el trámite y comprobar la información.</td>
+                        <td>Notificar a la institución sobre las observaciones, solcitar la corrección  debera ser solucionado el mismo día.</td>
                     </tr>
                     <tr>
                         <td>4</td>
                         <td>Devuelto</td>
-                        <td>El analista realiza observaciones sobre el trámite y puede devolverlo a la institución.</td>
+                        <td>El analista genera un volante y hacer entrega del expediente al representante de la institución.</td>
                         <td>Analista</td>
-                        <td>Notificar a la institución sobre las observaciones (La institución tiene 2 días para hacer
-                            los ajustes
-                            necesarios).</td>
+                        <td>Entrega de volante y expediente al representante de la institución (La institución tiene 2 días para hacer los ajustes necesarios).</td>
                     </tr>
                     <tr>
                         <td>5</td>
@@ -202,9 +202,7 @@
                     <tr>
                         <td>7</td>
                         <td>Registrado SAP</td>
-                        <td>El analista valida el trámite y lo registra en SAP. Luego entrega el expediente al operador
-                            para su
-                            gestión.</td>
+                        <td>El analista registra el trámite en SAP, indicando los números de documento SAP e integra SAP, y entrega el expediente al operador para gestión.</td>
                         <td>Analista</td>
                         <td>Registrar el trámite en SAP y entregarlo al operador. También comentar el número de
                             documento SAP y el
@@ -213,44 +211,42 @@
                     <tr>
                         <td>8</td>
                         <td>Remesa</td>
-                        <td>El operador crea la remesa y entrega tanto la remesa como el expediente al líder del
+                        <td>El operador crea la remesa y entrega tanto la remesa como el expediente al Coordinador del
                             departamento.</td>
                         <td>Operador</td>
-                        <td>Entregar la remesa al líder del departamento.</td>
+                        <td>Entregar la remesa al Coordinador del departamento. Las ordenes de pago deben estar en estatus Remesa y con la nomenclatura de la remesa. (ddmmaa-remesa-consecutivo)</td>
                     </tr>
                     <tr>
                         <td>9</td>
                         <td>Revisión Remesa</td>
-                        <td>El líder del departamento revisa la remesa recibida por el operador o devuelve el expediente
-                            al operador
-                            para hacer ajustes.</td>
-                        <td>Líder de Departamento</td>
+                        <td>El coordinador del departamento revisa la remesa recibida por el operador en caso de ser necesarias correcciones se puede devolver el expediente
+                            al operador para hacer ajustes.</td>
+                        <td>Coordinador</td>
                         <td>Dar el visto bueno a la remesa y trámite o devolver el expediente para ajustes.</td>
                     </tr>
                     <tr>
                         <td>10</td>
                         <td>Remesa Aprobada</td>
-                        <td>El líder del departamento crea nueva remesa y entrega la remesa y el expediente a la
-                            directora.</td>
-                        <td>Líder de Departamento</td>
-                        <td>Entregar la remesa y el expediente a la directora.</td>
-                    </tr>
-                    <tr>
-                        <td>11</td>
-                        <td>Órdenes de Pago</td>
-                        <td>La directora revisa la remesa y el expediente y los aprueba o los devuelve al líder del
-                            departamento
+                        <td>La directora revisa la remesa y el expediente y los aprueba o los devuelve al coordinador del departamento
                             para ajustes.</td>
                         <td>Directora</td>
                         <td>Dar el visto bueno a la remesa y trámite o devolver el expediente para ajustes.</td>
                     </tr>
                     <tr>
+                        <td>11</td>
+                        <td>Órdenes de Pago</td>
+                        <td>El coordinador de ordenes de pago recibe la remesa y el expediente.
+                            para ajustes.</td>
+                        <td>Coordinador Ordenes de Pago</td>
+                        <td>Dar el visto bueno a la remesa y trámite o devolver el expediente para ajustes.</td>
+                    </tr>
+                    <tr>
                         <td>12</td>
                         <td>Devuelto Órdenes de Pago</td>
-                        <td>El líder del departamento revisa la remesa y el expediente y los devuelve al operador para
+                        <td>El Coordinador del departamento revisa la remesa y el expediente y los devuelve al operador para
                             hacer los
                             ajustes necesarios.</td>
-                        <td>Líder de Departamento</td>
+                        <td>Coordinador</td>
                         <td>Devolver al operador para correcciones.</td>
                     </tr>
                     <tr>

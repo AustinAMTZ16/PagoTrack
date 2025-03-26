@@ -59,7 +59,6 @@
             'Message' => 'Error interno del servidor. Detalles: ' . $e->getMessage() . ' en línea ' . $e->getLine()
         ], JSON_UNESCAPED_UNICODE);
     }
-
     // Función para manejar las solicitudes POST
     function handlePostRequest($action, $data)
     {
@@ -95,7 +94,7 @@
 
                 if ($respuesta) {
                     http_response_code(200);
-                    echo json_encode(array('message' => 'Remesa registrada.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('data' => $respuesta), JSON_UNESCAPED_UNICODE);
                 } else {
                     http_response_code(404);
                     echo json_encode(array('message' => 'Remesa no registrada.'), JSON_UNESCAPED_UNICODE);
@@ -166,6 +165,23 @@
                 } else {
                     http_response_code(404);
                     echo json_encode(array('message' => 'No se encontraron detalle de remesas.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+            case 'updateRemesaTramites':
+                if(!empty($data)){
+                    global $controllerRemesa;
+                    $respuesta = $controllerRemesa->updateRemesaTramites((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Trámites actualizados.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron trámites actualizados.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;

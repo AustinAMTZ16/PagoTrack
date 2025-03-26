@@ -180,6 +180,7 @@
                 <label for="Estatus">Estatus del tramite</label>
                 <select name="Estatus" id="Estatus" placeholder="Estatus" required>
                     <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="Observaciones">Observaciones</option>
                     <option value="Devuelto">Devuelto</option>
                     <option value="RegistradoSAP">Registrado SAP</option>
                     <option value="JuntasAuxiliares">Juntas Auxiliares</option>
@@ -219,7 +220,7 @@
     <script>
         document.getElementById('Estatus').addEventListener('change', function() {
             const botonWhatsApp = document.getElementById('enviarWhatsApp');
-            botonWhatsApp.hidden = this.value !== 'Devuelto';
+            botonWhatsApp.hidden = this.value !== 'Devuelto' && this.value !== 'Observaciones';
         });
         document.getElementById('enviarWhatsApp').addEventListener('click', () => {
             const mensaje = `

@@ -86,3 +86,45 @@
 +-------------------+
 |    Cancelado      |  ← Operador cancela el expediente.
 +-------------------+
+
+
+
+
+
+
+CALL sp_FiltrarTramites(
+    NULL,           -- p_Estado
+    NULL,           -- p_Mes (nombre en inglés)
+    NULL,           -- p_TipoTramite
+    NULL,           -- p_Analista
+    NULL,           -- p_Dependencia
+    NULL,           -- p_Proveedor
+    NULL,           -- p_Concepto
+    NULL,           -- p_Importe
+    NULL,           -- p_Remesa
+    NULL,           -- p_IntegracionSAP
+    NULL,           -- p_DocSAP
+    NULL,           -- p_NumeroTramite
+    'AAAA-MM-DD',   -- p_FechaRecepcion
+    'AAAA-MM-DD'    -- p_FechaVencimiento
+);
+
+{
+    "estado": "Creado",
+    "mes": "Enero",
+    "tipoTramite": "OC",
+    "analista": "22",
+    "dependencia": "Oficina de Presidencia",
+    "proveedor": "er",
+    "concepto": "re",
+    "importe": 23,
+    "remesa": "re",
+    "integracionSAP": "t",
+    "docSAP": "t",
+    "numeroTramite": "tr",
+    "fechaRecepcion": "2025-03-27",
+    "fechaVencimiento": "2025-03-27"
+}
+
+
+'Creado','Turnado','Procesando','Observaciones','JuntasAuxiliares','Inspectoria','RegistradoSAP','Remesa','RevisionRemesa','RemesaAprobada','DevueltoOrdenesPago','Pagado','Terminado','Rechazado','Devuelto','Cancelado','Cheque'

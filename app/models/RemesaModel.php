@@ -1,20 +1,24 @@
 <?php
 include_once 'app/config/Database.php';
 
-class RemesaModel {
+class RemesaModel
+{
     private $conn;
-    public function __construct() {
+    public function __construct()
+    {
         $this->conn = (new Database())->conn;
     }
 
     // Obtener lista de remesas
-    public function getListaRemesas() {
+    public function getListaRemesas()
+    {
         $query = "SELECT 
                         SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
                         COUNT(*) AS TotalRegistros
                     FROM ConsentradoGeneralTramites
                     WHERE RemesaNumero IS NOT NULL
-                    GROUP BY Grupo;
+                    GROUP BY Grupo
+                    ORDER BY Grupo DESC;
                 ";
 
         $stmt = $this->conn->prepare($query);
@@ -22,7 +26,8 @@ class RemesaModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     // Obtener detalle de remesas
-    public function getDetalleRemesas($data) {
+    public function getDetalleRemesas($data)
+    {
         $consecutivo = $data['consecutivo'];
         $query = "SELECT 
                         SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
@@ -39,11 +44,13 @@ class RemesaModel {
                         CG.Importe,
                         CG.DoctacionAnexo,
                         CG.Fondo,
-                        CG.FechaRemesa,
                         CONCAT(i.NombreUser, ' ', i.ApellidoUser) AS Analista,
-                        CG.Estatus
+                        CG.Estatus,
+                        r.FechaRemesa,
+                        r.Comentarios 
                     FROM ConsentradoGeneralTramites CG
-                    inner join InicioSesion i on CG.AnalistaID = i.InicioSesionID
+                    INNER JOIN InicioSesion i ON CG.AnalistaID = i.InicioSesionID
+                    INNER JOIN Remesas r ON r.FKNumeroRemesa = '$consecutivo'
                     WHERE RemesaNumero IS NOT null
                     and CG.RemesaNumero like '$consecutivo%'
                     ORDER BY Grupo, RemesaNumero;
@@ -53,182 +60,288 @@ class RemesaModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Crear una nueva remesa
-    public function create($data) {
+    public function createRemesa($data)
+    {
         try {
+            // Validar si ya existe la remesa
+            $sqlValidacionRemesa = "SELECT * FROM Remesas WHERE FKNumeroRemesa = :FKNumeroRemesa;";
+            $stmtValidacionRemesa = $this->conn->prepare($sqlValidacionRemesa);
+            $stmtValidacionRemesa->bindParam(':FKNumeroRemesa', $data['FKNumeroRemesa']);
+            $stmtValidacionRemesa->execute();
+
+            $existeRemesaDB = $stmtValidacionRemesa->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($existeRemesaDB == true) {
+                http_response_code(200); // Código HTTP OK
+                header('Content-Type: application/json');
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'La remesa ya existe en el sistema.',
+                    'data' => $existeRemesaDB
+                ], JSON_UNESCAPED_UNICODE);
+
+                exit; // Muy importante para detener la ejecución del resto del código
+            }
+
             // Iniciar transacción
             $this->conn->beginTransaction();
-    
-            // Insertar en la tabla Remesas
-            $query = "INSERT INTO Remesas (DepartamentoTurnado, NumeroRemesa, NumeroConsecutivo, FolioIntegra, OficioPeticion, Beneficiario, FechaPago, FuenteFinanciamiento, Documento, Estatus, Comentarios, FK_CONTRATO) 
-                      VALUES (:DepartamentoTurnado, :NumeroRemesa, :NumeroConsecutivo, :FolioIntegra, :OficioPeticion, :Beneficiario, :FechaPago, :FuenteFinanciamiento, :Documento, :Estatus, :Comentarios, :FK_CONTRATO)";
+
+            // Valores con defaults
+            $departamento = (!isset($data['DepartamentoTurnado']) || empty($data['DepartamentoTurnado']))
+                ? 'GLOSA'
+                : $data['DepartamentoTurnado'];
+
+            $estatus = (!isset($data['Estatus']) || empty($data['Estatus']))
+                ? 'Pendiente'
+                : $data['Estatus'];
+
+            $comentarios = (!isset($data['Comentarios']) || empty($data['Comentarios']))
+                ? ''
+                : $data['Comentarios'];
+
+            // Insertar en Remesas
+            $query = "INSERT INTO Remesas (DepartamentoTurnado, FKNumeroRemesa, Estatus, Comentarios) 
+                      VALUES (:DepartamentoTurnado, :FKNumeroRemesa, :Estatus, :Comentarios)";
             $stmt = $this->conn->prepare($query);
-    
-            $stmt->bindParam(':DepartamentoTurnado', $data['DepartamentoTurnado']);
-            $stmt->bindParam(':NumeroRemesa', $data['NumeroRemesa']);
-            $stmt->bindParam(':NumeroConsecutivo', $data['NumeroConsecutivo']);
-            $stmt->bindParam(':FolioIntegra', $data['FolioIntegra']);
-            $stmt->bindParam(':OficioPeticion', $data['OficioPeticion']);
-            $stmt->bindParam(':Beneficiario', $data['Beneficiario']);
-            $stmt->bindParam(':FechaPago', $data['FechaPago']);
-            $stmt->bindParam(':FuenteFinanciamiento', $data['FuenteFinanciamiento']);
-            $stmt->bindParam(':Documento', $data['Documento']);
-            $stmt->bindParam(':Estatus', $data['Estatus']);
-            $stmt->bindParam(':Comentarios', $data['Comentarios']);
-            $stmt->bindParam(':FK_CONTRATO', $data['FK_CONTRATO']);
-    
+            $stmt->bindParam(':DepartamentoTurnado', $departamento);
+            $stmt->bindParam(':FKNumeroRemesa', $data['FKNumeroRemesa']);
+            $stmt->bindParam(':Estatus', $estatus);
+            $stmt->bindParam(':Comentarios', $comentarios);
+
             if (!$stmt->execute()) {
                 throw new Exception("Error al registrar la remesa.");
             }
-    
-            // Obtener el último ID insertado
+
+            // Obtener ID insertado
             $lastInsertId = $this->conn->lastInsertId();
-    
-            // Actualizar el estatus en ConsentradoGeneralTramites
-            $updateQuery = "UPDATE ConsentradoGeneralTramites SET Estatus = 'Remesa' WHERE ID_CONTRATO = :FK_CONTRATO";
-            $updateStmt = $this->conn->prepare($updateQuery);
-            $updateStmt->bindParam(':FK_CONTRATO', $data['FK_CONTRATO']);
-    
-            if (!$updateStmt->execute()) {
-                throw new Exception("Error al actualizar el estatus en ConsentradoGeneralTramites.");
+
+            // Obtener trámites que coincidan con el FKNumeroRemesa
+            $selectTramites = "SELECT ID_CONTRATO, Comentarios FROM ConsentradoGeneralTramites WHERE RemesaNumero LIKE :FKNumeroRemesa";
+            $stmtSelect = $this->conn->prepare($selectTramites);
+            $fkRemesaLike = $data['FKNumeroRemesa'] . '%';
+            $stmtSelect->bindParam(':FKNumeroRemesa', $fkRemesaLike);
+            $stmtSelect->execute();
+            $tramites = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+
+            // Definir zona horaria de México
+            date_default_timezone_set('America/Mexico_City');
+            // Obtener la fecha y hora actual en formato MySQL
+            $fechaActual = date('Y-m-d H:i:s');
+
+            // Recorrer los trámites para actualizar estatus y comentarios
+            foreach ($tramites as $tramite) {
+                $comentariosAnteriores = !empty($tramite['Comentarios']) ? json_decode($tramite['Comentarios'], true) : [];
+
+                $nuevoComentario = [
+                    "ID_CONTRATO" => $tramite['ID_CONTRATO'],
+                    "Fecha" => $fechaActual,
+                    "Estatus" => 'Remesa',
+                    "Comentario" => 'Remesa creada'
+                ];
+
+                $comentariosAnteriores[] = $nuevoComentario;
+                $comentariosActualizados = json_encode($comentariosAnteriores, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+                // Actualizar cada trámite
+                $updateTramite = "UPDATE ConsentradoGeneralTramites 
+                                  SET Estatus = 'Remesa', Comentarios = :Comentarios, FechaRemesa = :FechaRemesa
+                                  WHERE ID_CONTRATO = :ID_CONTRATO";
+                $stmtUpdate = $this->conn->prepare($updateTramite);
+                $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
+                $stmtUpdate->bindParam(':FechaRemesa', $fechaActual);
+                $stmtUpdate->bindParam(':ID_CONTRATO', $tramite['ID_CONTRATO'], PDO::PARAM_INT);
+
+                if (!$stmtUpdate->execute()) {
+                    throw new Exception("Error al actualizar trámite con ID_CONTRATO " . $tramite['ID_CONTRATO']);
+                }
             }
-    
-            // Si ambas operaciones son exitosas, hacer commit
+
+            // Confirmar todo
             $this->conn->commit();
-    
+
             return $lastInsertId;
         } catch (Exception $e) {
-            // Si ocurre un error, hacer rollback y lanzar la excepción
             $this->conn->rollBack();
             throw $e;
         }
-
-
-
-
-        // $query = "INSERT INTO Remesas (DepartamentoTurnado, NumeroRemesa, NumeroConsecutivo, FolioIntegra, OficioPeticion, Beneficiario, FechaPago, FuenteFinanciamiento, Documento, Estatus, Comentarios, FK_CONTRATO) 
-        //           VALUES (:DepartamentoTurnado, :NumeroRemesa, :NumeroConsecutivo, :FolioIntegra, :OficioPeticion, :Beneficiario, :FechaPago, :FuenteFinanciamiento, :Documento, :Estatus, :Comentarios, :FK_CONTRATO)";
-        // $stmt = $this->conn->prepare($query);
-
-        // $stmt->bindParam(':DepartamentoTurnado', $data['DepartamentoTurnado']);
-        // $stmt->bindParam(':NumeroRemesa', $data['NumeroRemesa']);
-        // $stmt->bindParam(':NumeroConsecutivo', $data['NumeroConsecutivo']);
-        // $stmt->bindParam(':FolioIntegra', $data['FolioIntegra']);
-        // $stmt->bindParam(':OficioPeticion', $data['OficioPeticion']);
-        // $stmt->bindParam(':Beneficiario', $data['Beneficiario']);
-        // $stmt->bindParam(':FechaPago', $data['FechaPago']);
-        // $stmt->bindParam(':FuenteFinanciamiento', $data['FuenteFinanciamiento']);
-        // $stmt->bindParam(':Documento', $data['Documento']);
-        // $stmt->bindParam(':Estatus', $data['Estatus']);
-        // $stmt->bindParam(':Comentarios', $data['Comentarios']);
-        // $stmt->bindParam(':FK_CONTRATO', $data['FK_CONTRATO']);
-
-        // if ($stmt->execute()) {
-        //     //Necesito actualizar el estatus del registro relacionado FK_CONTRATO en la tabla ConsentradoGeneralTramites
-        //     // Es decir update ConsentradoGeneralTramites set  Estatus = 'RemesaCreada' where ID_CONTRATO =  FK_CONTRATO
-        //     // Ejempo update ConsentradoGeneralTramites set  Estatus = 'RemesaCreada' where ID_CONTRATO =  5
-        //     return $this->conn->lastInsertId();
-        // } else {
-        //     throw new Exception("Error al registrar el cliente.");
-        // }
     }
+    // Actualizar una remesa
+    public function updateRemesa($data)
+    {
+        try {
+            // Actualizar la remesa con los nuevos comentarios acumulativos en JSON
+            $queryUpdate = "UPDATE Remesas SET Estatus = :Estatus, Comentarios = :Comentarios, DepartamentoTurnado = :DepartamentoTurnado, FechaPago = :FechaPago WHERE ID_REMESA = :ID_REMESA";
+            $stmtUpdate = $this->conn->prepare($queryUpdate);
+            $stmtUpdate->bindParam(':Estatus', $data['Estatus']);
+            $stmtUpdate->bindParam(':Comentarios', $data['Comentarios']);
+            $stmtUpdate->bindParam(':DepartamentoTurnado', $data['DepartamentoTurnado']);
+            $stmtUpdate->bindParam(':FechaPago', $data['FechaPago']);
+            $stmtUpdate->bindParam(':ID_REMESA', $data['ID_REMESA']);
+
+            $stmtUpdate->execute();
+
+            // Validar si se actualizó al menos una fila
+            if ($stmtUpdate->rowCount() > 0) {
+                return [
+                    'success' => true,
+                    'message' => 'Remesa actualizada correctamente.'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'No se realizaron cambios (la remesa ya tenía estos valores o el ID no existe).'
+                ];
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Error al actualizar la remesa: " . $e->getMessage());
+        }
+    }
+    // Actualizar trámites de una remesa
+    public function updateRemesaTramites($data)
+    {
+        // data : {
+        //     "ID_CONTRATO": "1379, 1365, 1368, 1040, 1378",
+        //     "FKNumeroRemesa" : "240325-1",
+        //     "estatus": "RemesaAprobada"
+        // }
+
+        // Convertir string a array si viene como texto
+        if (isset($data['ID_CONTRATO']) && is_string($data['ID_CONTRATO'])) {
+            $data['ID_CONTRATO'] = array_map('trim', explode(',', $data['ID_CONTRATO']));
+        }
+
+        // Validar que sea un array válido
+        if (empty($data['ID_CONTRATO']) || !is_array($data['ID_CONTRATO'])) {
+            throw new Exception("Se requiere una lista válida de IDs de contrato.");
+        }
+
+        // Zona horaria y fecha actual
+        date_default_timezone_set('America/Mexico_City');
+        $fechaActual = date('Y-m-d H:i:s');
+
+        // Iniciar transacción
+        $this->conn->beginTransaction();
+
+        try {
+            // Obtener los trámites existentes
+            $placeholders = implode(',', array_fill(0, count($data['ID_CONTRATO']), '?'));
+            $selectQuery = "SELECT ID_CONTRATO, Comentarios FROM ConsentradoGeneralTramites WHERE ID_CONTRATO IN ($placeholders)";
+            $stmtSelect = $this->conn->prepare($selectQuery);
+            foreach ($data['ID_CONTRATO'] as $i => $id) {
+                $stmtSelect->bindValue($i + 1, $id, PDO::PARAM_INT);
+            }
+            $stmtSelect->execute();
+            $tramites = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+
+            // Recorrer y actualizar uno a uno con comentarios acumulativos
+            foreach ($tramites as $tramite) {
+                $comentariosAnteriores = !empty($tramite['Comentarios']) ? json_decode($tramite['Comentarios'], true) : [];
+
+                $nuevoComentario = [
+                    "ID_CONTRATO" => $tramite['ID_CONTRATO'],
+                    "Fecha" => $fechaActual,
+                    "Estatus" => 'RemesaAprobada',
+                    "Comentario" => 'La remesa fue aprobada'
+                ];
+
+                $comentariosAnteriores[] = $nuevoComentario;
+                $comentariosActualizados = json_encode($comentariosAnteriores, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+                $updateQuery = "UPDATE ConsentradoGeneralTramites 
+                            SET Estatus = 'RemesaAprobada', 
+                                FechaRemesaAprobada = :FechaRemesaAprobada, 
+                                Comentarios = :Comentarios 
+                            WHERE ID_CONTRATO = :ID_CONTRATO";
+                $stmtUpdate = $this->conn->prepare($updateQuery);
+                $stmtUpdate->bindParam(':FechaRemesaAprobada', $fechaActual);
+                $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
+                $stmtUpdate->bindParam(':ID_CONTRATO', $tramite['ID_CONTRATO'], PDO::PARAM_INT);
+
+                if (!$stmtUpdate->execute()) {
+                    throw new Exception("Error al actualizar trámite con ID_CONTRATO " . $tramite['ID_CONTRATO']);
+                }
+            }
+
+            // Actualizar la remesa
+            // Actualizar la remesa
+            $estatusRemesa = 'Aprobado';
+            $queryUpdateRemesa = "UPDATE Remesas SET Estatus = :Estatus WHERE FKNumeroRemesa = :FKNumeroRemesa";
+            $stmtUpdateRemesa = $this->conn->prepare($queryUpdateRemesa);
+            $stmtUpdateRemesa->bindParam(':Estatus', $estatusRemesa);
+            $stmtUpdateRemesa->bindParam(':FKNumeroRemesa', $data['FKNumeroRemesa']);
+            $stmtUpdateRemesa->execute();
+
+
+            // Confirmar transacción
+            $this->conn->commit();
+
+            return count($tramites); // Cantidad de trámites actualizados
+
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            throw $e;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Obtener todas las remesas
-    public function getAll() {
+    public function getAll()
+    {
         $query = "SELECT * FROM Remesas";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    // Actualizar una remesa
-    public function update($data) {
-        try {
-            // Obtener la fecha actual en formato ISO 8601 (YYYY-MM-DD HH:MM:SS)
-            date_default_timezone_set('America/Mexico_City');
-            $fechaAhora = date("Y-m-d H:i:s");
-    
-            // Obtener los comentarios anteriores de la remesa
-            $querySelect = "SELECT Comentarios FROM Remesas WHERE ID_REMESA = :ID_REMESA";
-            $stmtSelect = $this->conn->prepare($querySelect);
-            $stmtSelect->bindParam(':ID_REMESA', $data['ID_REMESA']);
-            $stmtSelect->execute();
-            $comentariosAnteriores = $stmtSelect->fetchColumn();
-    
-            // Convertir comentarios previos a array JSON
-            $comentariosArray = $comentariosAnteriores ? json_decode($comentariosAnteriores, true) : [];
-            if (!is_array($comentariosArray)) {
-                $comentariosArray = [];
-            }
-    
-            // Agregar nuevo comentario en formato JSON
-            $nuevoComentario = [
-                "Fecha" => $fechaAhora,
-                "Estatus" => $data['Estatus'],
-                "Comentario" => $data['Comentarios']
-            ];
-            $comentariosArray[] = $nuevoComentario;
-    
-            // Convertir el array nuevamente a JSON
-            $comentariosActualizados = json_encode($comentariosArray, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    
-            // Actualizar la remesa con los nuevos comentarios acumulativos en JSON
-            $queryUpdate = "UPDATE Remesas SET Estatus = :Estatus, Comentarios = :Comentarios WHERE ID_REMESA = :ID_REMESA";
-            $stmtUpdate = $this->conn->prepare($queryUpdate);
-            $stmtUpdate->bindParam(':Estatus', $data['Estatus']);
-            $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
-            $stmtUpdate->bindParam(':ID_REMESA', $data['ID_REMESA']);
-    
-            return $stmtUpdate->execute();
-            
-        } catch (PDOException $e) {
-            throw new Exception("Error al actualizar la remesa: " . $e->getMessage());
-        }
-    }
     // Eliminar una remesa
-    public function delete($data) {
+    public function delete($data)
+    {
         $query = "DELETE FROM Remesas WHERE ID_REMESA = :ID_REMESA";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':ID_REMESA', $data['ID_REMESA']);
@@ -241,7 +354,8 @@ class RemesaModel {
         }
     }
     //Lista de remesas con tramites para el seguimiento de ordenes de pago
-    public function getRemesasWithTramites() {
+    public function getRemesasWithTramites()
+    {
         $query = "SELECT 
                     cgt.ID_CONTRATO,
                     cgt.Mes,
@@ -279,39 +393,40 @@ class RemesaModel {
                     WHERE cgt.Estatus = 'Remesa'
                     OR cgt.Estatus = 'DevueltoOrdenesPago'";
         $stmt = $this->conn->prepare($query);
-        $stmt->execute();   
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     //Actualizar tramite y remesa
-    public function updateTramiteRemesa($data) {
+    public function updateTramiteRemesa($data)
+    {
         try {
             date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria
             $fechaActual = date('Y-m-d H:i:s'); // Formato de fecha estándar
-    
+
             // Iniciar transacción
             $this->conn->beginTransaction();
-    
+
             // Obtener los comentarios anteriores de ConsentradoGeneralTramites
             $querySelect1 = "SELECT Comentarios FROM ConsentradoGeneralTramites WHERE ID_CONTRATO = :ID_CONTRATO";
             $stmtSelect1 = $this->conn->prepare($querySelect1);
             $stmtSelect1->bindParam(':ID_CONTRATO', $data['ID_CONTRATO']);
             $stmtSelect1->execute();
             $comentariosAnteriores1 = $stmtSelect1->fetchColumn();
-    
+
             // Obtener los comentarios anteriores de Remesas
             $querySelect2 = "SELECT Comentarios FROM Remesas WHERE FK_CONTRATO = :ID_CONTRATO";
             $stmtSelect2 = $this->conn->prepare($querySelect2);
             $stmtSelect2->bindParam(':ID_CONTRATO', $data['ID_CONTRATO']);
             $stmtSelect2->execute();
             $comentariosAnteriores2 = $stmtSelect2->fetchColumn();
-    
+
             // Crear el nuevo comentario en formato JSON
             $nuevoComentario = [
                 "Fecha" => $fechaActual,
                 "Estatus" => $data['Estatus'],
                 "Comentario" => $data['Comentarios']
             ];
-    
+
             // Acumular comentarios en formato JSON
             $comentariosArray1 = !empty($comentariosAnteriores1) ? json_decode($comentariosAnteriores1, true) : [];
             if (!is_array($comentariosArray1)) {
@@ -319,14 +434,14 @@ class RemesaModel {
             }
             $comentariosArray1[] = $nuevoComentario;
             $comentariosActualizados1 = json_encode($comentariosArray1, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    
+
             $comentariosArray2 = !empty($comentariosAnteriores2) ? json_decode($comentariosAnteriores2, true) : [];
             if (!is_array($comentariosArray2)) {
                 $comentariosArray2 = [];
             }
             $comentariosArray2[] = $nuevoComentario;
             $comentariosActualizados2 = json_encode($comentariosArray2, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    
+
             // Actualizar ConsentradoGeneralTramites
             $query1 = "UPDATE ConsentradoGeneralTramites SET Estatus = :Estatus, Comentarios = :Comentarios WHERE ID_CONTRATO = :ID_CONTRATO";
             $stmt1 = $this->conn->prepare($query1);
@@ -334,7 +449,7 @@ class RemesaModel {
             $stmt1->bindParam(':Comentarios', $comentariosActualizados1);
             $stmt1->bindParam(':ID_CONTRATO', $data['ID_CONTRATO']);
             $stmt1->execute();
-    
+
             // Actualizar Remesas
             $query2 = "UPDATE Remesas SET Estatus = :Estatus, Comentarios = :Comentarios WHERE FK_CONTRATO = :ID_CONTRATO";
             $stmt2 = $this->conn->prepare($query2);
@@ -342,18 +457,15 @@ class RemesaModel {
             $stmt2->bindParam(':Comentarios', $comentariosActualizados2);
             $stmt2->bindParam(':ID_CONTRATO', $data['ID_CONTRATO']);
             $stmt2->execute();
-    
+
             // Confirmar transacción
             $this->conn->commit();
-    
+
             return $stmt1->rowCount() + $stmt2->rowCount();
-    
         } catch (PDOException $e) {
             // Revertir transacción en caso de error
             $this->conn->rollBack();
             throw new Exception("Error al actualizar trámite y remesa: " . $e->getMessage());
         }
     }
-    
 }
-?>

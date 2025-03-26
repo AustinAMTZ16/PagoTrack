@@ -19,30 +19,38 @@ class RemesaController {
         $result = $this->model->getDetalleRemesas($data);
         return $result;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Crear una nueva remesa
     public function createRemesa($data) {
-        $result = $this->model->create($data);
+        $result = $this->model->createRemesa($data);
         return $result;
     }
+    // Actualizar una remesa
+    public function updateRemesa($data) {
+        $result = $this->model->updateRemesa($data);
+        return $result;
+    }
+    // Actualizar trámites de una remesa
+    public function updateRemesaTramites($data) {
+        $result = $this->model->updateRemesaTramites($data);
+        return $result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     // Obtener todas las remesas
     public function getRemesas() {
@@ -50,11 +58,7 @@ class RemesaController {
         return $result;
     }
 
-    // Actualizar una remesa
-    public function updateRemesa($data) {
-        $result = $this->model->update($data);
-        return $result;
-    }
+    
 
     // Eliminar una remesa
     public function deleteRemesa($data) {

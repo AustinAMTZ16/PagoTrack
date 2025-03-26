@@ -46,17 +46,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Agregar el evento al select de estado
     if (estadoSelect) {
+        const filtrosIniciales = {
+            estado: '',
+            mes: '',
+            tipoTramite: '',
+            analista: '',
+            dependencia: '',
+            proveedor: '',
+            concepto: '',
+            importe: '',
+            remesa: '',
+            integracionSAP: '',
+            docSAP: '',
+            numeroTramite: '',
+            fechaRecepcion: '',
+            fechaVencimiento: ''
+        };
+        filtrarTramites(filtrosIniciales); 
+
+        /* 
         // Listener para capturar el cambio de selección
         estadoSelect.addEventListener("change", function () {
             const selectedValue = estadoSelect.value; // Obtiene el valor seleccionado
             if (selectedValue) {
-                filtrarTramites(selectedValue); // Llama a la función con el valor seleccionado
+                // Llama a la función con el valor seleccionado
             } else if (selectedValue === 'Todos') {
                 //console.log('Todos');
                 //actualizarTablaTramites(tramitesArray, "tableTramites"); 
                 filtrarTramitesOperador();
             }
-        });
+        }); */
     }
     // Valida si existe la tabla de seguimiento de trámites por analista
     if (tramitesTableJS) {
@@ -127,6 +146,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             console.clear();
             console.log('Filtros limpiados');
+            const filtrosIniciales = {
+                estado: '',
+                mes: '',
+                tipoTramite: '',
+                analista: '',
+                dependencia: '',
+                proveedor: '',
+                concepto: '',
+                importe: '',
+                remesa: '',
+                integracionSAP: '',
+                docSAP: '',
+                numeroTramite: '',
+                fechaRecepcion: '',
+                fechaVencimiento: ''
+            };
+            filtrarTramites(filtrosIniciales);
         });
     }   
     // Filtrar trámites
@@ -171,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             console.log('Filtros aplicados:', appliedFilters);
+            filtrarTramites(appliedFilters);
         });
     }
 });
@@ -533,38 +570,64 @@ function actualizarTablaTurnados(data, tableId) {
     });
 }
 // Filtrar trámites por estado
-function filtrarTramites(status) {
-    if (status === "Todos") {
-        filtrarTramitesOperador();
-        //actualizarTablaTramites(tramitesArray, "tableTramites");
-    } else {
-        console.log('Seleccionado:', status);
+function filtrarTramites(filtros) {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const CorreoUser = usuario.CorreoUser;
 
-        // Obtener el usuario desde localStorage
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-        // Obtener el id del usuario
-        const idUser = usuario.InicioSesionID;
-        const CorreoUser = usuario.CorreoUser;
+    let base = tramitesArray;
 
-
-        if (CorreoUser === 'gonzalo.ochoa@ayuntamientopuebla.gob.mx') {
-            // Filtrar los trámites por TipoTramite
-            const tramitesOperador = tramitesArray.filter(tramite => tramite.TipoTramite === 'OCO' || tramite.TipoTramite === 'Obra' || tramite.TipoTramite === 'OPO' && tramite.Estatus === status);
-            actualizarTablaTramites(tramitesOperador, 'tableTramites');
-        } else if (CorreoUser === 'juan.garcia@ayuntamientopuebla.gob.mx') {
-            // Filtrar los trámites excepto los de tipo Obra
-            const tramitesOperador = tramitesArray.filter(tramite => tramite.TipoTramite !== 'Obra' && tramite.TipoTramite !== 'OCO' && tramite.TipoTramite !== 'OPO' && tramite.Estatus === status);
-            actualizarTablaTramites(tramitesOperador, 'tableTramites');
-        } else {
-            // Mostrar todos los trámites
-            const tramitesOperador = tramitesArray.filter(tramite => tramite.Estatus === status);
-            actualizarTablaTramites(tramitesOperador, 'tableTramites');
-        }
-        // Filtramos los trámites por el estado seleccionado
-        //const tramitesFiltrados = tramitesArray.filter(tramite => tramite.Estatus === status);
-
-        //actualizarTablaTramites(tramitesFiltrados, "tableTramites");
+    // 🔹 Filtro por operador
+    if (CorreoUser === 'gonzalo.ochoa@ayuntamientopuebla.gob.mx') {
+        base = base.filter(tramite => ['OCO', 'OPO', 'Obra'].includes(tramite.TipoTramite));
+    } else if (CorreoUser === 'juan.garcia@ayuntamientopuebla.gob.mx') {
+        base = base.filter(tramite => !['OCO', 'OPO', 'Obra'].includes(tramite.TipoTramite));
     }
+
+    // 🔹 Mapeo de filtros con campos reales
+    const mapaCampos = {
+        estado: 'Estatus',
+        mes: 'Mes',
+        tipoTramite: 'TipoTramite',
+        analista: 'AnalistaID',
+        dependencia: 'Dependencia',
+        proveedor: 'Proveedor',
+        concepto: 'Concepto',
+        importe: 'Importe',
+        remesa: 'RemesaNumero',
+        integracionSAP: 'IntegraSAP',
+        docSAP: 'DocSAP',
+        numeroTramite: 'NoTramite',
+        fechaRecepcion: 'FechaRecepcion',
+        fechaVencimiento: 'FechaLimite'
+    };
+
+    // 🔹 Aplicar filtros uno por uno
+    const filtrados = base.filter(tramite => {
+        for (let campo in filtros) {
+            const valorFiltro = filtros[campo];
+            if (valorFiltro === '' || valorFiltro === 'Todos') continue; // Saltar filtros vacíos
+
+            const campoReal = mapaCampos[campo];
+            const valorTramite = tramite[campoReal];
+
+            // Comparaciones específicas
+            if (campo === 'importe') {
+                if (parseFloat(valorTramite) !== parseFloat(valorFiltro)) return false;
+            } else if (campo === 'fechaRecepcion' || campo === 'fechaVencimiento') {
+                const fechaBase = valorTramite ? valorTramite.split(' ')[0] : '';
+                if (fechaBase !== valorFiltro) return false;
+            } else if (typeof valorTramite === 'string') {
+                if (!valorTramite.toLowerCase().includes(valorFiltro.toLowerCase())) return false;
+            } else {
+                if (valorTramite != valorFiltro) return false;
+            }
+        }
+
+        return true;
+    });
+
+    // 🔹 Actualizar tabla
+    actualizarTablaTramites(filtrados, 'tableTramites');
 }
 //Filtrar trámites por AnalistaTurnado
 function estadoTurnado() {

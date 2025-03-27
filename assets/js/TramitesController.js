@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const FechaLimite = urlParams.get('fechaLimite');
     const FechaRecepcion = urlParams.get('fechaRecepcion');
     const Dependencia = urlParams.get('dependencia');
+    const NombreUser = urlParams.get('nombreUser');
     // Mostrar el ID en el campo de entrada
     if (ID_CONTRATO) {
         const inputField = document.getElementById('ID_CONTRATO');
@@ -54,6 +55,10 @@ document.addEventListener("DOMContentLoaded", function() {
     if (Dependencia) {
         const inputField = document.getElementById('Dependencia');
         inputField.value = Dependencia;
+    }
+    if (NombreUser) {
+        const inputField = document.getElementById('NombreUser');
+        inputField.value = NombreUser;
     }
     // Evento para turnar un trámite
     const formTurnarTramite = document.getElementById('formTurnarTramite');

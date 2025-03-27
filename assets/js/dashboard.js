@@ -523,7 +523,7 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
-                        botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}')">Actualizar Estado</button> `;
+                        botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}', '${data.NombreUser} ${data.ApellidoUser}')">Actualizar Estado</button> `;
                     }
                     return botones;
                 }
@@ -628,6 +628,11 @@ function filtrarTramites(filtros) {
 
     // 🔹 Actualizar tabla
     actualizarTablaTramites(filtrados, 'tableTramites');
+
+    //si existe tabla turnados actualizarla
+    if ($.fn.DataTable.isDataTable(`#tableTurnados`)) {
+        actualizarTablaTurnados(filtrados, 'tableTurnados');
+    }
 }
 //Filtrar trámites por AnalistaTurnado
 function estadoTurnado() {
@@ -684,7 +689,7 @@ function turnarTramite(id) {
     window.location.href = `turnarTramite.html?id=${id}`;
 }
 // Editar tramite por id
-function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia) {
+function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia, nombreUser) {
     // Formatea las fechas eliminando la hora
     const formatoFecha = (fecha) => fecha.split(' ')[0];
 
@@ -693,7 +698,7 @@ function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecep
 
     console.log('Editar tramite:', id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia);
     
-    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}`;
+    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}&nombreUser=${encodeURIComponent(nombreUser)}`;
 }
 // Eliminar tramite por id
 function eliminarTramite(id) {

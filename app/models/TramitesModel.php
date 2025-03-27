@@ -96,29 +96,23 @@ class TramitesModel
     // Actualizar un trámite
     public function update($data)
     {
-        // Definir zona horaria de México
         date_default_timezone_set('America/Mexico_City');
-        // Obtener la fecha y hora actual en formato MySQL
         $fechaActual = date('Y-m-d H:i:s');
 
         try {
-            // 🔹 Paso 1: Obtener el registro actual desde la base de datos
             $querySelect = "SELECT Estatus, Comentarios, AnalistaID FROM ConsentradoGeneralTramites WHERE ID_CONTRATO = :ID_CONTRATO";
             $stmtSelect = $this->conn->prepare($querySelect);
             $stmtSelect->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
             $stmtSelect->execute();
             $currentData = $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
-            // Si el registro no existe, retornar falso
             if (!$currentData) {
                 return false;
             }
 
-            // 🔹 Paso 2: Determinar los valores a actualizar
             $estatus = !empty($data['Estatus']) ? $data['Estatus'] : $currentData['Estatus'];
             $AnalistaID = !empty($data['AnalistaID']) ? $data['AnalistaID'] : $currentData['AnalistaID'];
 
-            // 🔹 Paso 3: Construcción del nuevo comentario en formato JSON
             $nuevoComentario = !empty($data['Comentarios']) ? json_encode([
                 "ID_CONTRATO" => $data['ID_CONTRATO'],
                 "Fecha" => $fechaActual,
@@ -126,40 +120,42 @@ class TramitesModel
                 "Comentario" => $data['Comentarios']
             ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : '';
 
-            // 🔹 Paso 4: Acumulación de comentarios manteniendo el formato JSON
             $comentariosArray = !empty($currentData['Comentarios']) ? json_decode($currentData['Comentarios'], true) : [];
 
-            // Si hay un nuevo comentario, agregarlo al array
             if (!empty($nuevoComentario)) {
                 $comentariosArray[] = json_decode($nuevoComentario, true);
             }
 
-            // Convertir el array nuevamente a JSON
             $comentariosActualizados = json_encode($comentariosArray, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-            // 🔹 Paso 5: Construcción de la consulta SQL dinámica
             $queryUpdate = "UPDATE ConsentradoGeneralTramites 
-                            SET Estatus = :Estatus, 
-                                Comentarios = :Comentarios,  
-                                AnalistaID = :AnalistaID";
+                        SET Estatus = :Estatus, 
+                            Comentarios = :Comentarios,  
+                            AnalistaID = :AnalistaID";
 
-            // Si el estatus es "Devuelto", agregar los campos adicionales a la consulta
+            // Variables auxiliares
+            $docSAP = null;
+            $integraSAP = null;
+
             if ($estatus === 'Devuelto') {
                 $queryUpdate .= ", FechaDevuelto = :FechaDevuelto";
             }
             if ($estatus === 'Turnado') {
                 $queryUpdate .= ", FechaTurnado = :FechaTurnado";
             }
-            if ($estatus === 'RegistradoSAP' || $estatus === 'JuntasAuxiliares' || $estatus === 'Inspectoria') {
+            if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
                 $queryUpdate .= ", FechaTurnadoEntrega = :FechaTurnadoEntrega,
-                                RemesaNumero = :RemesaNumero,
-                                DocSAP = :DocSAP,
-                                IntegraSAP = :IntegraSAP";
+                             RemesaNumero = :RemesaNumero,
+                             DocSAP = :DocSAP,
+                             IntegraSAP = :IntegraSAP";
+
+                // Convertir "0" o 0 a null
+                $docSAP = ($data['DocSAP'] === "0" || $data['DocSAP'] === 0) ? null : $data['DocSAP'];
+                $integraSAP = ($data['IntegraSAP'] === "0" || $data['IntegraSAP'] === 0) ? null : $data['IntegraSAP'];
             }
 
             $queryUpdate .= " WHERE ID_CONTRATO = :ID_CONTRATO";
 
-            // 🔹 Paso 6: Preparación y ejecución de la consulta SQL
             $stmtUpdate = $this->conn->prepare($queryUpdate);
 
             $stmtUpdate->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
@@ -167,33 +163,25 @@ class TramitesModel
             $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
             $stmtUpdate->bindParam(':AnalistaID', $AnalistaID);
 
-            // Enlazar parámetros adicionales solo si el estatus es "Devuelto"
             if ($estatus === 'Devuelto') {
                 $stmtUpdate->bindParam(':FechaDevuelto', $fechaActual, PDO::PARAM_STR);
             }
             if ($estatus === 'Turnado') {
                 $stmtUpdate->bindParam(':FechaTurnado', $fechaActual, PDO::PARAM_STR);
             }
-            if ($estatus === 'RegistradoSAP') {
+            if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
                 $stmtUpdate->bindParam(':FechaTurnadoEntrega', $fechaActual, PDO::PARAM_STR);
                 $stmtUpdate->bindParam(':RemesaNumero', $data['RemesaNumero']);
-                $stmtUpdate->bindParam(':DocSAP', $data['DocSAP']);
-                $stmtUpdate->bindParam(':IntegraSAP', $data['IntegraSAP']);
-            }
-            if ($estatus === 'JuntasAuxiliares' || $estatus === 'Inspectoria') {
-                $stmtUpdate->bindParam(':FechaTurnadoEntrega', $fechaActual, PDO::PARAM_STR);
-                $stmtUpdate->bindParam(':RemesaNumero', $data['RemesaNumero']);
-                $stmtUpdate->bindParam(':DocSAP', $data['DocSAP']);
-                $stmtUpdate->bindParam(':IntegraSAP', $data['IntegraSAP']);
+                $stmtUpdate->bindValue(':DocSAP', $docSAP, $docSAP === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmtUpdate->bindValue(':IntegraSAP', $integraSAP, $integraSAP === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
             }
 
-            // Ejecutar la actualización y devolver el resultado
             return $stmtUpdate->execute();
         } catch (PDOException $e) {
-            // Capturar y lanzar excepciones en caso de error
             throw new Exception("Error al actualizar el trámite: " . $e->getMessage());
         }
     }
+
     // Eliminar un trámite
     public function delete($data)
     {

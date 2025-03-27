@@ -39,6 +39,15 @@
                 /* En pantallas más pequeñas, los inputs se apilan uno sobre otro */
             }
         }
+
+        input[readonly],
+        textarea[readonly],
+        select[readonly] {
+            background-color: #333 !important;
+            color: #fff !important;
+            border: 1px solid #555;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -196,6 +205,10 @@
                 <input type="text" id="IntegraSAP" name="IntegraSAP" placeholder="Debe ser unico. Ejemplo: 180655"
                     value="0" required>
             </div>
+            <div class="input-group">
+                <label for="NombreUser">Nombre del Usuario</label>
+                <input type="text" id="NombreUser" name="NombreUser" placeholder="Nombre del Usuario" readonly>
+            </div>
             <div class="input-group"></div>
             <label for="Comentarios">Comentarios</label>
             <textarea type="text" id="Comentarios" name="Comentarios" rows="10"
@@ -225,6 +238,7 @@
         document.getElementById('enviarWhatsApp').addEventListener('click', () => {
             const mensaje = `
                             🔹 TARJETA INFORMATIVA 🔹
+                👤 Analista: ${document.getElementById('NombreUser').value}
                 📌 ID Contrato: ${document.getElementById('ID_CONTRATO').value}
                 🏛 Institución: ${document.getElementById('Dependencia')?.value || 'N/A'}
                 👤 Proveedor: ${document.getElementById('Proveedor').value}

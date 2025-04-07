@@ -181,7 +181,6 @@ class TramitesModel
             throw new Exception("Error al actualizar el trámite: " . $e->getMessage());
         }
     }
-
     // Eliminar un trámite
     public function delete($data)
     {
@@ -214,7 +213,7 @@ class TramitesModel
                     COUNT(*) AS Total
                 FROM ConsentradoGeneralTramites CGT
                 INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
-                WHERE CGT.Estatus IN ('Turnado', 'Devuelto')  -- Filtra solo los estatus requeridos
+                WHERE CGT.Estatus IN ('Turnado', 'Observaciones')  -- Filtra solo los estatus requeridos
                 GROUP BY ISN.NombreUser, ISN.ApellidoUser
                 ORDER BY Total DESC;";
         $stmt = $this->conn->prepare($query);

@@ -117,14 +117,14 @@
     <div class="container">
         <img src="./assets/images/lg_seccion.jpg" alt="" width="20%" style="display: block; margin: 0 auto;">
         <h1>Sistema de Gestión de Trámites</h1>
-        <h1>Crear Trámite</h1>
+        <h1>Detalle de Trámite</h1>
 
         <form id="formUpdateTramiteCompleto" method="post">
             <label for="ID_CONTRATO">ID del Contrato:</label>
-            <input type="text" name="ID_CONTRATO" id="ID_CONTRATO" placeholder="ID del Contrato" readonly>
+            <input type="text" name="ID_CONTRATO" id="ID_CONTRATO" readonly>
         
             <label for="Dependencia">Institución:</label>
-            <select name="Dependencia" id="Dependencia" required>
+            <select name="Dependencia" id="Dependencia" disabled readonly>
                 <option value="Coordinación de las Regidurias">Coordinación de las Regidurias</option>
                 <option value="Oficina de Presidencia">Oficina de Presidencia</option>
                 <option value="Sindicatura Municipal">Sindicatura Municipal</option>
@@ -168,17 +168,16 @@
             </select>
         
             <label for="Proveedor">Proveedor:</label>
-            <input type="text" name="Proveedor" id="Proveedor" placeholder="Proveedor" required>
+            <input type="text" name="Proveedor" id="Proveedor" readonly>
         
             <label for="Concepto">Concepto:</label>
-            <input type="text" name="Concepto" id="Concepto" placeholder="Concepto" required>
+            <input type="text" name="Concepto" id="Concepto" readonly>
         
             <label for="Importe">Importe:</label>
-            <input type="number" name="Importe" id="Importe" placeholder="Importe" required step="0.01">
+            <input type="number" name="Importe" id="Importe" readonly>
         
             <label for="Mes">Mes:</label>
-            <select name="Mes" id="Mes" required>
-                <option value="" disabled selected>Seleccione un mes</option>
+            <select name="Mes" id="Mes" disabled readonly>
                 <option value="Enero">Enero</option>
                 <option value="Febrero">Febrero</option>
                 <option value="Marzo">Marzo</option>
@@ -192,13 +191,12 @@
                 <option value="Noviembre">Noviembre</option>
                 <option value="Diciembre">Diciembre</option>
             </select>
-            
+        
             <label for="FechaRecepcion">Fecha de Recepción:</label>
-            <input type="date" name="FechaRecepcion" id="FechaRecepcion" required>
+            <input type="date" name="FechaRecepcion" id="FechaRecepcion" readonly>
         
             <label for="TipoTramite">Tipo de Trámite:</label>
-            <select name="TipoTramite" id="TipoTramite" required>
-                <option value="" disabled selected>Tipo de Tramite</option>
+            <select name="TipoTramite" id="TipoTramite" disabled readonly>
                 <option value="OC">OC Ordenes Compromiso</option>
                 <option value="OP">OP Órdenes de Pago</option>
                 <option value="SRF">SRF Solicitud de Recurso Financieros</option>
@@ -210,7 +208,7 @@
             </select>
         
             <label for="AnalistaID">Analista:</label>
-            <select name="AnalistaID" id="AnalistaID">
+            <select name="AnalistaID" id="AnalistaID" disabled readonly>
                 <option value="4">Juan Carlos García Tagle</option>
                 <option value="22">Gonzalo Ochoa Huerta</option>
                 <option value="8">Isabel Cristina Pavón Nava</option>
@@ -235,8 +233,7 @@
             </select>
         
             <label for="Estatus">Estatus:</label>
-            <select name="Estatus" id="Estatus" required>
-                <option value="" disabled selected>Seleccione un estatus</option>
+            <select name="Estatus" id="Estatus" disabled readonly>
                 <option value="Creado">Creado</option>
                 <option value="Turnado">Turnado</option>
                 <option value="Observaciones">Observaciones</option>
@@ -257,13 +254,13 @@
             </select>
         
             <label for="Comentarios">Comentarios:</label>
-            <textarea name="Comentarios" id="Comentarios" placeholder="Comentarios" readonly rows="10"></textarea>
+            <textarea name="Comentarios" id="Comentarios" rows="10" readonly></textarea>
         
             <label for="Fondo">Fondo:</label>
-            <input type="text" name="Fondo" id="Fondo" placeholder="Ejemplo: 10050, 100500" required>
+            <input type="text" name="Fondo" id="Fondo" readonly>
         
             <label for="FechaLimite">Fecha Límite:</label>
-            <input type="date" name="FechaLimite" id="FechaLimite" required>
+            <input type="date" name="FechaLimite" id="FechaLimite" readonly>
         
             <label for="FechaTurnado">Fecha de Turnado:</label>
             <input type="date" name="FechaTurnado" id="FechaTurnado" readonly>
@@ -273,31 +270,26 @@
         
             <label for="FechaDevuelto">Fecha de Devolución:</label>
             <input type="date" name="FechaDevuelto" id="FechaDevuelto" readonly>
-
+        
             <label for="DocSAP">Numero de Documento SAP:</label>
-            <input type="text" name="DocSAP" id="DocSAP" placeholder="Ejemplo: 1900001034">
-
+            <input type="text" name="DocSAP" id="DocSAP" readonly>
+        
             <label for="IntegraSAP">Integra SAP:</label>
-            <input type="text" name="IntegraSAP" id="IntegraSAP" placeholder="Debe ser unico. Ejemplo: 180655">
-
+            <input type="text" name="IntegraSAP" id="IntegraSAP" readonly>
+        
             <label for="RemesaNumero">Numero de Remesa:</label>
-            <input type="text" name="RemesaNumero" id="RemesaNumero" placeholder="La remesa debe ser unica. Ejemplo: 060325-1 (ddmmyy-n)">
-
+            <input type="text" name="RemesaNumero" id="RemesaNumero" readonly>
+        
             <label for="OfPeticion">Of Peticion:</label>
-            <input type="text" name="OfPeticion" id="OfPeticion" placeholder="Of Peticion">
-
+            <input type="text" name="OfPeticion" id="OfPeticion" readonly>
+        
             <label for="NoTramite">NoTramite:</label>
-            <input type="text" name="NoTramite" id="NoTramite" placeholder="NoTramite">
-
+            <input type="text" name="NoTramite" id="NoTramite" readonly>
+        
             <label for="DoctacionAnexo">Doctacion Anexo:</label>
-            <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" placeholder="Doctacion Anexo">
-
-            <label for="MotivoModificacion">Motivo de la modificación:</label>
-            <textarea name="MotivoModificacion" id="MotivoModificacion" placeholder="Motivo de la modificación"  rows="10" required></textarea>
-
-            <button type="submit">Actualizar Trámite</button>
-            <button type="button" onclick="window.location.href = 'dashboard.html';" class="btn btn-secondary">Regresar</button>
+            <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" readonly>
         </form>
+        
         
     </div>
 

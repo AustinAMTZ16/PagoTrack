@@ -107,3 +107,123 @@ tr:nth-child(even) {
 .hidden {
     display: none;
 }
+
+
+
+
+
+/* Contenedor principal del formulario */
+#formEditarOficios {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Etiquetas */
+#formEditarOficios label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Campos de texto, fecha, número, select y textarea */
+#formEditarOficios .form-control,
+#formEditarOficios .form-select {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s;
+}
+
+#formEditarOficios .form-control:focus,
+#formEditarOficios .form-select:focus {
+    border-color: #198754;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+/* Agrupación de cada input */
+#formEditarOficios .mb-3 {
+    margin-bottom: 20px;
+}
+
+/* Botones */
+#formEditarOficios .btn {
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Espacio entre los botones */
+#formEditarOficios .d-grid.gap-2 button + button {
+    margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #formEditarOficios {
+        padding: 20px;
+    }
+}
+
+/* Contenedor principal del formulario */
+#formCrearOficios {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Etiquetas */
+#formCrearOficios label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Campos de texto, fecha, número, select y textarea */
+#formCrearOficios .form-control,
+#formCrearOficios .form-select {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s;
+}
+
+#formCrearOficios .form-control:focus,
+#formCrearOficios .form-select:focus {
+    border-color: #198754;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+/* Agrupación de cada input */
+#formCrearOficios .mb-3 {
+    margin-bottom: 20px;
+}
+
+/* Botones */
+#formCrearOficios .btn {
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Espacio entre los botones */
+#formCrearOficios .d-grid.gap-2 button + button {
+    margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #formCrearOficios {
+        padding: 20px;
+    }
+}

@@ -18,7 +18,7 @@ const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^
 const URL_BASE = `${URL_B}index.php?action=`;
 // Variable global para almacenar la lista trámites
 let tramitesArray = [];
-
+let nombreAnalista = "";
 
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Agregar el evento al select de estado
     if (estadoSelect) {
         const filtrosIniciales = {
+            ID_CONTRATO: '',
             estado: '',
             mes: '',
             tipoTramite: '',
@@ -147,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.clear();
             console.log('Filtros limpiados');
             const filtrosIniciales = {
+                ID_CONTRATO: '',
                 estado: '',
                 mes: '',
                 tipoTramite: '',
@@ -170,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnFiltrar.addEventListener('click', function () {
             // Definir todos los filtros con su tipo
             const filterConfig = [
+                { id: 'ID_CONTRATO', type: 'text' },
                 { id: 'estadoSelect', type: 'select' },
                 { id: 'mesSelect', type: 'select' },
                 { id: 'tipoTramiteSelect', type: 'select' },
@@ -393,7 +396,13 @@ function actualizarTablaTramites(data, tableId) {
                     return data ? formatoMoneda.format(data) : "$0.00";
                 }
             },
-            { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
+            { 
+                data: null,
+                render: function (data) {
+                    nombreAnalista = `${data.NombreUser} ${data.ApellidoUser}`;
+                    return nombreAnalista;
+                }
+            },
             { data: "Estatus" },          
             { data: "Fondo" },   
             { data: "RemesaNumero" },
@@ -410,8 +419,8 @@ function actualizarTablaTramites(data, tableId) {
                     if (data.Estatus === "VoBO") {
                         botones += `<button class="btn btn-success" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
                     }
-                    if (data.Estatus === "Registrado SAP") {
-                        botones += `<button class="btn btn-info" onclick="createRemesa(${data.ID_CONTRATO})">Crear Remesa</button> `;
+                    if (data.Estatus === "RegistradoSAP") {
+                        botones += `<button class="btn btn-warning" onclick="createRemesa(${data.ID_CONTRATO})">Asignar Remesa</button> `;
                     }
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "Operador") || usuario.RolUser === "KPI") {
@@ -420,6 +429,9 @@ function actualizarTablaTramites(data, tableId) {
                     if (usuario && usuario.RolUser === "Admin") {
                         botones += `<button class="btn btn-danger" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
                     }
+                    botones += `<button class="btn btn-info" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
+                    botones += `<button class="btn btn-dark" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'">Detalle</button>`;
+                    
                     return botones;
                 }
             },       
@@ -512,7 +524,13 @@ function actualizarTablaTurnados(data, tableId) {
                     return data ? formatoMoneda.format(data) : "$0.00";
                 }
             },
-            { data: null, render: function (data) { return data.NombreUser + " " + data.ApellidoUser; } },
+            { 
+                data: null,
+                render: function (data) {
+                    nombreAnalista = `${data.NombreUser} ${data.ApellidoUser}`;
+                    return nombreAnalista;
+                }
+            },
             { data: "Estatus" }, 
             { data: "Fondo" },  
             { data: "RemesaNumero" },
@@ -525,6 +543,7 @@ function actualizarTablaTurnados(data, tableId) {
                     if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
                         botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}', '${data.NombreUser} ${data.ApellidoUser}')">Actualizar Estado</button> `;
                     }
+                    botones += `<button class="btn btn-info" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
                     return botones;
                 }
             },
@@ -585,6 +604,7 @@ function filtrarTramites(filtros) {
 
     // 🔹 Mapeo de filtros con campos reales
     const mapaCampos = {
+        ID_CONTRATO: 'ID_CONTRATO',
         estado: 'Estatus',
         mes: 'Mes',
         tipoTramite: 'TipoTramite',
@@ -600,6 +620,21 @@ function filtrarTramites(filtros) {
         fechaRecepcion: 'FechaRecepcion',
         fechaVencimiento: 'FechaLimite'
     };
+
+    // 🔹 Campos con comparación exacta
+    const camposExactos = [
+        'estado',
+        'tipoTramite',
+        'analista',
+        'ID_CONTRATO',
+        'mes',
+        'remesa',
+        'integracionSAP',
+        'docSAP',
+        'numeroTramite',
+        'fechaRecepcion',
+        'fechaVencimiento'
+    ];
 
     // 🔹 Aplicar filtros uno por uno
     const filtrados = base.filter(tramite => {
@@ -617,7 +652,11 @@ function filtrarTramites(filtros) {
                 const fechaBase = valorTramite ? valorTramite.split(' ')[0] : '';
                 if (fechaBase !== valorFiltro) return false;
             } else if (typeof valorTramite === 'string') {
-                if (!valorTramite.toLowerCase().includes(valorFiltro.toLowerCase())) return false;
+                if (camposExactos.includes(campo)) {
+                    if (valorTramite !== valorFiltro) return false;
+                } else {
+                    if (!valorTramite.toLowerCase().includes(valorFiltro.toLowerCase())) return false;
+                }
             } else {
                 if (valorTramite != valorFiltro) return false;
             }
@@ -629,7 +668,7 @@ function filtrarTramites(filtros) {
     // 🔹 Actualizar tabla
     actualizarTablaTramites(filtrados, 'tableTramites');
 
-    //si existe tabla turnados actualizarla
+    // 🔹 Si existe tabla turnados actualizarla
     if ($.fn.DataTable.isDataTable(`#tableTurnados`)) {
         actualizarTablaTurnados(filtrados, 'tableTurnados');
     }
@@ -642,7 +681,7 @@ function estadoTurnado() {
     const idUser = usuario.InicioSesionID;
     // console.log('Usuario:', idUser);
     // Filtrar los trámites por el AnalistaTurnado
-    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser && (tramite.Estatus === 'Turnado' || tramite.Estatus === 'Devuelto' || tramite.Estatus === 'Observaciones' || tramite.Estatus === 'DevueltoOrdenPago' || tramite.Estatus === 'Rechazado' || tramite.Estatus === 'RegistradoSAP'));
+    const tramitesTurnados = tramitesArray.filter(tramite => tramite.AnalistaID === idUser);
     // En caso de que el usuario.RolUser sea igual a 'Admin' debera mostrar todos los trámites
     if (usuario.RolUser === 'Admin') {
         // Funcion para obtener KPI'S 
@@ -913,3 +952,72 @@ function exportToExcel() {
         console.error("La tabla no existe en el DOM.");
     }
 }
+function generarQR(id, nombreAnalista, noTramite) {
+    const url = `https://pagotrack.mexiclientes.com/TramiteDetalle.html?id=${id}`;
+    const qrCanvas = document.createElement("canvas");
+
+    const qr = new QRCode(document.createElement("div"), {
+        text: url,
+        width: 300,
+        height: 300,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Esperamos que el QR se genere
+    setTimeout(() => {
+        const qrImg = qr._el.querySelector("img") || qr._el.querySelector("canvas");
+        if (!qrImg) {
+            console.error("No se pudo generar el QR.");
+            return;
+        }
+
+        const tempCanvas = document.createElement("canvas");
+        const ctx = tempCanvas.getContext("2d");
+
+        const qrWidth = 300;
+        const qrHeight = 300;
+        const textHeight = 60;
+        tempCanvas.width = qrWidth;
+        tempCanvas.height = qrHeight + textHeight;
+
+        // Dibujar QR
+        if (qrImg.tagName === "IMG") {
+            const image = new Image();
+            image.src = qrImg.src;
+            image.onload = () => {
+                ctx.drawImage(image, 0, 0, qrWidth, qrHeight);
+
+                // Dibujar texto debajo
+                ctx.font = "bold 16px Arial";
+                ctx.fillStyle = "#000";
+                ctx.textAlign = "center";
+                ctx.fillText(`Analista: ${nombreAnalista}`, qrWidth / 2, qrHeight + 20);
+                ctx.fillText(`No. Orden: ${noTramite}`, qrWidth / 2, qrHeight + 40);
+                ctx.fillText(`ID Tramite: ${id}`, qrWidth / 2, qrHeight + 60);
+
+                // Descargar
+                const link = document.createElement("a");
+                link.href = tempCanvas.toDataURL("image/png");
+                link.download = `qr_tramite_${id}.png`;
+                link.click();
+            };
+        } else {
+            // Si es canvas directamente
+            ctx.drawImage(qrImg, 0, 0);
+
+            // Texto
+            ctx.font = "bold 16px Arial";
+            ctx.fillStyle = "#000";
+            ctx.textAlign = "center";
+            ctx.fillText(`Analista: ${nombreAnalista}`, qrWidth / 2, qrHeight + 20);
+            ctx.fillText(`ID Tramite: ${id}`, qrWidth / 2, qrHeight + 40);
+
+            // Descargar
+            const link = document.createElement("a");
+            link.href = tempCanvas.toDataURL("image/png");
+            link.download = `qr_tramite_${id}.png`;
+            link.click();
+        }
+    }, 500);
+}
+

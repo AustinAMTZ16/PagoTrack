@@ -2,6 +2,5 @@
 /vendor
 .env
 # Ignorar archivos de configuración de la base de datos
-
 /app/config/Database.php
-/assets/data/
+/assets/data/*.mp3

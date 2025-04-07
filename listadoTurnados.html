@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -69,7 +70,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
-                                    href="seguimientoSuficiencias.html">Suficiencias</a></li>
+                                    href="OficiosPanelControl.html">Suficiencias</a></li>
                             <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
                                     href="crearSuficiencias.html">Crear Suficiencia</a></li>
                         </ul>
@@ -157,6 +158,11 @@
         <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Trámites</h2>
 
         <div class="grid-filtros">
+            <!-- Columna Id -->
+            <div class="filtro-group">
+                <label for="ID_CONTRATO">Identificador Unico</label>
+                <input type="text" id="ID_CONTRATO" class="filtro-input">
+            </div>
             <!-- Columna Estado -->
             <div class="filtro-group">
                 <label for="estadoSelect">Estado</label>

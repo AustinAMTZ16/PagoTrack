@@ -6,12 +6,14 @@
     include_once 'app/controllers/LoginController.php'; 
     include_once 'app/controllers/KpiController.php';
     include_once 'app/controllers/SuficienciaController.php';
+    include_once 'app/controllers/Oficios/OficiosController.php';
     // Instanciamos el controlador
     $controllerTramite = new TramitesController();
     $controllerRemesa = new RemesaController();
     $controllerLogin = new LoginController();
     $controllerKpi = new KpiController();
     $controllerSuficiencia = new SuficienciaController();
+    $controllerOficios = new OficiosController();
     //Obtener el método de la solicitud HTTP
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -137,21 +139,21 @@
                 }
                 exit;
                 break;
-            case 'registrarSuficiencia':
+            case 'crearOficio':
                 if(!empty($data)){
                     // Declarar como global
-                    global $controllerSuficiencia;
-                    $respuesta = $controllerSuficiencia->registrarSuficiencia((array) $data);
+                    global $controllerOficios;
+                    $respuesta = $controllerOficios->crearOficio((array) $data);
                 }else{
                     echo "Datos no proporcionados";
                     exit;
                 }
                 if ($respuesta) {
                     http_response_code(200);
-                    echo json_encode(array('message' => 'Suficiencia registrada.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Oficio creado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
                 } else {
                     http_response_code(404);
-                    echo json_encode(array('message' => 'Suficiencia no registrada.'), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Oficio no creado.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;
@@ -301,16 +303,16 @@
                 }
                 exit;
                 break;
-            case 'getSuficiencias':
+            case 'listarOficios':
                 // Declarar como global
-                global $controllerSuficiencia;
-                $respuesta = $controllerSuficiencia->getSuficiencias();
+                global $controllerOficios;
+                $respuesta = $controllerOficios->listarOficios();
                 if ($respuesta) {
                     http_response_code(200);
-                    echo json_encode(array('message' => 'Listado de suficiencias.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Listado de oficios.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
                 } else {
                     http_response_code(404);
-                    echo json_encode(array('message' => 'No se encontraron suficiencias.'), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'No se encontraron oficios.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;
@@ -425,20 +427,20 @@
                 }
                 exit;
                 break;  
-            case 'actualizarSuficiencia':
+            case 'actualizarOficio':
                 if(!empty($data)){
-                    global $controllerSuficiencia;
-                    $respuesta = $controllerSuficiencia->actualizarSuficiencia((array) $data);
+                    global $controllerOficios;
+                    $respuesta = $controllerOficios->actualizarOficio((array) $data);
                 }else{
                     echo "Datos no proporcionados";
                     exit;
                 }
                 if ($respuesta) {
                     http_response_code(200);
-                    echo json_encode(array('message' => 'Suficiencia modificados.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Oficio modificado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
                 } else {
                     http_response_code(404);
-                    echo json_encode(array('message' => 'Suficiencia no modificados.'), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Oficio no modificado.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break; 
@@ -522,20 +524,20 @@
                 }
                 exit;
                 break;  
-            case 'eliminarSuficiencia':
+            case 'eliminarOficio':
                 if(!empty($data)){
-                    global $controllerSuficiencia;
-                    $respuesta = $controllerSuficiencia->eliminarSuficiencia((array) $data);
+                    global $controllerOficios;
+                    $respuesta = $controllerOficios->eliminarOficio((array) $data);
                 }else{
                     echo "Datos no proporcionados";
                     exit;
                 }
                 if ($respuesta) {
                     http_response_code(200);
-                    echo json_encode(array('message' => 'Suficiencia eliminada.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Oficio eliminado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
                 } else {
                     http_response_code(404);
-                    echo json_encode(array('message' => 'Suficiencia no eliminada.'), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Oficio no eliminado.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;  

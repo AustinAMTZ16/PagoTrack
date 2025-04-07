@@ -65,6 +65,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+    //validar si existe el formulario de asignar remesa
+    const formAsignarRemesa = document.getElementById('formAsignarRemesa');
+    if (formAsignarRemesa) {
+        //Obtener el ID_TRAMITE de la URL 
+        const ID_TRAMITE = urlParams.get('id');
+        if (ID_TRAMITE) {
+            document.getElementById('ID_TRAMITE').value = ID_TRAMITE;
+        }
+        formAsignarRemesa.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const data = {
+                ID_CONTRATO  : document.getElementById('ID_TRAMITE').value,
+                Estatus: document.getElementById('Estatus').value,
+                RemesaNumero: document.getElementById('NumeroRemesa').value,
+                MotivoModificacion: document.getElementById('Comentarios').value
+            };
+            updateTramiteCompleto(data);
+        });
+    }
 });
 
 // Funcion para ver el detalle de las remesas
@@ -369,4 +389,32 @@ async function updateRemesa(data) {
     } catch (error) {
         console.error('Error al actualizar la remesa:', error.message);
     }
+}
+// Función Actualizar Tramite Completo
+async function updateTramiteCompleto(data) {
+    console.log('updateTramiteCompletodata:', data);
+    return fetch(URL_BASE + 'updateTramiteCompleto', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        try {
+            alert(result.message);
+            window.location.href = 'dashboard.html';
+            // console.log('result:', result);
+        } catch (error) {
+            console.error("Error al actualizar el trámite:", error);
+        }
+    })
+    .catch(error => {
+        alert('Error al actualizar el trámite. Asegurese de que el numero de remesa sea unico.', error.message);
+        throw error; // Importante para que el error se propague y pueda ser capturado
+    });
 }

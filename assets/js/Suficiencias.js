@@ -203,7 +203,7 @@ function registrarSuficiencia(data){
     })
     .then(result => {
         alert(result.message);
-        // window.location.href = 'seguimientoSuficiencias.html';
+        // window.location.href = 'OficiosPanelControl.html';
     })
     .catch(error => {
         console.error('Error al obtener las remesas con trámites:', error.message);
@@ -292,7 +292,7 @@ function actualizarSuficiencia(data){
     })
     .then(result => {
         alert(result.message);
-        // window.location.href = 'seguimientoSuficiencias.html';
+        // window.location.href = 'OficiosPanelControl.html';
     })
     .catch(error => {
         console.error('Error al obtener las remesas con trámites:', error.message);

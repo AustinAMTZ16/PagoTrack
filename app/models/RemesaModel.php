@@ -18,7 +18,7 @@ class RemesaModel
                     FROM ConsentradoGeneralTramites
                     WHERE RemesaNumero IS NOT NULL
                     GROUP BY Grupo
-                    ORDER BY Grupo DESC;
+                    ORDER BY Grupo ASC;
                 ";
 
         $stmt = $this->conn->prepare($query);

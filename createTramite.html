@@ -51,6 +51,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    <!-- Sección para el Inicio -->
                     <li id="Operador" style="display: none;" class="nav-item">
                         <a class='nav-link' href="dashboard.html">Inicio</a>
                     </li>
@@ -73,7 +74,7 @@
                                     href="seguimientoRemesas.html">Remesas</a></li>
                         </ul>
                     </li>
-
+                    <!-- Sección para el Ordenes de Pago -->
                     <li id="Pagos" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -84,20 +85,7 @@
                                     href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
                         </ul>
                     </li>
-
-                    <li id="Suficiencias" class="nav-item dropdown" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Suficiencias
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
-                                    href="seguimientoSuficiencias.html">Suficiencias</a></li>
-                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
-                                    href="crearSuficiencias.html">Crear Suficiencia</a></li>
-                        </ul>
-                    </li>
-
+                    <!-- Sección para el KPI -->
                     <li id="KPI" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -110,11 +98,17 @@
                             <li id="KPI" style="display: none;"><a class="dropdown-item"
                                     href="listadoTurnados.html">Turnado</a></li>
                             <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoRemesas.html">Remesas</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
                                     href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="reportesquery.html">Reportes Query</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="exploradorArchivos.html">Explorador de Archivos</a></li>
 
                         </ul>
                     </li>
-
+                    <!-- Sección para el Oficios -->
                     <li id="Oficios" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -122,22 +116,17 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Oficios" style="display: none;"><a class="dropdown-item"
-                                    href="correspondencia.html">Correspondencia</a></li>
-                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
-                                    href="oficios.html">Oficios</a></li>
+                                    href="OficiosPanelControl.html">Oficios</a></li>
+                            <!-- <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="#">Correspondencia</a></li> -->
                         </ul>
                     </li>
-
-                    <li>
-                        <a class='nav-link' href="help.html">Ayuda</a>
-                    </li>
-
-                    <!-- Cerrar sesión -->
-                    <li>
-                        <a class='nav-link' href="#"
-                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
-                            Sesión</a>
-                    </li>
+                    <!-- Sección para el Manual --> 
+                    <li><a class="nav-link" href="manual.html">Manual</a></li>
+                    <!-- Sección para el Estados -->
+                    <li><a class="nav-link" href="help.html">Estados</a></li>
+                    <!-- Sección para el Cerrar sesión -->
+                    <li><a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -152,52 +141,37 @@
                 <label for="Dependencia">Institución</label>
                 <select name="Dependencia" id="Dependencia" placeholder="Institución" required>
                     <option value="" disabled selected>Institución</option>
-                    <option value="Coordinación de las Regidurias">Coordinación de las Regidurias</option>
-                    <option value="Oficina de Presidencia">Oficina de Presidencia</option>
+                    <!-- Dependencias -->
+                    <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
+                    <option value="Presidencia Municipal">Presidencia Municipal</option>
                     <option value="Sindicatura Municipal">Sindicatura Municipal</option>
                     <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
-                    <option value="Tesorería Municipal">Tesorería Municipal</option>
                     <option value="Contraloría Municipal">Contraloría Municipal</option>
+                    <option value="Tesorería Municipal">Tesorería Municipal</option>
                     <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
-                    <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y
-                        Participación Ciudadana</option>
-                    <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e Infraestructura
-                    </option>
-                    <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo Urbano
-                    </option>
+                    <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y Participación Ciudadana</option>
+                    <option value="Secretaría para la Igualdad Sustantiva de Género">Secretaría para la Igualdad Sustantiva de Género</option>
+                    <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de Administración y Tecnologías de la Información</option>
+                    <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo Urbano</option>
+                    <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro Histórico y Patrimonio Cultural</option>
                     <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
-                    <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de
-                        Administración y Tecnologías de la Información</option>
+                    <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e Infraestructura</option>
                     <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
-                    <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación General de
-                        Transparencia y Municipio Abierto</option>
-                    <option value="Sistemas Municipal DIF">Sistemas Municipal DIF</option>
-                    <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo Operador
-                        del
-                        Servicio de Limpia del Municipio de Puebla</option>
-                    <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte y
-                        Cultura de
-                        Puebla</option>
-                    <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
-                    <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de Puebla
-                    </option>
-                    <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud del
-                        Municipio
-                        de Puebla</option>
-                    <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
-                    <option value="Coordinación General de Comunicación Social">Coordinación General de Comunicación
-                        Social
-                    </option>
-                    <option value="Secretaria para la Igualdad Sustantiva de Género">Secretaria para la Igualdad
-                        Sustantiva
-                        de Género</option>
                     <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
                     <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
-                    <option value="Direccion General De Desarrollo y Formación Profesional">Direccion General De
-                        Desarrollo
-                        y Formación Profesional</option>
-                    <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro Histórico y
-                        Patrimonio Cultural</option>
+                    <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación General de Transparencia y Municipio Abierto</option>
+                    <option value="Coordinación General de Comunicación Social">Coordinación General de Comunicación Social</option>
+                    <option value="Dirección General de Desarrollo y Formación Profesional">Dirección General de Desarrollo y Formación Profesional</option>
+
+                    <!-- Organismos -->
+                    <option value="Sistema Municipal DIF">Sistema Municipal DIF</option>
+                    <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de Puebla</option>
+                    <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud del Municipio de Puebla</option>
+                    <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte y Cultura de Puebla</option>
+                    <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo Operador del Servicio de Limpia del Municipio de Puebla</option>
+                    <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
+                    <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
+
                 </select>
             </div>
 

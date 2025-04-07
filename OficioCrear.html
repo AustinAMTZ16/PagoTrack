@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Oficio</title>
+    <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="./assets/js/SesionUser.js"></script>
+    <script src="./assets/js/MenuSistema.js"></script>
+    <script src="./assets/js/Oficios.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li id="Operador" style="display: none;" class="nav-item">
+                        <a class='nav-link' href="dashboard.html">Inicio</a>
+                    </li>
+                    <!-- Sección para el Tramite -->
+                    <li id="Tramite" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Trámite
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Inicio</a></li>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="createTramite.html">Crear Trámite</a></li>
+                            <li id="Analista" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Listado de Turnados</a></li>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoRemesas.html">Remesas</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="Pagos" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Ordenes de Pago
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Pagos" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Indicadores de Rendimiento
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Turnado</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoRemesas.html">Remesas</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="reportesquery.html">Reportes Query</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="exploradorArchivos.html">Explorador de Archivos</a></li>
+
+                        </ul>
+                    </li>
+
+                    <li id="Oficios" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Correspondencia y Oficios
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="OficiosPanelControl.html">Oficios</a></li>
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="#">Correspondencia</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a class="nav-link" href="manual.html">Manual</a></li>
+                    <li><a class="nav-link" href="help.html">Estados</a></li>
+
+                    <!-- Cerrar sesión -->
+                    <li>
+                        <a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
+                            Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="contenedor">
+        <div class="table-container">
+            <h1>Crear Oficio</h1>
+            <form id="formCrearOficios" method="POST">
+                <!-- Folio -->
+                <div class="mb-3">
+                    <label for="Folio" class="form-label">Folio</label>
+                    <input type="text" class="form-control" id="Folio" name="Folio" value="0001-2025">
+                </div>
+    
+                <!-- Fecha de Recepción -->
+                <div class="mb-3">
+                    <label for="FechaRecepcion" class="form-label">Fecha de Recepción</label>
+                    <input type="date" class="form-control" id="FechaRecepcion" name="FechaRecepcion" value="2025-03-28">
+                </div>
+    
+                <!-- Solicitante -->
+                <div class="mb-3">
+                    <label for="Solicitante" class="form-label">Solicitante</label>
+                    <input type="text" class="form-control" id="Solicitante" name="Solicitante" value="Pedro Valencia Luna">
+                </div>
+    
+                <!-- Dependencia -->
+                <div class="mb-3">
+                    <label for="Dependencia" class="form-label">Dependencia</label>
+                    <input type="text" class="form-control" id="Dependencia" name="Dependencia" value="Secretaría de Bienestar y Participación Ciudadana">
+                </div>
+    
+                <!-- Departamento -->
+                <div class="mb-3">
+                    <label for="Departamento" class="form-label">Departamento</label>
+                    <input type="text" class="form-control" id="Departamento" name="Departamento" value="Dirección de Finanzas">
+                </div>
+    
+                <!-- Número de Oficio -->
+                <div class="mb-3">
+                    <label for="NumeroOficio" class="form-label">Número de Oficio</label>
+                    <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio" value="OF-2025-001">
+                </div>
+    
+                <!-- Tipo de Oficio -->
+                <div class="mb-3">
+                    <label for="tipoOficio" class="form-label">Tipo de Oficio</label>
+                    <select class="form-select" id="tipoOficio" name="tipoOficio">
+                        <option value="">Seleccione</option>
+                        <option value="Suficiencia Presupuestal" selected>Suficiencia Presupuestal</option>
+                        <option value="Suficiencia Compromiso Gasto">Suficiencia Compromiso Gasto</option>
+                        <option value="Suficiencia Anticipada">Suficiencia Anticipada</option>
+                        <option value="Modificaciones Suficiencia Presupuestal">Modificaciones Suficiencia Presupuestal</option>
+                        <option value="Suficiencia Ampliación">Suficiencia Ampliación</option>
+                    </select>
+                </div>
+    
+                <!-- Asunto -->
+                <div class="mb-3">
+                    <label for="Asunto" class="form-label">Asunto</label>
+                    <input type="text" class="form-control" id="Asunto" name="Asunto" value="Solicitud de Suficiencia Presupuestal">
+                </div>
+    
+                <!-- Concepto -->
+                <div class="mb-3">
+                    <label for="Concepto" class="form-label">Concepto</label>
+                    <textarea class="form-control" id="Concepto" name="Concepto" rows="3">Apoyo financiero para adquisición de mobiliario escolar en juntas auxiliares.</textarea>
+                </div>
+    
+                <!-- Monto -->
+                <div class="mb-3">
+                    <label for="Monto" class="form-label">Monto</label>
+                    <input type="number" step="0.01" class="form-control" id="Monto" name="Monto" value="150000.00">
+                </div>
+    
+                <!-- Fecha de Vencimiento -->
+                <div class="mb-3">
+                    <label for="FechaVencimiento" class="form-label">Fecha de Vencimiento</label>
+                    <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento" value="2025-04-15">
+                </div>
+    
+                <!-- Turnado A -->
+                <div class="mb-3">
+                    <label for="Turnado" class="form-label">Turnado A</label>
+                    <input type="text" class="form-control" id="Turnado" name="Turnado" value="Dirección de Programación y Presupuesto">
+                </div>
+    
+                <!-- Respuesta / Conocimiento -->
+                <div class="mb-3">
+                    <label for="RespuestaConocimiento" class="form-label">Respuesta / Conocimiento</label>
+                    <input type="text" class="form-control" id="RespuestaConocimiento" name="RespuestaConocimiento" value="SP-2025-004">
+                </div>
+    
+                <!-- Fecha Retroactiva -->
+                <div class="mb-3">
+                    <label for="FechaRetroactiva" class="form-label">Fecha Retroactiva</label>
+                    <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva" value="2025-03-01">
+                </div>
+    
+                <!-- Estado -->
+                <div class="mb-3">
+                    <label for="Estado" class="form-label">Estado del Oficio</label>
+                    <select class="form-select" id="Estado" name="Estado">
+                        <option value="CREADO" selected>CREADO</option>
+                        <option value="TURNADO">TURNADO</option>
+                        <option value="OBSERVACIONES">OBSERVACIONES</option>
+                        <option value="DEVUELTO">DEVUELTO</option>
+                        <option value="FIRMA-DG">FIRMA POR DIRECTORA TESORERIA</option>
+                        <option value="ESCANEO-FIRMAS">ESCANEO DE FIRMAS</option>
+                        <option value="RESPUESTA">RESPUESTA</option>
+                        <option value="ESCANEO-SELLOS">ESCANEO DE SELLOS</option>
+                        <option value="ARCHIVADO">ARCHIVADO</option>
+                        <option value="CANCELADO">CANCELADO</option>
+                    </select>
+                </div>
+    
+                <!-- UsuarioRegistro -->
+                <div class="mb-3">
+                    <label for="UsuarioRegistro" class="form-label">Usuario que registra</label>
+                    <input type="text" class="form-control" id="UsuarioRegistro" name="UsuarioRegistro" value="agustin.arenas" readonly>
+                </div>
+    
+                <!-- Comentarios -->
+                <div class="mb-3">
+                    <label for="Comentarios" class="form-label">Comentarios</label>
+                    <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2">Creación inicial desde el módulo de oficios.</textarea>
+                </div>
+    
+                <!-- Botón Enviar -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Guardar Oficio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

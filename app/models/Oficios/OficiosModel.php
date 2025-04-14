@@ -61,7 +61,8 @@ class OficiosModel
                 FechaRetroactiva,
                 Estado,
                 UsuarioRegistro,
-                Comentarios
+                Comentarios,
+                FechaRecepcion
             ) VALUES (
                 :Folio,
                 :Solicitante,
@@ -77,7 +78,8 @@ class OficiosModel
                 :FechaRetroactiva,
                 :Estado,
                 :UsuarioRegistro,
-                :Comentarios
+                :Comentarios,
+                :FechaRecepcion
             )";
 
             $stmt = $this->conn->prepare($query);
@@ -97,7 +99,7 @@ class OficiosModel
             $stmt->bindParam(':Estado', $data['Estado']);
             $stmt->bindParam(':UsuarioRegistro', $data['UsuarioRegistro']);
             $stmt->bindParam(':Comentarios', $jsonComentarios);
-
+            $stmt->bindParam(':FechaRecepcion', $data['FechaRecepcion']);
             $stmt->execute();
 
             return json_encode(["message" => "Oficio creado correctamente"]);

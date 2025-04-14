@@ -187,7 +187,7 @@ function llenarTablaSuficiencias(data) {
 }
 
 function registrarSuficiencia(data){
-    console.log('registrarSuficienciaData: ',data);
+    //console.log('registrarSuficienciaData: ',data);
     fetch(URL_BASE + 'registrarSuficiencia', {
         method: 'POST',
         headers: {
@@ -224,7 +224,7 @@ function llenarformActualizarSuficiencias(suficienciaID) {
         return await response.json();
     })
     .then(result => {
-        console.log(result.data);
+        //console.log(result.data);
         // Esperar que los datos se hayan cargado y luego buscar la suficiencia con el ID correspondiente
         const suficiencia = result.data.find(suficiencia => suficiencia.SuficienciasID == suficienciaID);
 
@@ -271,7 +271,7 @@ function actualizarSuficiencia(data){
     //Obtener el ID del URL
     const urlParams = new URLSearchParams(window.location.search);
     const SuficienciasID = urlParams.get('id');
-    console.log('actualizarSuficiencia', SuficienciasID);
+    //console.log('actualizarSuficiencia', SuficienciasID);
 
     // Agregar el campo SuficienciasID a data
     data.SuficienciasID = SuficienciasID;

@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Validar si el parámetro consecutivo existe
     const consecutivo = urlParams.get('consecutivo');
     if (consecutivo) {
-        console.log('consecutivo: ' + consecutivo);
+        //console.log('consecutivo: ' + consecutivo);
         armarRemesa(consecutivo);
     }
     // Validar si el elemento tableListaRemesas existe
@@ -123,7 +123,6 @@ async function cambiarEstatusRemesa(consecutivo, estatus) {
         console.error('Error al actualizar los trámites:', error.message);
     }
 }
-
 // Funcion para llenar la tabla con los datos de la remesa
 function llenarTablaRemesas(listadoRemesas) {
     // console.log('listadoRemesas:', listadoRemesas);
@@ -392,7 +391,7 @@ async function updateRemesa(data) {
 }
 // Función Actualizar Tramite Completo
 async function updateTramiteCompleto(data) {
-    console.log('updateTramiteCompletodata:', data);
+    //console.log('updateTramiteCompletodata:', data);
     return fetch(URL_BASE + 'updateTramiteCompleto', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

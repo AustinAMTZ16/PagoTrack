@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             console.clear();
-            console.log('Filtros limpiados');
+            //console.log('Filtros limpiados');
             const filtrosIniciales = {
                 ID_CONTRATO: '',
                 estado: '',
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            console.log('Filtros aplicados:', appliedFilters);
+            //console.log('Filtros aplicados:', appliedFilters);
             filtrarTramites(appliedFilters);
         });
     }
@@ -234,7 +234,7 @@ function getTramites() {
             if (result.data && Array.isArray(result.data)) {
                 // Extraer el array dentro de 'data'
                 tramitesArray = result.data;
-                console.log('Trámites:', tramitesArray);
+                //console.log('Trámites:', tramitesArray);
                 // console.log('Array de trámites:', tramitesArray);
                 //actualizarTablaTramites(tramitesArray, 'tableTramites'); // Pasar el array a la función
                 filtrarTramitesOperador();
@@ -285,7 +285,7 @@ function getConteoEstatus() {
             return await response.json();
         })
         .then(result => {
-            console.log('Result:', result);
+            //console.log('Result:', result);
             // Renderizar la tabla
             /* renderTable(result.data); */
         })
@@ -308,7 +308,7 @@ function getReporteEstatusComentarios() {
             return await response.json();
         })
         .then(result => {
-            console.log('Result:', result);
+            //console.log('Result:', result);
             // Renderizar la tabla
             /* renderTable(result.data); */
         })
@@ -735,13 +735,13 @@ function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecep
     const fechaLimiteFormateada = formatoFecha(fechaLimite);
     const fechaRecepcionFormateada = formatoFecha(fechaRecepcion);
 
-    console.log('Editar tramite:', id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia);
+    //console.log('Editar tramite:', id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia);
     
     window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}&nombreUser=${encodeURIComponent(nombreUser)}`;
 }
 // Eliminar tramite por id
 function eliminarTramite(id) {
-    console.log('Eliminar tramite:', id);
+    //console.log('Eliminar tramite:', id);
 
     try {
         // Confirmación del usuario antes de eliminar
@@ -892,7 +892,7 @@ function mostrarComentario(comentario) {
 }
 // Modificar tramite por id
 function modificarTramite(id) {
-    console.log('Editar tramite:', id);
+    //console.log('Editar tramite:', id);
     window.location.href = `updateTramiteCompleto.html?id=${id}`;
 }
 // Funcion para obtener KPI'S  Total Hoy, Total Vencidos, Total a vencer
@@ -901,11 +901,11 @@ function obtenerSemaforoTurnado(tramitesTurnados) {
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
 
-    console.log('Fecha actual:', fechaActual); // Ejemplo: "2025-03-06"
+    //console.log('Fecha actual:', fechaActual); // Ejemplo: "2025-03-06"
 
     // Obtener el total de trámites
     const totalTramites = tramitesTurnados.length;
-    console.log('Total de trámites:', totalTramites);
+    //console.log('Total de trámites:', totalTramites);
     
     // Lista de estatus válidos
     const estatusValidos = ['Turnado', 'Devuelto', 'DevueltoOrdenPago'];
@@ -916,7 +916,7 @@ function obtenerSemaforoTurnado(tramitesTurnados) {
         obtenerFechaSinHora(tramite.FechaLimite) === fechaActual
     );
     const idsHoy = tramitesHoy.map(tramite => tramite.ID_CONTRATO);
-    console.log('Total de trámites en estado Turnado, Devuelto o DevueltoOrdenPago que vencen hoy:', idsHoy.length, idsHoy);
+    //console.log('Total de trámites en estado Turnado, Devuelto o DevueltoOrdenPago que vencen hoy:', idsHoy.length, idsHoy);
     document.getElementById('total_hoy').textContent = idsHoy.length || 0;
 
     // Trámites vencidos (FechaLimite < fecha actual)
@@ -925,7 +925,7 @@ function obtenerSemaforoTurnado(tramitesTurnados) {
         obtenerFechaSinHora(tramite.FechaLimite) < fechaActual
     );
     const idsVencidos = tramitesVencidos.map(tramite => tramite.ID_CONTRATO);
-    console.log('Total de trámites vencidos:', idsVencidos.length, idsVencidos);
+    //console.log('Total de trámites vencidos:', idsVencidos.length, idsVencidos);
     document.getElementById('total_vencidos').textContent = idsVencidos.length || 0;
 
     // Trámites a vencer (FechaLimite > fecha actual)
@@ -934,7 +934,7 @@ function obtenerSemaforoTurnado(tramitesTurnados) {
         obtenerFechaSinHora(tramite.FechaLimite) > fechaActual
     );
     const idsFuturos = tramitesFuturos.map(tramite => tramite.ID_CONTRATO);
-    console.log('Total de trámites a vencer:', idsFuturos.length, idsFuturos);
+    //console.log('Total de trámites a vencer:', idsFuturos.length, idsFuturos);
     document.getElementById('total_futuros').textContent = idsFuturos.length || 0;
 }
 // Función para obtener solo la fecha en formato YYYY-MM-DD

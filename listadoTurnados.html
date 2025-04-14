@@ -29,6 +29,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    <!-- Sección para el Inicio -->
                     <li id="Operador" style="display: none;" class="nav-item">
                         <a class='nav-link' href="dashboard.html">Inicio</a>
                     </li>
@@ -51,7 +52,7 @@
                                     href="seguimientoRemesas.html">Remesas</a></li>
                         </ul>
                     </li>
-
+                    <!-- Sección para el Ordenes de Pago -->
                     <li id="Pagos" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -62,20 +63,7 @@
                                     href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
                         </ul>
                     </li>
-
-                    <li id="Suficiencias" class="nav-item dropdown" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Suficiencias
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
-                                    href="OficiosPanelControl.html">Suficiencias</a></li>
-                            <li id="Suficiencias" style="display: none;"><a class="dropdown-item"
-                                    href="crearSuficiencias.html">Crear Suficiencia</a></li>
-                        </ul>
-                    </li>
-
+                    <!-- Sección para el KPI -->
                     <li id="KPI" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,10 +79,14 @@
                                     href="seguimientoRemesas.html">Remesas</a></li>
                             <li id="KPI" style="display: none;"><a class="dropdown-item"
                                     href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="reportesquery.html">Reportes Query</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="exploradorArchivos.html">Explorador de Archivos</a></li>
 
                         </ul>
                     </li>
-
+                    <!-- Sección para el Oficios -->
                     <li id="Oficios" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -102,22 +94,19 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Oficios" style="display: none;"><a class="dropdown-item"
-                                    href="correspondencia.html">Correspondencia</a></li>
+                                    href="OficiosPanelControl.html">Oficios</a></li>
                             <li id="Oficios" style="display: none;"><a class="dropdown-item"
-                                    href="oficios.html">Oficios</a></li>
+                                    href="OficiosPanelAnalista.html">Panel Analista</a></li>
+                            <!-- <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="#">Correspondencia</a></li> -->
                         </ul>
                     </li>
-
-                    <li>
-                        <a class='nav-link' href="help.html">Ayuda</a>
-                    </li>
-
-                    <!-- Cerrar sesión -->
-                    <li>
-                        <a class='nav-link' href="#"
-                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar
-                            Sesión</a>
-                    </li>
+                    <!-- Sección para el Manual --> 
+                    <li><a class="nav-link" href="manual.html">Manual</a></li>
+                    <!-- Sección para el Estados -->
+                    <li><a class="nav-link" href="help.html">Estados</a></li>
+                    <!-- Sección para el Cerrar sesión -->
+                    <li><a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>

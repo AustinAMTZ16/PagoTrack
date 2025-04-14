@@ -57,7 +57,7 @@ function getRemesasWithTramites() {
             return await response.json();
         })
         .then(result => {
-            console.log('ResultgetRemesasWithTramites:', result);
+            //console.log('ResultgetRemesasWithTramites:', result);
             // Renderizar la tabla
             renderTable2(result.data);
         })
@@ -185,7 +185,7 @@ function actualizarRegistro(row) {
 }
 // Función para actualizar un trámite y remesa
 function updateTramiteRemesa(data) {
-    console.log('updateTramiteRemesa: ', data)
+    //console.log('updateTramiteRemesa: ', data)
     fetch(URL_BASE + 'updateTramiteRemesa', {
         method: 'PATCH',
         headers: {

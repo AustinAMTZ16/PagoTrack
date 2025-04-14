@@ -10,7 +10,7 @@ document.getElementById('btnGenerarComentario').addEventListener('click', functi
     })
     .then(response => response.json())
     .then(data => {
-        console.log("Respuesta de la API:", data); // Imprime la respuesta en consola para depuración
+        //console.log("Respuesta de la API:", data); // Imprime la respuesta en consola para depuración
 
         if (data.error) {
             document.getElementById('resultado').innerText = "Error: " + data.error;

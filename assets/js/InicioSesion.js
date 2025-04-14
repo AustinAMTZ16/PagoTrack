@@ -54,7 +54,7 @@ function inicioSesion(CorreoUserForm, ClaveUserForm){
                     window.location.href = 'seguimientoOrdenesPago.html';
                     break;
                 case 'Suficiencias' :
-                    window.location.href = 'OficiosPanelControl.html';
+                    window.location.href = 'OficiosPanelAnalista.html';
                     break;  
                 case 'KPI' :
                     window.location.href = 'kpi.html';

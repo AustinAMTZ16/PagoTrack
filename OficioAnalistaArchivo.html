@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
-    <script src="./assets/js/RemesaController.js"></script>
+    <script type="module" src="./assets/js/Oficios.js"></script>
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
@@ -113,13 +115,30 @@
 
     <div class="contenedor">
         <div class="table-container">
-            <h1 style="text-align: center;">Listado de Remesas</h1>
-            <table id="tableListaRemesas" class="display">
+            <h1>Listado de Oficios</h1>
+            <button id="descargarExcelOficiosAnalista" class="btn btn-primary toggleButton">Descargar Excel</button>
+            <table id="tableOficiosAnalistaArchivo" class="display">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Remesa</th>
-                        <th>No. Tramites</th>
+                        <th>ID</th>
+                        <th>Folio</th>
+                        <th>FechaRecepcion</th>
+                        <th>Solicitante</th>
+                        <th>Dependencia</th>
+                        <th>Departamento</th>
+                        <th>NumeroOficio</th>
+                        <th>tipoOficio</th>
+                        <th>Asunto</th>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>FechaVencimiento</th>
+                        <th>Turnado</th>
+                        <th>RespuestaConocimiento</th>
+                        <th>FechaRetroactiva</th>
+                        <th>Estado</th>
+                        <th>FechaCreacion</th>
+                        <th>UsuarioRegistro</th>
+                        <th>Comentarios</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>

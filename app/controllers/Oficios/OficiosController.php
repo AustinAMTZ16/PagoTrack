@@ -22,6 +22,10 @@ class OficiosController {
 
     public function eliminarOficio($id){
         return $this->model->eliminarOficio($id);
+    }  
+
+    public function actualizarOficioArchivo($data, $archivos){
+        return $this->model->actualizarOficioArchivo($data, $archivos);
     }   
 }   
 ?>

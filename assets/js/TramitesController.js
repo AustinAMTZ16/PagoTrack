@@ -215,7 +215,7 @@ async function updateTramiteCompleto(data) {
 }
 // Función para obtener un trámite
 async function obtenerTramite(ID_CONTRATO) {
-    console.log('ID_CONTRATO: ', ID_CONTRATO);
+    //console.log('ID_CONTRATO: ', ID_CONTRATO);
     return fetch(URL_BASE + 'getTramites', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -227,10 +227,10 @@ async function obtenerTramite(ID_CONTRATO) {
         return response.json();
     })
     .then(result => {
-        console.log('idTramite: ', ID_CONTRATO);
+        //console.log('idTramite: ', ID_CONTRATO);
         try {
             const tramite = result.data.find(tramite => tramite.ID_CONTRATO == ID_CONTRATO);
-            console.log('Tramite obtenido:', tramite);
+            //console.log('Tramite obtenido:', tramite);
 
             if (tramite) {
                 document.getElementById("ID_CONTRATO").value = tramite.ID_CONTRATO || "";

@@ -117,6 +117,8 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li id="Oficios" style="display: none;"><a class="dropdown-item"
                                     href="OficiosPanelControl.html">Oficios</a></li>
+                            <li id="Oficios" style="display: none;"><a class="dropdown-item"
+                                    href="OficiosPanelAnalista.html">Panel Analista</a></li>
                             <!-- <li id="Oficios" style="display: none;"><a class="dropdown-item"
                                     href="#">Correspondencia</a></li> -->
                         </ul>
@@ -378,7 +380,7 @@
 
         function actualizarCampoOculto() {
             document.getElementById('Fondo').value = JSON.stringify(importesFF);
-            console.log(document.getElementById('Fondo').value);
+            //console.log(document.getElementById('Fondo').value);
 
             // Convertimos los valores del objeto a números y sumamos
             let sumaTotal = Object.values(importesFF).reduce((total, valor) => total + parseFloat(valor), 0);

@@ -4,19 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de control</title>
+    <title>Modificar Tramite</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/SesionUser.js"></script>
+    <script type="module" src="./assets/js/Oficios.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
-    <script src="./assets/js/RemesaController.js"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <style>
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            /* Espacio entre los campos */
+        }
 
+        .input-group {
+            width: 48%;
+            /* Cada input toma un 48% del ancho para caber en dos por fila */
+        }
+
+        .small-text {
+            font-size: 0.8em;
+            /* Reduce el tamaño del texto */
+            color: #666;
+            /* Cambia el color si lo deseas, un gris suave es ideal */
+        }
+
+
+        @media (max-width: 768px) {
+            .input-group {
+                width: 100%;
+                /* En pantallas más pequeñas, los inputs se apilan uno sobre otro */
+            }
+        }
+
+        input[readonly],
+        textarea[readonly],
+        select[readonly] {
+            background-color: #333 !important;
+            color: #fff !important;
+            border: 1px solid #555;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 
 <body>
@@ -100,35 +133,127 @@
                                     href="#">Correspondencia</a></li> -->
                         </ul>
                     </li>
-                    <!-- Sección para el Manual --> 
+                    <!-- Sección para el Manual -->
                     <li><a class="nav-link" href="manual.html">Manual</a></li>
                     <!-- Sección para el Estados -->
                     <li><a class="nav-link" href="help.html">Estados</a></li>
                     <!-- Sección para el Cerrar sesión -->
-                    <li><a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
+                    <li><a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="contenedor">
-        <div class="table-container">
-            <h1 style="text-align: center;">Listado de Remesas</h1>
-            <table id="tableListaRemesas" class="display">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Remesa</th>
-                        <th>No. Tramites</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Filas generadas dinámicamente -->
-                </tbody>
-            </table>
-        </div>
+    <div class="container">
+        <img src="./assets/images/lg_seccion.jpg" alt="" width="20%" style="display: block; margin: 0 auto;">
+        <h1>Sistema de Gestión de Trámites</h1>
+        <h1>Actualizar Oficio</h1>
+        <form id="formOficioAnalistaActualizar" method="post">
+            <!-- Sección para el ID del Oficio -->
+            <div class="input-group">
+                <label for="ID">Identificador del Oficio</label>
+                <input type="text" id="ID" name="ID" placeholder="ID del Oficio" readonly>
+            </div>
+            <!-- Sección para el Nombre del Usuario -->
+            <div class="input-group">
+                <label for="NombreUser">Nombre del Usuario</label>
+                <input type="text" id="Turnado" name="Turnado" placeholder="Nombre del Usuario" readonly>
+            </div>
+            <!-- Sección para la Dependencia -->
+            <div class="input-group">
+                <label for="Dependencia">Dependencia</label>
+                <input type="text" id="Dependencia" name="Dependencia" placeholder="Dependencia" readonly>
+            </div>
+            <!-- Sección para el Solicitante -->
+            <div class="input-group">
+                <label for="Solicitante">Solicitante</label>
+                <input type="text" id="Solicitante" name="Solicitante" placeholder="Solicitante" readonly>
+            </div>
+            <!-- Sección para la Fecha de Recepción -->
+            <div class="input-group">
+                <label for="FechaRecepcion">Fecha de Recepción</label>
+                <input type="date" id="FechaRecepcion" name="FechaRecepcion" placeholder="Fecha de Recepción" readonly>
+            </div>
+            <!-- Sección para la Fecha de Vencimiento -->
+            <div class="input-group">
+                <label for="FechaVencimiento">Fecha de Vencimiento</label>
+                <input type="date" id="FechaVencimiento" name="FechaVencimiento" placeholder="Fecha de Vencimiento"
+                    readonly>
+            </div>
+            <!-- Sección para el Concepto -->
+            <div class="input-group">
+                <label for="Concepto">Concepto</label>
+                <input type="text" id="Concepto" name="Concepto" placeholder="Concepto" readonly>
+            </div>
+            <!-- Sección para el Monto -->
+            <div class="input-group">
+                <label for="Monto">Monto</label>
+                <input type="number" id="Monto" name="Monto" placeholder="Monto" readonly>
+            </div>
+            <!-- Sección para el Estado del Oficio -->
+            <div class="input-group">
+                <label for="Estado">Estado del Oficio</label>
+                <select name="Estado" id="Estado" placeholder="Estado" required>
+                    <option value="" selected>Selecciona una opción</option>
+                    <option value="OBSERVACIONES">Observaciones</option>
+                    <option value="DEVUELTO">Devuelto</option>
+                    <option value="FIRMA-DG">Solicitud Firma Dirección</option>
+                </select>
+            </div>
+            <!-- Sección para el Key SAP -->
+            <div class="input-group" id="grupoRespuestaConocimiento" name="grupoRespuestaConocimiento" hidden>
+                <label for="RespuestaConocimiento">Respuesta de Conocimiento</label>
+                <input type="text" id="RespuestaConocimiento" name="RespuestaConocimiento"
+                    placeholder="Respuesta de Conocimiento">
+            </div>
+            <!-- Sección para el Comentarios -->
+            <div class="input-group">
+                <label for="Comentarios">Comentarios</label>
+                <textarea type="text" id="Comentarios" name="Comentarios" rows="10" placeholder="Ejemplo: Describa las aciones a realizar, el responsable de la actividad y observaciones.                
+                ⚠ Antecedentes:
+                * [Fecha]: [Descripción breve de cada evento importante en orden cronológico]
+                * [Fecha]: [Descripción de observaciones o devoluciones]
+                * [Fecha]: [Motivo del rechazo o devolución más reciente]
+                ✅ Acción Requerida:
+                1. [Descripción clara de la primera acción necesaria]
+                2. [Segunda acción requerida]
+                " required></textarea>
+            </div>
+
+            <button type="submit" id="btnGuardar">Actualizar Oficio</button>
+            <button type="button" onclick="window.location.href = 'OficiosPanelAnalista.html';"
+                class="btn btn-secondary">Regresar</button>
+            <button type="button" id="enviarWhatsApp" class="btn btn-primary" target="_blank" hidden>Enviar Tarjeta
+                Informativa</button>
+        </form>
     </div>
+
+
+
+
+    <script>
+        // // logica para que el estado no se pueda cambiar 
+        // window.addEventListener('load', function () {
+        //     const estadoSelect = document.getElementById("Estado");
+
+        //     // Guardamos el valor fijo
+        //     const valorFijo = estadoSelect.value;
+
+        //     // Hacemos que el valor no se pueda cambiar
+        //     Object.defineProperty(estadoSelect, 'value', {
+        //         get: function () {
+        //             return valorFijo;
+        //         },
+        //         set: function (_) {
+        //             // Ignora cualquier intento de cambiar el valor
+        //             return valorFijo;
+        //         }
+        //     });
+        // });
+    </script>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

@@ -186,6 +186,32 @@
                     echo json_encode(array('message' => 'No se encontraron trámites actualizados.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
+                break;            
+            case 'actualizarOficioArchivo':
+                    header('Content-Type: application/json; charset=utf-8');
+
+                    $datos = !empty($_POST) ? $_POST : json_decode(file_get_contents("php://input"), true);
+                    $archivos = $_FILES;
+                
+                    // ✅ Asegúrate de que al menos $datos tenga algo
+                    if (!empty($datos)) {
+                        global $controllerOficios;
+                        // 👉 Pasamos tanto los datos como los archivos
+                        $respuesta = $controllerOficios->actualizarOficioArchivo($datos, $archivos);
+                    } else {
+                        echo json_encode(["error" => "Datos no proporcionados"]);
+                        exit;
+                    }
+                
+                    if ($respuesta) {
+                        http_response_code(200);
+                        echo json_encode(array('message' => 'Oficio modificado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    } else {
+                        http_response_code(404);
+                        echo json_encode(array('message' => 'Oficio no modificado.'), JSON_UNESCAPED_UNICODE);
+                    }
+            
+                exit;
                 break;
             default:
                 http_response_code(404);
@@ -443,7 +469,7 @@
                     echo json_encode(array('message' => 'Oficio no modificado.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
-                break; 
+                break;                
             case 'updateTramiteCompleto':
                     if(!empty($data)){
                         global $controllerTramite;
@@ -460,8 +486,7 @@
                         echo json_encode(array('message' => 'Tramite no modificados.'), JSON_UNESCAPED_UNICODE);
                     }
                     exit;
-                    break; 
-                
+                    break;    
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción PATCH desconocida.'], JSON_UNESCAPED_UNICODE);

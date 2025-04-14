@@ -1,35 +1,53 @@
 <?php
 include_once 'app/config/Database.php';
 
-class OficiosModel {
+class OficiosModel
+{
     private $conn;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->conn = (new Database())->conn;
     }
     // Función para obtener los oficios
-    public function listarOficios(){
-        try{
+    public function listarOficios()
+    {
+        try {
             // Consulta de totales
             $query = "SELECT * FROM Oficios ORDER BY FechaCreacion DESC;";
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
-        }
-        catch(PDOException $e){
+        } catch (PDOException $e) {
             // Respuesta de error en caso de fallo
             http_response_code(500);
             return json_encode(["error" => "Error en la consulta: " . $e->getMessage()]);
         }
     }
     // Función para crear un oficio
-    public function crearOficio($data){
-        try{
+    public function crearOficio($data)
+    {
+        try {
+            date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
+            $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
+            // Crear historial de comentarios en formato JSON
+            $comentariosArray = [];
+            if (!empty($data['Comentarios'])) {
+                $comentarioInicial = [
+                    "Fecha" => $fechaActual,
+                    "Estatus" => $data['Estado'],
+                    "Usuario" => $data['UsuarioRegistro'],
+                    "Comentario" => $data['Comentarios']
+                ];
+                $comentariosArray[] = $comentarioInicial;
+            }
+            $jsonComentarios = json_encode($comentariosArray, JSON_UNESCAPED_UNICODE);
+
+
             // Consulta con campos completos
             $query = "INSERT INTO Oficios (
                 Folio,
-                FechaRecepcion,
                 Solicitante,
                 Dependencia,
                 Departamento,
@@ -40,14 +58,12 @@ class OficiosModel {
                 Monto,
                 FechaVencimiento,
                 Turnado,
-                RespuestaConocimiento,
                 FechaRetroactiva,
                 Estado,
                 UsuarioRegistro,
                 Comentarios
             ) VALUES (
                 :Folio,
-                :FechaRecepcion,
                 :Solicitante,
                 :Dependencia,
                 :Departamento,
@@ -58,17 +74,15 @@ class OficiosModel {
                 :Monto,
                 :FechaVencimiento,
                 :Turnado,
-                :RespuestaConocimiento,
                 :FechaRetroactiva,
                 :Estado,
                 :UsuarioRegistro,
                 :Comentarios
             )";
-    
+
             $stmt = $this->conn->prepare($query);
-    
+
             $stmt->bindParam(':Folio', $data['Folio']);
-            $stmt->bindParam(':FechaRecepcion', $data['FechaRecepcion']);
             $stmt->bindParam(':Solicitante', $data['Solicitante']);
             $stmt->bindParam(':Dependencia', $data['Dependencia']);
             $stmt->bindParam(':Departamento', $data['Departamento']);
@@ -79,85 +93,120 @@ class OficiosModel {
             $stmt->bindParam(':Monto', $data['Monto']);
             $stmt->bindParam(':FechaVencimiento', $data['FechaVencimiento']);
             $stmt->bindParam(':Turnado', $data['Turnado']);
-            $stmt->bindParam(':RespuestaConocimiento', $data['RespuestaConocimiento']);
             $stmt->bindParam(':FechaRetroactiva', $data['FechaRetroactiva']);
             $stmt->bindParam(':Estado', $data['Estado']);
             $stmt->bindParam(':UsuarioRegistro', $data['UsuarioRegistro']);
-            $stmt->bindParam(':Comentarios', $data['Comentarios']);
-    
+            $stmt->bindParam(':Comentarios', $jsonComentarios);
+
             $stmt->execute();
-    
+
             return json_encode(["message" => "Oficio creado correctamente"]);
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             http_response_code(500);
             return json_encode(["error" => "Error en la consulta: " . $e->getMessage()]);
         }
     }
     // Función para actualizar un oficio
-    public function actualizarOficio($data) {
+    public function actualizarOficio($data)
+    {
         try {
-            // Lista de columnas válidas en la tabla
+            date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
+            $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
+            // Obtener comentarios actuales si existen
+            $queryComentarios = "SELECT Comentarios FROM Oficios WHERE ID = :ID";
+            $stmtComentarios = $this->conn->prepare($queryComentarios);
+            $stmtComentarios->bindValue(':ID', $data['ID']);
+            $stmtComentarios->execute();
+            $resultComentarios = $stmtComentarios->fetch(PDO::FETCH_ASSOC);
+
+            $comentariosActuales = [];
+            if (!empty($resultComentarios['Comentarios'])) {
+                $comentariosActuales = json_decode($resultComentarios['Comentarios'], true);
+            }
+
+            if (!empty($data['Comentarios'])) {
+                $nuevoComentario = [
+                    "Fecha" => $fechaActual,
+                    "Estatus" => $data['Estado'] ?? '',
+                    "Usuario" => $data['UsuarioRegistro'] ?? '',
+                    "Comentario" => $data['Comentarios']
+                ];
+                $comentariosActuales[] = $nuevoComentario;
+                $data['Comentarios'] = json_encode($comentariosActuales, JSON_UNESCAPED_UNICODE);
+            }
+
             $camposValidos = [
-                'Folio', 'FechaRecepcion', 'Solicitante', 'Dependencia', 'Departamento',
-                'NumeroOficio', 'tipoOficio', 'Asunto', 'Concepto', 'Monto', 'FechaVencimiento',
-                'Turnado', 'RespuestaConocimiento', 'FechaRetroactiva', 'Estado',
-                'UsuarioRegistro', 'Comentarios'
+                'Folio',
+                'FechaRecepcion',
+                'Solicitante',
+                'Dependencia',
+                'Departamento',
+                'NumeroOficio',
+                'tipoOficio',
+                'Asunto',
+                'Concepto',
+                'Monto',
+                'FechaVencimiento',
+                'Turnado',
+                'RespuestaConocimiento',
+                'FechaRetroactiva',
+                'Estado',
+                'UsuarioRegistro',
+                'Comentarios',
+                'ArchivoScaneado',
+                'FechaEntregaAcuse'
             ];
-    
-            // Verificar que venga el ID
+
             if (!isset($data['ID'])) {
                 http_response_code(400);
                 return json_encode(["error" => "Falta el ID del oficio a actualizar"]);
             }
-    
+
             $setClauses = [];
             $params = [];
-    
-            // Construir cláusulas dinámicamente
+
             foreach ($camposValidos as $campo) {
                 if (isset($data[$campo])) {
                     $setClauses[] = "$campo = :$campo";
                     $params[$campo] = $data[$campo];
                 }
             }
-    
+
             if (empty($setClauses)) {
                 return json_encode(["message" => "No se proporcionaron campos para actualizar"]);
             }
-    
+
             $setSQL = implode(", ", $setClauses);
-    
             $query = "UPDATE Oficios SET $setSQL WHERE ID = :ID";
-    
+
             $stmt = $this->conn->prepare($query);
-    
-            // Enlazar campos dinámicamente
+
             foreach ($params as $campo => $valor) {
                 $stmt->bindValue(":$campo", $valor);
             }
-    
+
             $stmt->bindValue(":ID", $data['ID']);
             $stmt->execute();
-    
+
             $rowsAffected = $stmt->rowCount();
-    
+
             if ($rowsAffected > 0) {
                 return json_encode(["message" => "Oficio actualizado correctamente", "rowsAffected" => $rowsAffected]);
             } else {
                 return json_encode(["message" => "No se realizaron cambios", "rowsAffected" => 0]);
             }
-    
         } catch (PDOException $e) {
             http_response_code(500);
             return json_encode(["error" => "Error en la consulta: " . $e->getMessage()]);
         }
     }
     // Función para eliminar un oficio
-    public function eliminarOficio($data) {
+    public function eliminarOficio($data)
+    {
         try {
             $query = "DELETE FROM Oficios WHERE ID = :ID";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':ID', $data['ID']);   
+            $stmt->bindParam(':ID', $data['ID']);
             $stmt->execute();
             $rowsAffected = $stmt->rowCount();
             if ($rowsAffected > 0) {
@@ -169,8 +218,124 @@ class OficiosModel {
             http_response_code(500);
             return json_encode(["error" => "Error en la consulta: " . $e->getMessage()]);
         }
-    }    
+    }
+    // Función para actualizar un oficio con archivo
+    public function actualizarOficioArchivo($data, $archivos)
+    {
+        try {
+            date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
+            $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
+            // ✅ 1. Validar y mover archivo si viene
+            if (isset($archivos['Archivo']) && $archivos['Archivo']['error'] === UPLOAD_ERR_OK) {
+                $archivo = $archivos['Archivo'];
+
+                $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
+                $nombreArchivoFinal = $data['ID'] . '.' . $extension;
+                $rutaDestino = __DIR__ . '/../../../assets/uploads/oficios/' . $nombreArchivoFinal;
+
+                if (!is_dir(dirname($rutaDestino))) {
+                    mkdir(dirname($rutaDestino), 0777, true);
+                }
+
+                if (move_uploaded_file($archivo['tmp_name'], $rutaDestino)) {
+                    $data['ArchivoScaneado'] = $nombreArchivoFinal;
+                } else {
+                    return json_encode([
+                        "error" => "No se pudo mover el archivo al directorio destino."
+                    ]);
+                }
+            }
+
+            // ✅ 2. Acumulación de comentarios
+            if (!empty($data['Comentarios'])) {
+                // Obtener comentarios actuales
+                $stmtComentarios = $this->conn->prepare("SELECT Comentarios FROM Oficios WHERE ID = :ID");
+                $stmtComentarios->bindValue(":ID", $data['ID']);
+                $stmtComentarios->execute();
+                $resultado = $stmtComentarios->fetch(PDO::FETCH_ASSOC);
+
+                $comentariosPrevios = [];
+                if (!empty($resultado['Comentarios'])) {
+                    $comentariosPrevios = json_decode($resultado['Comentarios'], true);
+                    if (!is_array($comentariosPrevios)) {
+                        $comentariosPrevios = [];
+                    }
+                }
+
+                // Agregar nuevo comentario al historial
+                $comentarioNuevo = [
+                    "ID_OFICIO" => $data['ID'],
+                    "Fecha" => $fechaActual,
+                    "Estatus" => $data['Estado'] ?? "ACTUALIZACIÓN",
+                    "Usuario" => $data['UsuarioRegistro'] ?? "N/A",
+                    "Comentario" => $data['Comentarios']
+                ];
+                $comentariosPrevios[] = $comentarioNuevo;
+                $data['Comentarios'] = json_encode($comentariosPrevios, JSON_UNESCAPED_UNICODE);
+            }
+
+            // ✅ 3. Preparar UPDATE dinámico
+            $camposValidos = [
+                'Folio',
+                'FechaRecepcion',
+                'Solicitante',
+                'Dependencia',
+                'Departamento',
+                'NumeroOficio',
+                'tipoOficio',
+                'Asunto',
+                'Concepto',
+                'Monto',
+                'FechaVencimiento',
+                'Turnado',
+                'RespuestaConocimiento',
+                'FechaRetroactiva',
+                'Estado',
+                'UsuarioRegistro',
+                'Comentarios',
+                'ArchivoScaneado',
+                'FechaEntregaAcuse'
+            ];
+
+            if (!isset($data['ID'])) {
+                http_response_code(400);
+                return json_encode(["error" => "Falta el ID del oficio a actualizar"]);
+            }
+
+            $setClauses = [];
+            $params = [];
+
+            foreach ($camposValidos as $campo) {
+                if (isset($data[$campo])) {
+                    $setClauses[] = "$campo = :$campo";
+                    $params[$campo] = $data[$campo];
+                }
+            }
+
+            if (empty($setClauses)) {
+                return json_encode(["message" => "No se proporcionaron campos para actualizar"]);
+            }
+
+            $setSQL = implode(", ", $setClauses);
+            $query = "UPDATE Oficios SET $setSQL WHERE ID = :ID";
+
+            $stmt = $this->conn->prepare($query);
+            foreach ($params as $campo => $valor) {
+                $stmt->bindValue(":$campo", $valor);
+            }
+            $stmt->bindValue(":ID", $data['ID']);
+            $stmt->execute();
+
+            $rowsAffected = $stmt->rowCount();
+
+            return json_encode([
+                "message" => $rowsAffected > 0 ? "Oficio actualizado correctamente" : "No se realizaron cambios",
+                "rowsAffected" => $rowsAffected,
+                "archivo" => $data['ArchivoScaneado'] ?? null
+            ]);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            return json_encode(["error" => "Error en la consulta: " . $e->getMessage()]);
+        }
+    }
 }
-?>
-
-

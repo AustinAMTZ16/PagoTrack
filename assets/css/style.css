@@ -12,6 +12,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
+
 .contenedor {
     margin: 10px;
     padding: 10px;
@@ -119,7 +120,7 @@ tr:nth-child(even) {
     padding: 30px;
     background-color: #f8f9fa;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Etiquetas */
@@ -159,7 +160,7 @@ tr:nth-child(even) {
 }
 
 /* Espacio entre los botones */
-#formEditarOficios .d-grid.gap-2 button + button {
+#formEditarOficios .d-grid.gap-2 button+button {
     margin-top: 10px;
 }
 
@@ -177,7 +178,7 @@ tr:nth-child(even) {
     padding: 30px;
     background-color: #f8f9fa;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Etiquetas */
@@ -217,7 +218,7 @@ tr:nth-child(even) {
 }
 
 /* Espacio entre los botones */
-#formCrearOficios .d-grid.gap-2 button + button {
+#formCrearOficios .d-grid.gap-2 button+button {
     margin-top: 10px;
 }
 
@@ -226,4 +227,15 @@ tr:nth-child(even) {
     #formCrearOficios {
         padding: 20px;
     }
+}
+
+
+
+input[readonly],
+textarea[readonly],
+select[readonly] {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: 1px solid #555;
+    cursor: not-allowed;
 }

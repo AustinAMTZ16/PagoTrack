@@ -23,13 +23,13 @@ function obtenerKPI() {
         return await response.json();
     })
     .then(result => {
-        console.log('Respuesta de la API:', result);
+        //console.log('Respuesta de la API:', result);
 
         // Verificar si 'result.data' es una cadena JSON válida antes de intentar parsearla
         try {
             const data = JSON.parse(result.data);
             parsedData = JSON.parse(result.data);
-            console.log('Datos parseados:', parsedData);
+            //console.log('Datos parseados:', parsedData);
 
             // Verificar si 'totales' y 'tramites' existen en 'data'
             if (data) {

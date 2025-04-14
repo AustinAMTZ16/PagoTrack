@@ -13,13 +13,18 @@ class RemesaModel
     public function getListaRemesas()
     {
         $query = "SELECT 
-                        SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
-                        COUNT(*) AS TotalRegistros
-                    FROM ConsentradoGeneralTramites
-                    WHERE RemesaNumero IS NOT NULL
-                    GROUP BY Grupo
-                    ORDER BY Grupo ASC;
-                ";
+                        t.Grupo,
+                        t.TotalRegistros
+                    FROM (
+                        SELECT 
+                            SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
+                            COUNT(*) AS TotalRegistros
+                        FROM ConsentradoGeneralTramites
+                        WHERE RemesaNumero IS NOT NULL
+                        GROUP BY Grupo
+                    ) AS t
+                    ORDER BY 
+                        STR_TO_DATE(SUBSTRING_INDEX(t.Grupo, '-', 1), '%d%m%y') DESC; ";
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -30,30 +35,36 @@ class RemesaModel
     {
         $consecutivo = $data['consecutivo'];
         $query = "SELECT 
-                        SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
-                        CG.ID_CONTRATO,
-                        CG.OfPeticion,
-                        CG.FechaRecepcion,
-                        CG.IntegraSAP,
-                        CG.DocSAP,
-                        CG.TipoTramite,
-                        CG.NoTramite,
-                        CG.Dependencia,
-                        CG.Proveedor,
-                        CG.Concepto,
-                        CG.Importe,
-                        CG.DoctacionAnexo,
-                        CG.Fondo,
+                        t.Grupo,
+                        t.RemesaNumero,
+                        t.ID_CONTRATO,
+                        t.OfPeticion,
+                        t.FechaRecepcion,
+                        t.IntegraSAP,
+                        t.DocSAP,
+                        t.TipoTramite,
+                        t.NoTramite,
+                        t.Dependencia,
+                        t.Proveedor,
+                        t.Concepto,
+                        t.Importe,
+                        t.DoctacionAnexo,
+                        t.Fondo,
                         CONCAT(i.NombreUser, ' ', i.ApellidoUser) AS Analista,
-                        CG.Estatus,
+                        t.Estatus,
                         r.FechaRemesa,
                         r.Comentarios 
-                    FROM ConsentradoGeneralTramites CG
-                    INNER JOIN InicioSesion i ON CG.AnalistaID = i.InicioSesionID
-                    INNER JOIN Remesas r ON r.FKNumeroRemesa = '$consecutivo'
-                    WHERE RemesaNumero IS NOT null
-                    and CG.RemesaNumero like '$consecutivo%'
-                    ORDER BY Grupo, RemesaNumero;
+                    FROM (
+                        SELECT 
+                            CG.*,
+                            SUBSTRING_INDEX(CG.RemesaNumero, '-', 2) AS Grupo
+                        FROM ConsentradoGeneralTramites CG
+                        WHERE CG.RemesaNumero IS NOT NULL
+                    ) t
+                            INNER JOIN InicioSesion i ON t.AnalistaID = i.InicioSesionID
+                            LEFT JOIN Remesas r ON r.FKNumeroRemesa = '$consecutivo'
+                            WHERE t.Grupo = '$consecutivo'
+                            ORDER BY t.Grupo, t.RemesaNumero;
                  ";
 
         $stmt = $this->conn->prepare($query);

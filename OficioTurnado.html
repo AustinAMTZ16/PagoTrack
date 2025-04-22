@@ -69,28 +69,27 @@
                         </ul>
                     </li>
                     <!-- Sección para el KPI -->
-                    <li id="KPI" class="nav-item dropdown" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Indicadores de Rendimiento
+                <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Indicadores de Rendimiento
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item"
-                                    href="dashboard.html">Tramites</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item"
-                                    href="listadoTurnados.html">Turnado</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item"
-                                    href="seguimientoRemesas.html">Remesas</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item"
-                                    href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item"
-                                    href="reportesquery.html">Reportes Query</a></li>
-                            <li id="KPI" style="display: none;"><a class="dropdown-item"
-                                    href="exploradorArchivos.html">Explorador de Archivos</a></li>
-
+                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Tramites</a></li>
+                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a>
+                                </li>
+                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a>
+                                </li>
+                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes
+                                                de Pago</a></li>
+                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="reportesquery.html">Reportes
+                                                Query</a></li>
+                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="exploradorArchivos.html">Explorador
+                                                de Archivos</a></li>
+                                <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item" href="oficiosPanelControl.html">Oficios Panel Control</a></li>
                         </ul>
-                    </li>
+                </li>
                     <!-- Sección para el Oficios -->
                     <li id="Oficios" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -106,12 +105,13 @@
                                     href="#">Correspondencia</a></li> -->
                         </ul>
                     </li>
-                    <!-- Sección para el Manual --> 
+                    <!-- Sección para el Manual -->
                     <li><a class="nav-link" href="manual.html">Manual</a></li>
                     <!-- Sección para el Estados -->
                     <li><a class="nav-link" href="help.html">Estados</a></li>
                     <!-- Sección para el Cerrar sesión -->
-                    <li><a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
+                    <li><a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -133,7 +133,11 @@
             <input type="hidden" name="Estado" id="Estado" value="Turnado">
             <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required>
                 <option value="" disabled selected>Analista Turnado</option>
-                <option value="36">Leobardo Armenta Suárez</option>
+                <option value="39">Gloria Dolores Rodríguez Medina</option>
+                <option value="35">Eugenia Bermejo García</option>
+                <option value="29">Laura Hernandez Garcia</option>
+                <option value="24">Alan Michell Navarrete Flores</option>
+                <option value="41">José Gilberto Bello Ramírez</option>
                 <option value="4">Juan Carlos García Tagle</option>
                 <option value="8">Isabel Cristina Pavón Nava</option>
                 <option value="11">Isabel Cortes Varillas</option>
@@ -156,10 +160,12 @@
                 <option value="14">Daniel Rodríguez Cardenas</option>
                 <option value="9">Roberta Marcela Uvera Saucedo</option>
             </select>
-            <input type="text" id="Comentarios" name="Comentarios" placeholder="Observaciones de Turnado o del Oficio" required>
+            <input type="text" id="Comentarios" name="Comentarios" placeholder="Observaciones de Turnado o del Oficio"
+                required>
 
             <button type="submit">Turnar Oficio</button>
-            <button onclick="window.location.href = 'OficiosPanelControl.html';" class="btn btn-secondary">Regresar</button>
+            <button onclick="window.location.href = 'OficiosPanelControl.html';"
+                class="btn btn-secondary">Regresar</button>
         </form>
     </div>
 

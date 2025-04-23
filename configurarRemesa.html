@@ -73,27 +73,34 @@
                         </ul>
                     </li>
                     <!-- Sección para el KPI -->
-                <li id="KPI" class="nav-item dropdown" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Indicadores de Rendimiento
+                    <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Indicadores de Rendimiento
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Tramites</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a>
-                                </li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a>
-                                </li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes
-                                                de Pago</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="reportesquery.html">Reportes
-                                                Query</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="exploradorArchivos.html">Explorador
-                                                de Archivos</a></li>
-                                <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item" href="oficiosPanelControl.html">Oficios Panel Control</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Turnado</a>
+                            </li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoRemesas.html">Remesas</a>
+                            </li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes
+                                    de Pago</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="reportesquery.html">Reportes
+                                    Query</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="exploradorArchivos.html">Explorador
+                                    de Archivos</a></li>
+                            <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item"
+                                    href="oficiosPanelControl.html">Oficios Panel Control</a></li>
                         </ul>
-                </li>
+                    </li>
                     <!-- Sección para el Oficios -->
                     <li id="Oficios" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -109,12 +116,13 @@
                                     href="#">Correspondencia</a></li> -->
                         </ul>
                     </li>
-                    <!-- Sección para el Manual --> 
+                    <!-- Sección para el Manual -->
                     <li><a class="nav-link" href="manual.html">Manual</a></li>
                     <!-- Sección para el Estados -->
                     <li><a class="nav-link" href="help.html">Estados</a></li>
                     <!-- Sección para el Cerrar sesión -->
-                    <li><a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
+                    <li><a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -126,11 +134,12 @@
             <label for="ID_REMESA">Identificador de la Remesa</label>
             <input type="text" id="ID_REMESA" name="ID_REMESA" placeholder="ID_REMESA" readonly>
             <label for="DepartamentoTurnado">Departamento Responsable</label>
-            <select type="text" id="DepartamentoTurnado" name="DepartamentoTurnado" placeholder="DepartamentoTurnado" required>
+            <select type="text" id="DepartamentoTurnado" name="DepartamentoTurnado" placeholder="DepartamentoTurnado"
+                required>
                 <option value="PRESUPUESTO">PRESUPUESTO</option>
                 <option value="GLOSA">GLOSA</option>
                 <option value="ORDENES-PAGO">ORDENES DE PAGO</option>
-            </select>                
+            </select>
             <label for="FechaRemesa">Fecha de la Remesa</label>
             <input type="date" id="FechaRemesa" name="FechaRemesa" placeholder="FechaRemesa" readonly>
             <label for="FKNumeroRemesa">Numero de Remesa</label>
@@ -149,7 +158,8 @@
 
 
             <button type="submit">Actualizar Remesa</button>
-            <button onclick="window.location.href = 'seguimientoRemesas.html';" class="btn btn-secondary">Regresar</button>
+            <button onclick="window.location.href = 'seguimientoRemesas.html';"
+                class="btn btn-secondary">Regresar</button>
         </form>
     </div>
 

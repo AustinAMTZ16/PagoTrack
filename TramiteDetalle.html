@@ -68,27 +68,34 @@
                         </ul>
                     </li>
                     <!-- Sección para el KPI -->
-                <li id="KPI" class="nav-item dropdown" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Indicadores de Rendimiento
+                    <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Indicadores de Rendimiento
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Tramites</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a>
-                                </li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a>
-                                </li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes
-                                                de Pago</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="reportesquery.html">Reportes
-                                                Query</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="exploradorArchivos.html">Explorador
-                                                de Archivos</a></li>
-                                <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item" href="oficiosPanelControl.html">Oficios Panel Control</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Turnado</a>
+                            </li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoRemesas.html">Remesas</a>
+                            </li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes
+                                    de Pago</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="reportesquery.html">Reportes
+                                    Query</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="exploradorArchivos.html">Explorador
+                                    de Archivos</a></li>
+                            <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item"
+                                    href="oficiosPanelControl.html">Oficios Panel Control</a></li>
                         </ul>
-                </li>
+                    </li>
                     <!-- Sección para el Oficios -->
                     <li id="Oficios" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -104,12 +111,13 @@
                                     href="#">Correspondencia</a></li> -->
                         </ul>
                     </li>
-                    <!-- Sección para el Manual --> 
+                    <!-- Sección para el Manual -->
                     <li><a class="nav-link" href="manual.html">Manual</a></li>
                     <!-- Sección para el Estados -->
                     <li><a class="nav-link" href="help.html">Estados</a></li>
                     <!-- Sección para el Cerrar sesión -->
-                    <li><a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
+                    <li><a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -123,7 +131,7 @@
         <form id="formUpdateTramiteCompleto" method="post">
             <label for="ID_CONTRATO">ID del Contrato:</label>
             <input type="text" name="ID_CONTRATO" id="ID_CONTRATO" readonly>
-        
+
             <label for="Dependencia">Institución:</label>
             <select name="Dependencia" id="Dependencia" disabled readonly>
                 <option value="Coordinación de las Regidurias">Coordinación de las Regidurias</option>
@@ -167,16 +175,16 @@
                 <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro Histórico y
                     Patrimonio Cultural</option>
             </select>
-        
+
             <label for="Proveedor">Proveedor:</label>
             <input type="text" name="Proveedor" id="Proveedor" readonly>
-        
+
             <label for="Concepto">Concepto:</label>
             <input type="text" name="Concepto" id="Concepto" readonly>
-        
+
             <label for="Importe">Importe:</label>
             <input type="number" name="Importe" id="Importe" readonly>
-        
+
             <label for="Mes">Mes:</label>
             <select name="Mes" id="Mes" disabled readonly>
                 <option value="Enero">Enero</option>
@@ -192,10 +200,10 @@
                 <option value="Noviembre">Noviembre</option>
                 <option value="Diciembre">Diciembre</option>
             </select>
-        
+
             <label for="FechaRecepcion">Fecha de Recepción:</label>
             <input type="date" name="FechaRecepcion" id="FechaRecepcion" readonly>
-        
+
             <label for="TipoTramite">Tipo de Trámite:</label>
             <select name="TipoTramite" id="TipoTramite" disabled readonly>
                 <option value="OC">OC Ordenes Compromiso</option>
@@ -207,7 +215,7 @@
                 <option value="OCO">Ordenes Compromiso Obras</option>
                 <option value="OPO">Ordenes Pago Obras</option>
             </select>
-        
+
             <label for="AnalistaID">Analista:</label>
             <select name="AnalistaID" id="AnalistaID" disabled readonly>
                 <option value="4">Juan Carlos García Tagle</option>
@@ -232,7 +240,7 @@
                 <option value="14">Daniel Rodríguez Cardenas</option>
                 <option value="9">Roberta Marcela Uvera Saucedo</option>
             </select>
-        
+
             <label for="Estatus">Estatus:</label>
             <select name="Estatus" id="Estatus" disabled readonly>
                 <option value="Creado">Creado</option>
@@ -253,45 +261,45 @@
                 <option value="Rechazado">Rechazado</option>
                 <option value="Cancelado">Cancelado</option>
             </select>
-        
+
             <label for="Comentarios">Comentarios:</label>
             <textarea name="Comentarios" id="Comentarios" rows="10" readonly></textarea>
-        
+
             <label for="Fondo">Fondo:</label>
             <input type="text" name="Fondo" id="Fondo" readonly>
-        
+
             <label for="FechaLimite">Fecha Límite:</label>
             <input type="date" name="FechaLimite" id="FechaLimite" readonly>
-        
+
             <label for="FechaTurnado">Fecha de Turnado:</label>
             <input type="date" name="FechaTurnado" id="FechaTurnado" readonly>
-        
+
             <label for="FechaTurnadoEntrega">Fecha de Turnado de Entrega:</label>
             <input type="date" name="FechaTurnadoEntrega" id="FechaTurnadoEntrega" readonly>
-        
+
             <label for="FechaDevuelto">Fecha de Devolución:</label>
             <input type="date" name="FechaDevuelto" id="FechaDevuelto" readonly>
-        
+
             <label for="DocSAP">Numero de Documento SAP:</label>
             <input type="text" name="DocSAP" id="DocSAP" readonly>
-        
+
             <label for="IntegraSAP">Integra SAP:</label>
             <input type="text" name="IntegraSAP" id="IntegraSAP" readonly>
-        
+
             <label for="RemesaNumero">Numero de Remesa:</label>
             <input type="text" name="RemesaNumero" id="RemesaNumero" readonly>
-        
+
             <label for="OfPeticion">Of Peticion:</label>
             <input type="text" name="OfPeticion" id="OfPeticion" readonly>
-        
+
             <label for="NoTramite">NoTramite:</label>
             <input type="text" name="NoTramite" id="NoTramite" readonly>
-        
+
             <label for="DoctacionAnexo">Doctacion Anexo:</label>
             <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" readonly>
         </form>
-        
-        
+
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -6,14 +6,14 @@
     include_once 'app/controllers/LoginController.php'; 
     include_once 'app/controllers/KpiController.php';
     include_once 'app/controllers/SuficienciaController.php';
-    include_once 'app/controllers/Oficios/OficiosController.php';
+    include_once 'app/controllers/Correspondencia/CorrespondenciaController.php';
     // Instanciamos el controlador
     $controllerTramite = new TramitesController();
     $controllerRemesa = new RemesaController();
     $controllerLogin = new LoginController();
     $controllerKpi = new KpiController();
     $controllerSuficiencia = new SuficienciaController();
-    $controllerOficios = new OficiosController();
+    $controllerCorrespondencia = new CorrespondenciaController();
     //Obtener el método de la solicitud HTTP
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -142,8 +142,8 @@
             case 'crearOficio':
                 if(!empty($data)){
                     // Declarar como global
-                    global $controllerOficios;
-                    $respuesta = $controllerOficios->crearOficio((array) $data);
+                    global $controllerCorrespondencia;
+                    $respuesta = $controllerCorrespondencia->crearOficio((array) $data);
                 }else{
                     echo "Datos no proporcionados";
                     exit;
@@ -195,9 +195,9 @@
                 
                     // ✅ Asegúrate de que al menos $datos tenga algo
                     if (!empty($datos)) {
-                        global $controllerOficios;
+                        global $controllerCorrespondencia;
                         // 👉 Pasamos tanto los datos como los archivos
-                        $respuesta = $controllerOficios->actualizarOficioArchivo($datos, $archivos);
+                        $respuesta = $controllerCorrespondencia->actualizarOficioArchivo($datos, $archivos);
                     } else {
                         echo json_encode(["error" => "Datos no proporcionados"]);
                         exit;
@@ -331,8 +331,8 @@
                 break;
             case 'listarOficios':
                 // Declarar como global
-                global $controllerOficios;
-                $respuesta = $controllerOficios->listarOficios();
+                global $controllerCorrespondencia;
+                $respuesta = $controllerCorrespondencia->listarOficios();
                 if ($respuesta) {
                     http_response_code(200);
                     echo json_encode(array('message' => 'Listado de oficios.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
@@ -455,8 +455,8 @@
                 break;  
             case 'actualizarOficio':
                 if(!empty($data)){
-                    global $controllerOficios;
-                    $respuesta = $controllerOficios->actualizarOficio((array) $data);
+                    global $controllerCorrespondencia;
+                    $respuesta = $controllerCorrespondencia->actualizarOficio((array) $data);
                 }else{
                     echo "Datos no proporcionados";
                     exit;
@@ -551,8 +551,8 @@
                 break;  
             case 'eliminarOficio':
                 if(!empty($data)){
-                    global $controllerOficios;
-                    $respuesta = $controllerOficios->eliminarOficio((array) $data);
+                    global $controllerCorrespondencia;
+                    $respuesta = $controllerCorrespondencia->eliminarOficio((array) $data);
                 }else{
                     echo "Datos no proporcionados";
                     exit;

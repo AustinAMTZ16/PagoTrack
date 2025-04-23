@@ -24,15 +24,19 @@
             border-collapse: collapse;
             background: white;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
         }
+
         th {
             background-color: #007BFF;
             color: white;
         }
+
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
@@ -64,6 +68,8 @@
                                     href="dashboard.html">Inicio</a></li>
                             <li id="Operador" style="display: none;"><a class="dropdown-item"
                                     href="createTramite.html">Crear Trámite</a></li>
+                            <li id="Operador" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Listado de Turnados</a></li>
                             <li id="Analista" style="display: none;"><a class="dropdown-item"
                                     href="listadoTurnados.html">Listado de Turnados</a></li>
                             <li id="Operador" style="display: none;"><a class="dropdown-item"
@@ -84,27 +90,34 @@
                         </ul>
                     </li>
                     <!-- Sección para el KPI -->
-                <li id="KPI" class="nav-item dropdown" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Indicadores de Rendimiento
+                    <li id="KPI" class="nav-item dropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Indicadores de Rendimiento
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Tramites</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a>
-                                </li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a>
-                                </li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes
-                                                de Pago</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="reportesquery.html">Reportes
-                                                Query</a></li>
-                                <li id="KPI" style="display: none;"><a class="dropdown-item" href="exploradorArchivos.html">Explorador
-                                                de Archivos</a></li>
-                                <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item" href="oficiosPanelControl.html">Oficios Panel Control</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item" href="kpi.html">KPI</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="dashboard.html">Tramites</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="listadoTurnados.html">Turnado</a>
+                            </li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoRemesas.html">Remesas</a>
+                            </li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="seguimientoOrdenesPago.html">Ordenes
+                                    de Pago</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="reportesquery.html">Reportes
+                                    Query</a></li>
+                            <li id="KPI" style="display: none;"><a class="dropdown-item"
+                                    href="exploradorArchivos.html">Explorador
+                                    de Archivos</a></li>
+                            <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item"
+                                    href="oficiosPanelControl.html">Oficios Panel Control</a></li>
                         </ul>
-                </li>
+                    </li>
                     <!-- Sección para el Oficios -->
                     <li id="Oficios" class="nav-item dropdown" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -120,12 +133,13 @@
                                     href="#">Correspondencia</a></li> -->
                         </ul>
                     </li>
-                    <!-- Sección para el Manual --> 
+                    <!-- Sección para el Manual -->
                     <li><a class="nav-link" href="manual.html">Manual</a></li>
                     <!-- Sección para el Estados -->
                     <li><a class="nav-link" href="help.html">Estados</a></li>
                     <!-- Sección para el Cerrar sesión -->
-                    <li><a class='nav-link' href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
+                    <li><a class='nav-link' href="#"
+                            onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -146,30 +160,37 @@
                     <tr>
                         <td>1</td>
                         <td>Creado</td>
-                        <td>El operador recibe el expediente valida checklist de documentos y registra el trámite en el sistema.</td>
+                        <td>El operador recibe el expediente valida checklist de documentos y registra el trámite en el
+                            sistema.</td>
                         <td>Operador</td>
                         <td>Registrar el trámite en el sistema.</td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>Turnado</td>
-                        <td>El operador entrega el expediente al analista, quien valida el registro del trámite en el sistema PagoTrack.</td>
+                        <td>El operador entrega el expediente al analista, quien valida el registro del trámite en el
+                            sistema PagoTrack.</td>
                         <td>Operador/Analista</td>
-                        <td>Entregar el expediente al analista y validar el registro del trámite en el sistema PagoTrack.</td>
+                        <td>Entregar el expediente al analista y validar el registro del trámite en el sistema
+                            PagoTrack.</td>
                     </tr>
                     <tr>
                         <td>3</td>
                         <td>Observaciones</td>
-                        <td>El analista detecta observaciones en el expediente, notifica a la institución y solicita correcciones inmediatas (deben solucionarse el mismo día).</td>
+                        <td>El analista detecta observaciones en el expediente, notifica a la institución y solicita
+                            correcciones inmediatas (deben solucionarse el mismo día).</td>
                         <td>Analista</td>
-                        <td>Notificar a la institución sobre las observaciones, solcitar la corrección  debera ser solucionado el mismo día.</td>
+                        <td>Notificar a la institución sobre las observaciones, solcitar la corrección debera ser
+                            solucionado el mismo día.</td>
                     </tr>
                     <tr>
                         <td>4</td>
                         <td>Devuelto</td>
-                        <td>El analista genera un volante y hacer entrega del expediente al representante de la institución.</td>
+                        <td>El analista genera un volante y hacer entrega del expediente al representante de la
+                            institución.</td>
                         <td>Analista</td>
-                        <td>Entrega de volante y expediente al representante de la institución (La institución tiene 2 días para hacer los ajustes necesarios).</td>
+                        <td>Entrega de volante y expediente al representante de la institución (La institución tiene 2
+                            días para hacer los ajustes necesarios).</td>
                     </tr>
                     <tr>
                         <td>5</td>
@@ -192,7 +213,8 @@
                     <tr>
                         <td>7</td>
                         <td>Registrado SAP</td>
-                        <td>El analista registra el trámite en SAP, indicando los números de documento SAP e integra SAP, y entrega el expediente al operador para gestión.</td>
+                        <td>El analista registra el trámite en SAP, indicando los números de documento SAP e integra
+                            SAP, y entrega el expediente al operador para gestión.</td>
                         <td>Analista</td>
                         <td>Registrar el trámite en SAP y entregarlo al operador. También comentar el número de
                             documento SAP y el
@@ -204,12 +226,14 @@
                         <td>El operador crea la remesa y entrega tanto la remesa como el expediente al Coordinador del
                             departamento.</td>
                         <td>Operador</td>
-                        <td>Entregar la remesa al Coordinador del departamento. Las ordenes de pago deben estar en estatus Remesa y con la nomenclatura de la remesa. (ddmmaa-remesa-consecutivo)</td>
+                        <td>Entregar la remesa al Coordinador del departamento. Las ordenes de pago deben estar en
+                            estatus Remesa y con la nomenclatura de la remesa. (ddmmaa-remesa-consecutivo)</td>
                     </tr>
                     <tr>
                         <td>9</td>
                         <td>Revisión Remesa</td>
-                        <td>El coordinador del departamento revisa la remesa recibida por el operador en caso de ser necesarias correcciones se puede devolver el expediente
+                        <td>El coordinador del departamento revisa la remesa recibida por el operador en caso de ser
+                            necesarias correcciones se puede devolver el expediente
                             al operador para hacer ajustes.</td>
                         <td>Coordinador</td>
                         <td>Dar el visto bueno a la remesa y trámite o devolver el expediente para ajustes.</td>
@@ -217,7 +241,8 @@
                     <tr>
                         <td>10</td>
                         <td>Remesa Aprobada</td>
-                        <td>La directora revisa la remesa y el expediente y los aprueba o los devuelve al coordinador del departamento
+                        <td>La directora revisa la remesa y el expediente y los aprueba o los devuelve al coordinador
+                            del departamento
                             para ajustes.</td>
                         <td>Directora</td>
                         <td>Dar el visto bueno a la remesa y trámite o devolver el expediente para ajustes.</td>
@@ -233,7 +258,8 @@
                     <tr>
                         <td>12</td>
                         <td>Devuelto Órdenes de Pago</td>
-                        <td>El Coordinador del departamento revisa la remesa y el expediente y los devuelve al operador para
+                        <td>El Coordinador del departamento revisa la remesa y el expediente y los devuelve al operador
+                            para
                             hacer los
                             ajustes necesarios.</td>
                         <td>Coordinador</td>

@@ -42,18 +42,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         <li id="KPI" style="display: none;"><a class="dropdown-item" href="dashboard.html">Trámites</a></li>
                         <li id="KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Turnado</a></li>
                         <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a></li>
-                        <li id="KPI" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
-                        <li id="KPI" style="display: none;"><a class="dropdown-item" href="reportesquery.html">Reportes Query</a></li>
-                        <li id="KPI" style="display: none;"><a class="dropdown-item" href="exploradorArchivos.html">Explorador de Archivos</a></li>
-                        <li id="OficiosPanelControl" style="display: none;"><a class="dropdown-item" href="OficiosPanelControl.html">Oficios Panel Control</a></li>
+                        <li id="na" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
+                        <li id="na" style="display: none;"><a class="dropdown-item" href="reportesquery.html">Reportes Query</a></li>
+                        <li id="na" style="display: none;"><a class="dropdown-item" href="exploradorArchivos.html">Explorador de Archivos</a></li>
+                        <li id="KPI" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelControl.html">Oficios Panel Control</a></li>
                     </ul>
                 </li>
                 <li id="Oficios" class="nav-item dropdown" style="display: none;">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">Correspondencia y Oficios</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li id="Oficios" style="display: none;"><a class="dropdown-item" href="OficiosPanelControl.html">Oficios</a></li>
-                        <li id="Oficios" style="display: none;"><a class="dropdown-item" href="OficiosPanelAnalista.html">Panel Analista</a></li>
+                        <li id="Oficios" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelControl.html">Correspondencia</a></li>
+                        <li id="Oficios" style="display: none;"><a class="dropdown-item" href="#">Contestaciones</a></li>
+                        <li id="Oficios" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelAnalista.html">Panel Analista</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-link" href="manual.html">Manual</a></li>

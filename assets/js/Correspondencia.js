@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             actualizarOficio(data);
             setTimeout(() => {
-                window.location.href = "OficiosPanelControl.html";
+                window.location.href = "CorrespondenciaPanelControl.html";
             }, 3000); // 5 segundos
         });
     }
@@ -87,7 +87,7 @@ async function cargarApp() {
     const crearOficio = document.getElementById("crearOficio");
     if (crearOficio) {
         crearOficio.addEventListener("click", () => {
-            window.location.href = "OficioCrear.html";
+            window.location.href = "CorrespondenciaCrear.html";
         });
     }
     // Evento para validar el formulario de edición de oficios
@@ -108,7 +108,7 @@ async function cargarApp() {
             });
             actualizarOficio(data);
             setTimeout(() => {
-                window.location.href = "OficiosPanelControl.html";
+                window.location.href = "CorrespondenciaPanelControl.html";
             }, 3000); // 5 segundos
         });
     }
@@ -133,7 +133,7 @@ async function cargarApp() {
             });
             actualizarOficio(data);
             setTimeout(() => {
-                window.location.href = "OficiosPanelAnalista.html";
+                window.location.href = "CorrespondenciaPanelAnalista.html";
             }, 3000); // 5 segundos
 
         });
@@ -173,7 +173,7 @@ async function cargarApp() {
             // ✅ Continúa si todo está bien
             actualizarOficio(formData);
             setTimeout(() => {
-                window.location.href = "OficiosPanelControl.html";
+                window.location.href = "CorrespondenciaPanelControl.html";
             }, 3000); // 5 segundos 
         });
     }
@@ -240,17 +240,17 @@ function llenarTablaOficios(data, tableId) {
                     let botones = "";
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
-                        botones += `<button class="btn btn-primary" onclick="window.location.href='OficioEditar.html?id=' + ${data.ID}">Actualizar</button>`;
+                        botones += `<button class="btn btn-primary" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Actualizar</button>`;
                     }
                     if (usuario && usuario.RolUser === "Admin") {
                         botones += `<button class="btn btn-danger" onclick="eliminarOficio(${data.ID})">Eliminar</button>`;
                     }
                     if (data.Estado === "CREADO") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='OficioTurnado.html?id=' + ${data.ID}">TURNADO</button>`;
+                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}">TURNADO</button>`;
                         //RESULTADO DE LA VISTA OFICIOTURNADO = OBSERVACIONES, DEVUELTO O FIRMA-DG
                     }
                     if (data.Estado === "FIRMA-DG") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='OficioEditar.html?id=' + ${data.ID}">ACUSE</button>`;
+                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ACUSE</button>`;
                         //RESULTADO DE LA VISTA OFICIOSCANEOFIRMAS = ESCANEO-FIRMAS
                     }
                     if (data.Estado === "ESCANEO-FIRMAS") {
@@ -258,15 +258,15 @@ function llenarTablaOficios(data, tableId) {
                         //RESULTADO DE LA VISTA OFICIORESPUESTA = ACUSE
                     }
                     if (data.Estado === "ACUSE") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='OficioScaneoFirmas.html?id=' + ${data.ID}">ESCANEO-SELLOS</button>`;
+                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}">ESCANEO-SELLOS</button>`;
                         //RESULTADO DE LA VISTA OFICIOESCANEOSSELLOS = ESCANEO-SELLOS
                     }
                     if (data.Estado === "ESCANEO-SELLOS") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='OficioEditar.html?id=' + ${data.ID}">ARCHIVADO</button>`;
+                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ARCHIVADO</button>`;
                         //RESULTADO DE LA VISTA OFICIOARCHIVADO = ARCHIVADO
                     }
                     if (data.Estado === "TURNADO" || data.Estado === "OBSERVACIONES" || data.Estado === "DEVUELTO") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='OficiosAnalistaActualizar.html?id=' + ${data.ID}">ACTUALIZAR</button>`;
+                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}">ACTUALIZAR</button>`;
                     }
 
                     return botones;
@@ -340,7 +340,7 @@ function crearOficio(data) {
 
             if (responseData.message === "Oficio creado correctamente") {
                 //console.log('Oficio creado correctamente');
-                window.location.href = "OficiosPanelControl.html";
+                window.location.href = "CorrespondenciaPanelControl.html";
             } else {
                 alert("Error al crear el oficio: " + (responseData.error || "Error desconocido"));
             }

@@ -54,13 +54,13 @@ function inicioSesion(CorreoUserForm, ClaveUserForm){
                     window.location.href = 'seguimientoOrdenesPago.html';
                     break;
                 case 'Suficiencias' :
-                    window.location.href = 'OficiosPanelAnalista.html';
+                    window.location.href = 'CorrespondenciaPanelAnalista.html';
                     break;  
                 case 'KPI' :
                     window.location.href = 'kpi.html';
                     break;
                 case 'Oficios' :
-                    window.location.href = 'OficiosPanelControl.html';
+                    window.location.href = 'CorrespondenciaPanelControl.html';
                     break;
             }
         } else {

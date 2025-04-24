@@ -7,6 +7,8 @@
     include_once 'app/controllers/KpiController.php';
     include_once 'app/controllers/SuficienciaController.php';
     include_once 'app/controllers/Correspondencia/CorrespondenciaController.php';
+    include_once 'app/controllers/Oficios/OficiosController.php';
+
     // Instanciamos el controlador
     $controllerTramite = new TramitesController();
     $controllerRemesa = new RemesaController();
@@ -14,6 +16,8 @@
     $controllerKpi = new KpiController();
     $controllerSuficiencia = new SuficienciaController();
     $controllerCorrespondencia = new CorrespondenciaController();
+    $controllerOficios = new OficiosController();
+
     //Obtener el método de la solicitud HTTP
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -213,6 +217,47 @@
             
                 exit;
                 break;
+            case 'actualizarRegistroOficioArchivo':
+                header('Content-Type: application/json; charset=utf-8');
+
+                $datos = !empty($_POST) ? $_POST : json_decode(file_get_contents("php://input"), true);
+                $archivos = $_FILES;    
+                
+                if (!empty($datos)) {
+                    global $controllerOficios;
+                    $respuesta = $controllerOficios->actualizarRegistroOficioArchivo($datos, $archivos);
+                } else {
+                    echo json_encode(["error" => "Datos no proporcionados"]);
+                    exit;
+                }   
+
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Registro de oficio modificado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);    
+                    echo json_encode(array('message' => 'Registro de oficio no modificado.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+
+            case 'crearRegistroOficio':
+                if(!empty($data)){
+                    global $controllerOficios;
+                    $respuesta = $controllerOficios->crearRegistroOficio((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Oficio creado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'Oficio no creado.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción POST desconocida.'], JSON_UNESCAPED_UNICODE);
@@ -355,6 +400,20 @@
                 }
                 exit;
                 break;
+            case 'listarRegistroOficios':
+                // Declarar como global
+                global $controllerOficios;
+                $respuesta = $controllerOficios->listarRegistroOficios();
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Listado de registros de oficios.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'No se encontraron registros de oficios.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
+            
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción GET desconocida.'], JSON_UNESCAPED_UNICODE);
@@ -487,6 +546,23 @@
                     }
                     exit;
                     break;    
+            case 'actualizarRegistroOficio':
+                if(!empty($data)){
+                    global $controllerOficios;
+                    $respuesta = $controllerOficios->actualizarRegistroOficio((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Registro de oficio modificado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'Registro de oficio no modificado.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción PATCH desconocida.'], JSON_UNESCAPED_UNICODE);
@@ -566,6 +642,23 @@
                 }
                 exit;
                 break;  
+            case 'eliminarRegistroOficio':
+                if(!empty($data)){
+                    global $controllerOficios;
+                    $respuesta = $controllerOficios->eliminarRegistroOficio((array) $data);
+                }else{
+                    echo "Datos no proporcionados";
+                    exit;
+                }
+                if ($respuesta) {
+                    http_response_code(200);
+                    echo json_encode(array('message' => 'Registro de oficio eliminado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array('message' => 'Registro de oficio no eliminado.'), JSON_UNESCAPED_UNICODE);
+                }
+                exit;
+                break;
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción DELETE desconocida.'], JSON_UNESCAPED_UNICODE);

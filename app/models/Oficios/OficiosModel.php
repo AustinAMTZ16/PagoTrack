@@ -3,6 +3,28 @@ include_once 'app/config/Database.php';
 
 class OficiosModel
 {
+    // Tablas RegistroOficios
+    // 'TipoOficio',
+    // 'NumeroOficio',
+    // 'FechaRetroactivo',
+    // 'DirigidoA',
+    // 'Asunto',
+    // 'Institucion',
+    // 'Solicita',
+    // 'FolioInterno',
+    // 'Estado',
+    // 'FechaEntregaDGAnalista',
+    // 'Concepto',
+    // 'RespuestaA',
+    // 'Monto',
+    // 'FechaRecepcionDependencia',
+    // 'FechaEntregaAnalistaOperador',
+    // 'Comentario',
+    // 'ArchivoAdjunto',
+    // 'UsuarioRegistro',
+    // 'FechaActualizacion'
+
+
     private $conn;
 
     public function __construct()
@@ -10,11 +32,11 @@ class OficiosModel
         $this->conn = (new Database())->conn;
     }
     // Función para obtener los oficios
-    public function listarOficios()
+    public function listarRegistroOficios()
     {
         try {
             // Consulta de totales
-            $query = "SELECT * FROM Oficios ORDER BY FechaCreacion DESC;";
+            $query = "SELECT * FROM RegistroOficios ORDER BY FechaRegistro DESC;";
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -26,19 +48,20 @@ class OficiosModel
         }
     }
     // Función para crear un oficio
-    public function crearOficio($data)
+    public function crearRegistroOficio($data)
     {
         try {
             date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
             $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
             // Crear historial de comentarios en formato JSON
             $comentariosArray = [];
-            if (!empty($data['Comentarios'])) {
+
+            if (!empty($data['Comentario'])) {
                 $comentarioInicial = [
                     "Fecha" => $fechaActual,
                     "Estatus" => $data['Estado'],
                     "Usuario" => $data['UsuarioRegistro'],
-                    "Comentario" => $data['Comentarios']
+                    "Comentario" => $data['Comentario']
                 ];
                 $comentariosArray[] = $comentarioInicial;
             }
@@ -46,60 +69,67 @@ class OficiosModel
 
 
             // Consulta con campos completos
-            $query = "INSERT INTO Oficios (
-                Folio,
-                Solicitante,
-                Dependencia,
-                Departamento,
+            $query = "INSERT INTO RegistroOficios (
+                TipoOficio,
                 NumeroOficio,
-                tipoOficio,
+                FechaRetroactivo,
+                DirigidoA,
                 Asunto,
-                Concepto,
-                Monto,
-                FechaVencimiento,
-                Turnado,
-                FechaRetroactiva,
+                Institucion,
+                Solicita,
+                FolioInterno,
                 Estado,
-                UsuarioRegistro,
-                Comentarios,
-                FechaRecepcion
+                FechaEntregaDGAnalista,
+                Concepto,
+                RespuestaA,
+                Monto,
+                FechaRecepcionDependencia,
+                FechaEntregaAnalistaOperador,
+                Comentario,
+                ArchivoAdjunto,
+                UsuarioRegistro
             ) VALUES (
-                :Folio,
-                :Solicitante,
-                :Dependencia,
-                :Departamento,
+                :TipoOficio,
                 :NumeroOficio,
-                :tipoOficio,
+                :FechaRetroactivo,
+                :DirigidoA,
                 :Asunto,
-                :Concepto,
-                :Monto,
-                :FechaVencimiento,
-                :Turnado,
-                :FechaRetroactiva,
+                :Institucion,
+                :Solicita,
+                :FolioInterno,
                 :Estado,
-                :UsuarioRegistro,
-                :Comentarios,
-                :FechaRecepcion
+                :FechaEntregaDGAnalista,
+                :Concepto,
+                :RespuestaA,
+                :Monto,
+                :FechaRecepcionDependencia,
+                :FechaEntregaAnalistaOperador,
+                :Comentario,
+                :ArchivoAdjunto,
+                :UsuarioRegistro
             )";
 
             $stmt = $this->conn->prepare($query);
 
-            $stmt->bindParam(':Folio', $data['Folio']);
-            $stmt->bindParam(':Solicitante', $data['Solicitante']);
-            $stmt->bindParam(':Dependencia', $data['Dependencia']);
-            $stmt->bindParam(':Departamento', $data['Departamento']);
-            $stmt->bindParam(':NumeroOficio', $data['NumeroOficio']);
-            $stmt->bindParam(':tipoOficio', $data['tipoOficio']);
-            $stmt->bindParam(':Asunto', $data['Asunto']);
-            $stmt->bindParam(':Concepto', $data['Concepto']);
-            $stmt->bindParam(':Monto', $data['Monto']);
-            $stmt->bindParam(':FechaVencimiento', $data['FechaVencimiento']);
-            $stmt->bindParam(':Turnado', $data['Turnado']);
-            $stmt->bindParam(':FechaRetroactiva', $data['FechaRetroactiva']);
-            $stmt->bindParam(':Estado', $data['Estado']);
-            $stmt->bindParam(':UsuarioRegistro', $data['UsuarioRegistro']);
-            $stmt->bindParam(':Comentarios', $jsonComentarios);
-            $stmt->bindParam(':FechaRecepcion', $data['FechaRecepcion']);
+            $stmt->bindValue(':TipoOficio', isset($data['TipoOficio']) && trim($data['TipoOficio']) !== '' ? $data['TipoOficio'] : 'Oficios');
+            $stmt->bindValue(':NumeroOficio', isset($data['NumeroOficio']) && trim($data['NumeroOficio']) !== '' ? $data['NumeroOficio'] : 'N/A');
+            $stmt->bindValue(':FechaRetroactivo', isset($data['FechaRetroactivo']) && trim($data['FechaRetroactivo']) !== '' ? $data['FechaRetroactivo'] : $fechaActual);
+            $stmt->bindValue(':DirigidoA', isset($data['DirigidoA']) && trim($data['DirigidoA']) !== '' ? $data['DirigidoA'] : 'N/A');
+            $stmt->bindValue(':Asunto', isset($data['Asunto']) && trim($data['Asunto']) !== '' ? $data['Asunto'] : 'N/A');
+            $stmt->bindValue(':Institucion', isset($data['Institucion']) && trim($data['Institucion']) !== '' ? $data['Institucion'] : 'N/A');
+            $stmt->bindValue(':Solicita', isset($data['Solicita']) && trim($data['Solicita']) !== '' ? $data['Solicita'] : 'N/A');
+            $stmt->bindValue(':FolioInterno', isset($data['FolioInterno']) && trim($data['FolioInterno']) !== '' ? $data['FolioInterno'] : 'N/A');
+            $stmt->bindValue(':Estado', isset($data['Estado']) && trim($data['Estado']) !== '' ? $data['Estado'] : 'Registrado');
+            $stmt->bindValue(':FechaEntregaDGAnalista', isset($data['FechaEntregaDGAnalista']) && trim($data['FechaEntregaDGAnalista']) !== '' ? $data['FechaEntregaDGAnalista'] : $fechaActual);
+            $stmt->bindValue(':Concepto', isset($data['Concepto']) && trim($data['Concepto']) !== '' ? $data['Concepto'] : 'N/A');
+            $stmt->bindValue(':RespuestaA', isset($data['RespuestaA']) && trim($data['RespuestaA']) !== '' ? $data['RespuestaA'] : 'N/A');
+            $stmt->bindValue(':Monto', isset($data['Monto']) && trim($data['Monto']) !== '' ? $data['Monto'] : 0.00);
+            $stmt->bindValue(':FechaRecepcionDependencia', isset($data['FechaRecepcionDependencia']) && trim($data['FechaRecepcionDependencia']) !== '' ? $data['FechaRecepcionDependencia'] : $fechaActual);
+            $stmt->bindValue(':FechaEntregaAnalistaOperador', isset($data['FechaEntregaAnalistaOperador']) && trim($data['FechaEntregaAnalistaOperador']) !== '' ? $data['FechaEntregaAnalistaOperador'] : $fechaActual);
+            $stmt->bindValue(':Comentario', isset($data['Comentario']) && trim($data['Comentario']) !== '' ? $data['Comentario'] : '[]');
+            $stmt->bindValue(':ArchivoAdjunto', isset($data['ArchivoAdjunto']) && trim($data['ArchivoAdjunto']) !== '' ? $data['ArchivoAdjunto'] : 'N/A');
+            $stmt->bindValue(':UsuarioRegistro', isset($data['UsuarioRegistro']) && trim($data['UsuarioRegistro']) !== '' ? $data['UsuarioRegistro'] : 'N/A');
+
             $stmt->execute();
 
             return json_encode(["message" => "Oficio creado correctamente"]);
@@ -109,57 +139,59 @@ class OficiosModel
         }
     }
     // Función para actualizar un oficio
-    public function actualizarOficio($data)
+    public function actualizarRegistroOficio($data)
     {
         try {
             date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
             $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
+            $data['FechaActualizacion'] = $fechaActual;
+            
             // Obtener comentarios actuales si existen
-            $queryComentarios = "SELECT Comentarios FROM Oficios WHERE ID = :ID";
+            $queryComentarios = "SELECT Comentario FROM RegistroOficios WHERE ID_RegistroOficios = :ID_RegistroOficios";
             $stmtComentarios = $this->conn->prepare($queryComentarios);
-            $stmtComentarios->bindValue(':ID', $data['ID']);
+            $stmtComentarios->bindValue(':ID_RegistroOficios', $data['ID_RegistroOficios']);
             $stmtComentarios->execute();
             $resultComentarios = $stmtComentarios->fetch(PDO::FETCH_ASSOC);
 
             $comentariosActuales = [];
-            if (!empty($resultComentarios['Comentarios'])) {
-                $comentariosActuales = json_decode($resultComentarios['Comentarios'], true);
+            if (!empty($resultComentarios['Comentario'])) {
+                $comentariosActuales = json_decode($resultComentarios['Comentario'], true);
             }
 
-            if (!empty($data['Comentarios'])) {
+            if (!empty($data['Comentario'])) {
                 $nuevoComentario = [
                     "Fecha" => $fechaActual,
                     "Estatus" => $data['Estado'] ?? '',
                     "Usuario" => $data['UsuarioRegistro'] ?? '',
-                    "Comentario" => $data['Comentarios']
+                    "Comentario" => $data['Comentario']
                 ];
                 $comentariosActuales[] = $nuevoComentario;
-                $data['Comentarios'] = json_encode($comentariosActuales, JSON_UNESCAPED_UNICODE);
+                $data['Comentario'] = json_encode($comentariosActuales, JSON_UNESCAPED_UNICODE);
             }
 
-            $camposValidos = [
-                'Folio',
-                'FechaRecepcion',
-                'Solicitante',
-                'Dependencia',
-                'Departamento',
+            $camposValidos = [                
+                'TipoOficio',
                 'NumeroOficio',
-                'tipoOficio',
+                'FechaRetroactivo',
+                'DirigidoA',
                 'Asunto',
-                'Concepto',
-                'Monto',
-                'FechaVencimiento',
-                'Turnado',
-                'RespuestaConocimiento',
-                'FechaRetroactiva',
+                'Institucion',
+                'Solicita',
+                'FolioInterno',
                 'Estado',
+                'FechaEntregaDGAnalista',
+                'Concepto',
+                'RespuestaA',
+                'Monto',
+                'FechaRecepcionDependencia',
+                'FechaEntregaAnalistaOperador',
+                'Comentario',
+                'ArchivoAdjunto',
                 'UsuarioRegistro',
-                'Comentarios',
-                'ArchivoScaneado',
-                'FechaEntregaAcuse'
+                'FechaActualizacion'
             ];
 
-            if (!isset($data['ID'])) {
+            if (!isset($data['ID_RegistroOficios'])) {
                 http_response_code(400);
                 return json_encode(["error" => "Falta el ID del oficio a actualizar"]);
             }
@@ -179,7 +211,7 @@ class OficiosModel
             }
 
             $setSQL = implode(", ", $setClauses);
-            $query = "UPDATE Oficios SET $setSQL WHERE ID = :ID";
+            $query = "UPDATE RegistroOficios SET $setSQL WHERE ID_RegistroOficios = :ID_RegistroOficios";
 
             $stmt = $this->conn->prepare($query);
 
@@ -187,7 +219,7 @@ class OficiosModel
                 $stmt->bindValue(":$campo", $valor);
             }
 
-            $stmt->bindValue(":ID", $data['ID']);
+            $stmt->bindValue(":ID_RegistroOficios", $data['ID_RegistroOficios']);
             $stmt->execute();
 
             $rowsAffected = $stmt->rowCount();
@@ -203,18 +235,20 @@ class OficiosModel
         }
     }
     // Función para eliminar un oficio
-    public function eliminarOficio($data)
+    public function eliminarRegistroOficio($data)
     {
         try {
-            $query = "DELETE FROM Oficios WHERE ID = :ID";
+            var_dump($data['ID_RegistroOficios']);
+
+            $query = "DELETE FROM RegistroOficios WHERE ID_RegistroOficios = :ID_RegistroOficios";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':ID', $data['ID']);
+            $stmt->bindParam(':ID_RegistroOficios', $data['ID_RegistroOficios']);
             $stmt->execute();
             $rowsAffected = $stmt->rowCount();
             if ($rowsAffected > 0) {
-                return json_encode(["message" => "Oficio eliminado correctamente", "rowsAffected" => $rowsAffected]);
+                return json_encode(["message" => "Registro de oficio eliminado correctamente", "rowsAffected" => $rowsAffected]);
             } else {
-                return json_encode(["message" => "No se realizó ninguna eliminación", "rowsAffected" => 0]);
+                return json_encode(["message" => "No se realizó ninguna eliminación...", "rowsAffected" => 0]);
             }
         } catch (PDOException $e) {
             http_response_code(500);
@@ -222,17 +256,19 @@ class OficiosModel
         }
     }
     // Función para actualizar un oficio con archivo
-    public function actualizarOficioArchivo($data, $archivos)
+    public function actualizarRegistroOficioArchivo($data, $archivos)
     {
         try {
             date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
             $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
+            $data['FechaActualizacion'] = $fechaActual;
+            
             // ✅ 1. Validar y mover archivo si viene
             if (isset($archivos['Archivo']) && $archivos['Archivo']['error'] === UPLOAD_ERR_OK) {
                 $archivo = $archivos['Archivo'];
 
                 $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
-                $nombreArchivoFinal = $data['ID'] . '.' . $extension;
+                $nombreArchivoFinal = $data['ID_RegistroOficios'] . '.' . $extension;
                 $rutaDestino = __DIR__ . '/../../../assets/uploads/oficios/' . $nombreArchivoFinal;
 
                 if (!is_dir(dirname($rutaDestino))) {
@@ -240,7 +276,7 @@ class OficiosModel
                 }
 
                 if (move_uploaded_file($archivo['tmp_name'], $rutaDestino)) {
-                    $data['ArchivoScaneado'] = $nombreArchivoFinal;
+                    $data['ArchivoAdjunto'] = $nombreArchivoFinal;
                 } else {
                     return json_encode([
                         "error" => "No se pudo mover el archivo al directorio destino."
@@ -249,16 +285,16 @@ class OficiosModel
             }
 
             // ✅ 2. Acumulación de comentarios
-            if (!empty($data['Comentarios'])) {
+            if (!empty($data['Comentario'])) {
                 // Obtener comentarios actuales
-                $stmtComentarios = $this->conn->prepare("SELECT Comentarios FROM Oficios WHERE ID = :ID");
-                $stmtComentarios->bindValue(":ID", $data['ID']);
+                $stmtComentarios = $this->conn->prepare("SELECT Comentario FROM RegistroOficios WHERE ID_RegistroOficios = :ID_RegistroOficios");
+                $stmtComentarios->bindValue(":ID_RegistroOficios", $data['ID_RegistroOficios']);
                 $stmtComentarios->execute();
                 $resultado = $stmtComentarios->fetch(PDO::FETCH_ASSOC);
 
                 $comentariosPrevios = [];
-                if (!empty($resultado['Comentarios'])) {
-                    $comentariosPrevios = json_decode($resultado['Comentarios'], true);
+                if (!empty($resultado['Comentario'])) {
+                    $comentariosPrevios = json_decode($resultado['Comentario'], true);
                     if (!is_array($comentariosPrevios)) {
                         $comentariosPrevios = [];
                     }
@@ -266,40 +302,40 @@ class OficiosModel
 
                 // Agregar nuevo comentario al historial
                 $comentarioNuevo = [
-                    "ID_OFICIO" => $data['ID'],
+                    "ID_OFICIO" => $data['ID_RegistroOficios'],
                     "Fecha" => $fechaActual,
                     "Estatus" => $data['Estado'] ?? "ACTUALIZACIÓN",
                     "Usuario" => $data['UsuarioRegistro'] ?? "N/A",
-                    "Comentario" => $data['Comentarios']
+                    "Comentario" => $data['Comentario']
                 ];
                 $comentariosPrevios[] = $comentarioNuevo;
-                $data['Comentarios'] = json_encode($comentariosPrevios, JSON_UNESCAPED_UNICODE);
+                $data['Comentario'] = json_encode($comentariosPrevios, JSON_UNESCAPED_UNICODE);
             }
 
             // ✅ 3. Preparar UPDATE dinámico
             $camposValidos = [
-                'Folio',
-                'FechaRecepcion',
-                'Solicitante',
-                'Dependencia',
-                'Departamento',
+                'TipoOficio',
                 'NumeroOficio',
-                'tipoOficio',
+                'FechaRetroactivo',
+                'DirigidoA',
                 'Asunto',
-                'Concepto',
-                'Monto',
-                'FechaVencimiento',
-                'Turnado',
-                'RespuestaConocimiento',
-                'FechaRetroactiva',
+                'Institucion',
+                'Solicita',
+                'FolioInterno',
                 'Estado',
+                'FechaEntregaDGAnalista',
+                'Concepto',
+                'RespuestaA',
+                'Monto',
+                'FechaRecepcionDependencia',
+                'FechaEntregaAnalistaOperador',
+                'Comentario',
+                'ArchivoAdjunto',
                 'UsuarioRegistro',
-                'Comentarios',
-                'ArchivoScaneado',
-                'FechaEntregaAcuse'
+                'FechaActualizacion'
             ];
 
-            if (!isset($data['ID'])) {
+            if (!isset($data['ID_RegistroOficios'])) {
                 http_response_code(400);
                 return json_encode(["error" => "Falta el ID del oficio a actualizar"]);
             }
@@ -319,13 +355,13 @@ class OficiosModel
             }
 
             $setSQL = implode(", ", $setClauses);
-            $query = "UPDATE Oficios SET $setSQL WHERE ID = :ID";
+            $query = "UPDATE RegistroOficios SET $setSQL WHERE ID_RegistroOficios = :ID_RegistroOficios";
 
             $stmt = $this->conn->prepare($query);
             foreach ($params as $campo => $valor) {
                 $stmt->bindValue(":$campo", $valor);
             }
-            $stmt->bindValue(":ID", $data['ID']);
+            $stmt->bindValue(":ID_RegistroOficios", $data['ID_RegistroOficios']);
             $stmt->execute();
 
             $rowsAffected = $stmt->rowCount();
@@ -333,7 +369,7 @@ class OficiosModel
             return json_encode([
                 "message" => $rowsAffected > 0 ? "Oficio actualizado correctamente" : "No se realizaron cambios",
                 "rowsAffected" => $rowsAffected,
-                "archivo" => $data['ArchivoScaneado'] ?? null
+                "archivo" => $data['ArchivoAdjunto'] ?? null
             ]);
         } catch (PDOException $e) {
             http_response_code(500);

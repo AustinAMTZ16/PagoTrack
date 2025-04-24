@@ -233,7 +233,7 @@ class CorrespondenciaModel
 
                 $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
                 $nombreArchivoFinal = $data['ID'] . '.' . $extension;
-                $rutaDestino = __DIR__ . '/../../../assets/uploads/oficios/' . $nombreArchivoFinal;
+                $rutaDestino = __DIR__ . '/../../../assets/uploads/Correspondencia/' . $nombreArchivoFinal;
 
                 if (!is_dir(dirname($rutaDestino))) {
                     mkdir(dirname($rutaDestino), 0777, true);

@@ -8,24 +8,24 @@ class OficiosController {
         $this->model = new OficiosModel();
     }
 
-    public function listarOficios() {
-        return $this->model->listarOficios();
+    public function listarRegistroOficios() {
+        return $this->model->listarRegistroOficios();
     }
 
-    public function crearOficio($data){
-        return $this->model->crearOficio($data);
+    public function crearRegistroOficio($data){
+        return $this->model->crearRegistroOficio($data);
     }
 
-    public function actualizarOficio($data){
-        return $this->model->actualizarOficio($data);
+    public function actualizarRegistroOficio($data){
+        return $this->model->actualizarRegistroOficio($data);
     }
 
-    public function eliminarOficio($id){
-        return $this->model->eliminarOficio($id);
+    public function eliminarRegistroOficio($data){
+        return $this->model->eliminarRegistroOficio($data);
     }  
 
-    public function actualizarOficioArchivo($data, $archivos){
-        return $this->model->actualizarOficioArchivo($data, $archivos);
+    public function actualizarRegistroOficioArchivo($data, $archivos){
+        return $this->model->actualizarRegistroOficioArchivo($data, $archivos);
     }   
 }   
 ?>

@@ -235,24 +235,35 @@ class OficiosModel
         }
     }
     // Función para eliminar un oficio
-    public function eliminarRegistroOficio($data)
-    {
+    public function eliminarRegistroOficio($data) {
         try {
-            var_dump($data['ID_RegistroOficios']);
-
             $query = "DELETE FROM RegistroOficios WHERE ID_RegistroOficios = :ID_RegistroOficios";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':ID_RegistroOficios', $data['ID_RegistroOficios']);
             $stmt->execute();
+            
             $rowsAffected = $stmt->rowCount();
+            
+            // Devuelve array directamente (NO json_encode)
             if ($rowsAffected > 0) {
-                return json_encode(["message" => "Registro de oficio eliminado correctamente", "rowsAffected" => $rowsAffected]);
+                return [
+                    "success" => true,
+                    "message" => "Registro eliminado correctamente",
+                    "rowsAffected" => $rowsAffected
+                ];
             } else {
-                return json_encode(["message" => "No se realizó ninguna eliminación...", "rowsAffected" => 0]);
+                return [
+                    "success" => false,
+                    "message" => "No se encontró el registro a eliminar",
+                    "rowsAffected" => 0
+                ];
             }
         } catch (PDOException $e) {
-            http_response_code(500);
-            return json_encode(["error" => "Error en la consulta: " . $e->getMessage()]);
+            // Devuelve array para errores también
+            return [
+                "success" => false,
+                "error" => "Error en la consulta: " . $e->getMessage()
+            ];
         }
     }
     // Función para actualizar un oficio con archivo

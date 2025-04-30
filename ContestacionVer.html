@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Oficio</title>
+    <title>Contestacion Crear</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
 
-    <script type="module" src="./assets/js/Correspondencia.js"></script>
+    <script type="module" src="./assets/js/Contestacion.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -28,31 +28,69 @@
 
     <div class="contenedor">
         <div class="table-container">
-            <h1>Crear Oficio</h1>
-            <form id="formCrearOficios" method="POST">
-                <!-- Folio -->
+            <h1>Ver Contestacion</h1>
+            <form id="formVerContestacion" method="POST">
+                <input type="text" id="ID_RegistroOficios" name="ID_RegistroOficios" value="" readonly>
+
+                <!-- TipoOficio -->
                 <div class="mb-3">
-                    <label for="Folio" class="form-label">Folio</label>
-                    <input type="text" class="form-control" id="Folio" name="Folio" placeholder="ddmmyy-nn">
+                    <label for="TipoOficio" class="form-label">Tipo de Oficio</label>
+                    <select class="form-select" id="TipoOficio" name="TipoOficio" readonly>
+                        <option value="">Seleccione el Tipo de Oficio</option>
+                        <option value="Oficios">Oficios</option>
+                        <option value="Memos">Memos</option>
+                        <option value="Circulares">Circulares</option>
+                        <option value="Recalendarizaciones">Recalendarizaciones</option>
+                        <option value="Transferencias">Transferencias</option>
+                        <option value="Usos de partida">Usos de partida</option>
+                        <option value="Oficios DGE">Oficios DGE</option>
+                        <option value="Memos DGE">Memos DGE</option>
+                        <option value="Circulares DGE">Circulares DGE</option>
+                        <option value="Ampliaciones">Ampliaciones</option>
+                        <option value="Disposiciones">Disposiciones</option>
+                        <option value="Disposiciones y Reasignaciones">Disposiciones y Reasignaciones</option>
+                        <option value="Reducciones">Reducciones</option>
+                        <option value="Resignación">Resignación</option>
+                    </select>
                 </div>
 
-                <!-- Fecha de Recepción -->
+                <!-- NumeroOficio -->
                 <div class="mb-3">
-                    <label for="FechaRecepcion" class="form-label">Fecha de Recepción</label>
-                    <input type="datetime-local" class="form-control" id="FechaRecepcion" name="FechaRecepcion">
+                    <label for="NumeroOficio" class="form-label">Numero de Oficio</label>
+                    <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio"
+                        placeholder="Numero de Oficio" readonly>
                 </div>
 
-                <!-- Solicitante -->
+                <!-- FechaRetroactivo -->
                 <div class="mb-3">
-                    <label for="Solicitante" class="form-label">Solicitante</label>
-                    <input type="text" class="form-control" id="Solicitante" name="Solicitante"
-                        placeholder="Nombre del Solicitante">
+                    <label for="FechaRetroactivo" class="form-label">Fecha Retroactivo</label>
+                    <input type="date" class="form-control" id="FechaRetroactivo" name="FechaRetroactivo"
+                        placeholder="Fecha Retroactivo" readonly>
                 </div>
 
-                <!-- Dependencia -->
+
+                <!-- DirigidoA -->
                 <div class="mb-3">
-                    <label for="Dependencia" class="form-label">Institución</label>
-                    <select name="Dependencia" id="Dependencia" placeholder="Institución" required>
+                    <label for="DirigidoA" class="form-label">Dirigido A</label>
+                    <input type="text" class="form-control" id="DirigidoA" name="DirigidoA" placeholder="Dirigido A" readonly>
+                </div>
+
+                <!-- Asunto -->
+                <div class="mb-3">
+                    <label for="Asunto" class="form-label">Asunto</label>
+                    <input type="text" class="form-control" id="Asunto" name="Asunto" placeholder="Asunto" readonly>
+                </div>
+
+                <!-- Concepto -->
+                <div class="mb-3">
+                    <label for="Concepto" class="form-label">Concepto</label>
+                    <input type="text" class="form-control" id="Concepto" name="Concepto" placeholder="Concepto" readonly>
+                </div>
+
+                <!-- Institucion -->
+                <div class="mb-3">
+                    <label for="Institucion" class="form-label">Institucion</label>
+                    <select class="form-select" id="Institucion" name="Institucion" readonly>
                         <option value="" disabled selected>Seleccione una Institución</option>
                         <!-- Dependencias -->
                         <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
@@ -97,86 +135,13 @@
                             Operador del Servicio de Limpia del Municipio de Puebla</option>
                         <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
                         <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
-
                     </select>
                 </div>
 
-                <!-- Departamento -->
+                <!-- Solicita -->
                 <div class="mb-3">
-                    <label for="Departamento" class="form-label">Departamento</label>
-                    <input type="text" class="form-control" id="Departamento" name="Departamento"
-                        placeholder="Nombre del Departamento">
-                </div>
-
-                <!-- Número de Oficio -->
-                <div class="mb-3">
-                    <label for="NumeroOficio" class="form-label">Número de Oficio</label>
-                    <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio"
-                        placeholder="OF-2025-010">
-                </div>
-
-                <!-- Tipo de Oficio -->
-                <div class="mb-3">
-                    <label for="tipoOficio" class="form-label">Tipo de Oficio</label>
-                    <select class="form-select" id="tipoOficio" name="tipoOficio">
-                        <option value="">Seleccione el Tipo de Oficio</option>
-                        <option value="Suficiencia Presupuestal">Suficiencia Presupuestal</option>
-                        <option value="Suficiencia Compromiso Gasto">Suficiencia Compromiso Gasto</option>
-                        <option value="Suficiencia Anticipada">Suficiencia Anticipada</option>
-                        <option value="Modificaciones Suficiencia Presupuestal">Modificaciones Suficiencia Presupuestal
-                        </option>
-                        <option value="Suficiencia Ampliación">Suficiencia Ampliación</option>
-
-                        <option value="Oficios">Oficios</option>
-                        <option value="Memorandos">Memorandos</option>
-                        <option value="Circulares">Circulares</option>
-                        <option value="Recalendarizacion">Recalendarizacion</option>
-                        <option value="Transferencias">Transferencias</option>
-                        <option value="Uso de Partida">Uso de Partida</option>
-
-                        <option value="Ampliación Presupuestal">Ampliación Presupuestal</option>
-                        <option value="Ampliación Liquida">Ampliación Liquida</option>
-                        <option value="Resignación">Resignación</option>
-                        <option value="Disposicion y Reasignacion">Disposicion y Reasignacion</option>
-                        <option value="Disposicion">Disposicion</option>
-                        <option value="Apertura de fondo fijo">Apertura de fondo fijo</option>
-                        <option value="Multi Anuales">Multi Anuales</option>
-                        <option value="Transparencia">Transparencia</option>
-
-                        <option value="Lic Romay">Lic Romay</option>
-                    </select>
-                </div>
-
-                <!-- Asunto -->
-                <div class="mb-3">
-                    <label for="Asunto" class="form-label">Asunto</label>
-                    <input type="text" class="form-control" id="Asunto" name="Asunto" placeholder="Asunto del Oficio">
-                </div>
-
-                <!-- Concepto -->
-                <div class="mb-3">
-                    <label for="Concepto" class="form-label">Concepto</label>
-                    <textarea class="form-control" id="Concepto" name="Concepto" rows="3"
-                        placeholder="Concepto del Oficio"></textarea>
-                </div>
-
-                <!-- Monto -->
-                <div class="mb-3">
-                    <label for="Monto" class="form-label">Monto</label>
-                    <input type="number" step="0.01" class="form-control" id="Monto" name="Monto"
-                        placeholder="Monto del Oficio Ejemplo: 1000000.00">
-                </div>
-
-                <!-- Fecha de Vencimiento -->
-                <div class="mb-3">
-                    <label for="FechaVencimiento" class="form-label">Fecha de Vencimiento</label>
-                    <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento">
-                </div>
-
-                <!-- Turnado A -->
-                <div class="mb-3">
-                    <label for="Turnado" class="form-label">Turnado A</label>
-                    <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required>
+                    <label for="Solicita" class="form-label">Solicita</label>
+                    <select class="form-select" id="Solicita" name="Solicita" readonly>
                         <option value="" disabled selected>Seleccione el Analista</option>
                         <option value="36">Leobardo Armenta Suárez</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
@@ -207,61 +172,86 @@
                         <option value="9">Roberta Marcela Uvera Saucedo</option>
                         <option value="42">Elisa Castillo Ramírez</option>
                         <option value="41">Cèsar Andrès Marìn Àlvarez</option>
-                        <option value="31">Sonia Pavon Nava</option>
                     </select>
                 </div>
 
-                <!-- Respuesta / Conocimiento -->
-                <!-- <div class="mb-3">
-                    <label for="RespuestaConocimiento" class="form-label">Respuesta / Conocimiento</label>
-                    <input type="text" class="form-control" id="RespuestaConocimiento" name="RespuestaConocimiento" placeholder="Respuesta / Conocimiento">
-                </div> -->
-
-                <!-- Fecha Retroactiva -->
+                <!-- FolioInterno -->
                 <div class="mb-3">
-                    <label for="FechaRetroactiva" class="form-label">Fecha Retroactiva</label>
-                    <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva">
+                    <label for="FolioInterno" class="form-label">Folio Interno</label>
+                    <input type="text" class="form-control" id="FolioInterno" name="FolioInterno"
+                        placeholder="Folio Interno" readonly>
                 </div>
 
-                <!-- Estado -->
+                <!-- Monto -->
                 <div class="mb-3">
-                    <label for="Estado" class="form-label">Estado del Oficio</label>
-                    <select class="form-select" id="Estado" name="Estado">
-                        <option value="CREADO" selected>CREADO</option>
-                        <option value="TURNADO">TURNADO</option>
-                        <option value="OBSERVACIONES">OBSERVACIONES</option>
-                        <option value="DEVUELTO">DEVUELTO</option>
-                        <option value="FIRMA-DG">FIRMA POR DIRECTORA TESORERIA</option>
-                        <option value="ESCANEO-FIRMAS">ESCANEO DE FIRMAS</option>
-                        <option value="ACUSE">ACUSE</option>
-                        <option value="ESCANEO-SELLOS">ESCANEO DE SELLOS</option>
-                        <option value="ARCHIVADO">ARCHIVADO</option>
-                        <option value="CANCELADO">CANCELADO</option>
-                    </select>
+                    <label for="Monto" class="form-label">Monto</label>
+                    <input type="text" class="form-control" id="Monto" name="Monto" placeholder="Monto" readonly>
+                </div>
+
+                <!-- FechaRecepcionDependencia -->
+                <div class="mb-3">
+                    <label for="FechaRecepcionDependencia" class="form-label">Fecha Recepcion Dependencia</label>
+                    <input type="date" class="form-control" id="FechaRecepcionDependencia"
+                        name="FechaRecepcionDependencia" placeholder="Fecha Recepcion Dependencia" readonly>
+                </div>
+
+                <!-- FechaEntregaAnalistaOperador -->
+                <div class="mb-3">
+                    <label for="FechaEntregaAnalistaOperador" class="form-label">Fecha Entrega Analista Operador</label>
+                    <input type="date" class="form-control" id="FechaEntregaAnalistaOperador"
+                        name="FechaEntregaAnalistaOperador" placeholder="Fecha Entrega Analista Operador" readonly>
+                </div>
+
+                <!-- Comentario -->
+                <div class="mb-3">
+                    <label for="Comentario" class="form-label">Comentario</label>
+                    <textarea class="form-control" id="Comentario" name="Comentario"
+                        placeholder="Comentario" readonly></textarea>
                 </div>
 
                 <!-- UsuarioRegistro -->
                 <div class="mb-3">
-                    <label for="UsuarioRegistro" class="form-label">Usuario que registra</label>
-                    <select name="UsuarioRegistro" id="UsuarioRegistro" placeholder="Usuario">
-                        <option value="" disabled selected>Seleccione el Usuario</option>
+                    <label for="UsuarioRegistro" class="form-label">Usuario Registro</label>
+                    <select class="form-select" id="UsuarioRegistro" name="UsuarioRegistro" readonly>
+                        <option value="" disabled selected>Seleccione el Analista</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
                         <option value="35">Eugenia Bermejo García</option>
                     </select>
                 </div>
 
-                <!-- Comentarios -->
+                <!-- Estado -->
                 <div class="mb-3">
-                    <label for="Comentarios" class="form-label">Comentarios</label>
-                    <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2"
-                        placeholder="Comentarios del Oficio"></textarea>
+                    <label for="Estado" class="form-label">Estado</label>
+                    <select class="form-select" id="Estado" name="Estado" readonly>
+                        <option value="Registrado">Registrado</option>
+                        <option value="Turnado">Turnado</option>
+                        <option value="Acuse de recibo">Acuse de recibo</option>
+                        <option value="Archivado">Archivado</option>
+                        <option value="Rechazado">Rechazado</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
                 </div>
+
+                <!-- Fecha Entrega DG Analista -->
+                <div class="mb-3">
+                    <label for="FechaEntregaDGAnalista" class="form-label">Fecha Entrega DG Analista</label>
+                    <input type="date" class="form-control" id="FechaEntregaDGAnalista" name="FechaEntregaDGAnalista" readonly>
+                </div>
+
+                <!-- Respuesta A -->
+                <div class="mb-3">
+                    <label for="RespuestaA" class="form-label">Respuesta A</label>
+                    <input type="text" class="form-control" id="RespuestaA" name="RespuestaA"
+                        placeholder="Ej. OF-2025-0009" readonly>
+                </div>
+
+                
+
 
                 <!-- Botón Enviar -->
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-success">Guardar Oficio</button>
                     <button type="button" class="btn btn-danger"
-                        onclick="window.location.href='CorrespondenciaPanelControl.html'">Cancelar</button>
+                        onclick="window.location.href='ContestacionPanelControl.html'">Cancelar</button>
                 </div>
             </form>
         </div>

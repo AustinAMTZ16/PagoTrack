@@ -147,6 +147,7 @@ class RemesaModel
 
                 $nuevoComentario = [
                     "ID_CONTRATO" => $tramite['ID_CONTRATO'],
+                    "Modificado_Por" => $data['Analista'],
                     "Fecha" => $fechaActual,
                     "Estatus" => 'Remesa',
                     "Comentario" => 'Remesa creada'
@@ -252,6 +253,7 @@ class RemesaModel
 
                 $nuevoComentario = [
                     "ID_CONTRATO" => $tramite['ID_CONTRATO'],
+                    "Modificado_Por" => $data['Analista'],
                     "Fecha" => $fechaActual,
                     "Estatus" => 'RemesaAprobada',
                     "Comentario" => 'La remesa fue aprobada'
@@ -434,6 +436,7 @@ class RemesaModel
             // Crear el nuevo comentario en formato JSON
             $nuevoComentario = [
                 "Fecha" => $fechaActual,
+                "Modificado_Por" => $data['Analista'],
                 "Estatus" => $data['Estatus'],
                 "Comentario" => $data['Comentarios']
             ];

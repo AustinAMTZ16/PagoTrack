@@ -251,10 +251,10 @@
                 }
                 if ($respuesta) {
                     http_response_code(200);
-                    echo json_encode(array('message' => 'Oficio creado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Contestacion creada.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
                 } else {
                     http_response_code(404);
-                    echo json_encode(array('message' => 'Oficio no creado.'), JSON_UNESCAPED_UNICODE);
+                    echo json_encode(array('message' => 'Contestacion no creada.'), JSON_UNESCAPED_UNICODE);
                 }
                 exit;
                 break;
@@ -643,22 +643,36 @@
                 exit;
                 break;  
             case 'eliminarRegistroOficio':
-                if(!empty($data)){
-                    global $controllerOficios;
-                    $respuesta = $controllerOficios->eliminarRegistroOficio((array) $data);
-                }else{
-                    echo "Datos no proporcionados";
+                    header('Content-Type: application/json');
+                    
+                    try {
+                        // Para método DELETE, leemos el input directamente
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        
+                        if(empty($input['ID_RegistroOficios'])) {
+                            throw new Exception("ID no proporcionado");
+                        }
+                
+                        global $controllerOficios;
+                        $resultado = $controllerOficios->eliminarRegistroOficio($input);
+                        
+                        // Solo codificamos a JSON una vez al final
+                        if($resultado['success']) {
+                            http_response_code(200);
+                            echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
+                        } else {
+                            http_response_code(404);
+                            echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
+                        }
+                    } catch (Exception $e) {
+                        http_response_code(400);
+                        echo json_encode([
+                            "success" => false,
+                            "error" => $e->getMessage()
+                        ], JSON_UNESCAPED_UNICODE);
+                    }
                     exit;
-                }
-                if ($respuesta) {
-                    http_response_code(200);
-                    echo json_encode(array('message' => 'Registro de oficio eliminado.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
-                } else {
-                    http_response_code(404);
-                    echo json_encode(array('message' => 'Registro de oficio no eliminado.'), JSON_UNESCAPED_UNICODE);
-                }
-                exit;
-                break;
+                    break;
             default:
                 http_response_code(404);
                 echo json_encode(['Message' => 'Acción DELETE desconocida.'], JSON_UNESCAPED_UNICODE);

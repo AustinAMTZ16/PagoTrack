@@ -57,6 +57,7 @@ class TramitesModel
             if (!empty($data['Comentarios'])) {
                 $comentarioInicial = [
                     "ID_CONTRATO" => $idContrato,
+                    "Modificado_Por" => $data['Analista'],
                     "Fecha" => $fechaActual,
                     "Estatus" => $data['Estatus'],
                     "Comentario" => $data['Comentarios']
@@ -115,6 +116,7 @@ class TramitesModel
 
             $nuevoComentario = !empty($data['Comentarios']) ? json_encode([
                 "ID_CONTRATO" => $data['ID_CONTRATO'],
+                "Modificado_Por" => $data['Analista'],
                 "Fecha" => $fechaActual,
                 "Estatus" => $data['Estatus'],
                 "Comentario" => $data['Comentarios']
@@ -282,6 +284,7 @@ class TramitesModel
         if (!empty($data['MotivoModificacion'])) {
             $nuevoComentario = [
                 "ID_CONTRATO" => $resultado['ID_CONTRATO'],
+                "Modificado_Por" => $data['Analista'],
                 "Fecha" => $fechaActual,
                 "Estatus" => $data['Estatus'], // Tomar el estatus actual del trámite
                 "Comentario" => $data['MotivoModificacion']

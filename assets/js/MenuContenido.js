@@ -45,7 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         <li id="na" style="display: none;"><a class="dropdown-item" href="seguimientoOrdenesPago.html">Ordenes de Pago</a></li>
                         <li id="na" style="display: none;"><a class="dropdown-item" href="reportesquery.html">Reportes Query</a></li>
                         <li id="na" style="display: none;"><a class="dropdown-item" href="exploradorArchivos.html">Explorador de Archivos</a></li>
-                        <li id="KPI" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelControl.html">Oficios Panel Control</a></li>
+                        <li id="KPI" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelControl.html">Correspondencia Panel</a></li>
+                        <li id="KPI" style="display: none;"><a class="dropdown-item" href="ContestacionPanelControl.html">Contestaciones Panel</a></li>
                     </ul>
                 </li>
                 <li id="Oficios" class="nav-item dropdown" style="display: none;">
@@ -53,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         data-bs-toggle="dropdown" aria-expanded="false">Correspondencia y Oficios</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li id="Oficios" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelControl.html">Correspondencia</a></li>
-                        <li id="Oficios" style="display: none;"><a class="dropdown-item" href="#">Contestaciones</a></li>
+                        <li id="Oficios" style="display: none;"><a class="dropdown-item" href="ContestacionPanelControl.html">Contestaciones</a></li>
                         <li id="Oficios" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelAnalista.html">Panel Analista</a></li>
                     </ul>
                 </li>

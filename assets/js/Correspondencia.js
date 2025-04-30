@@ -184,7 +184,7 @@ async function listarOficios() {
     let jsonOficios = await resOficios.json();
     // Guardar respuesta en variable global
     dataOficios = jsonOficios.data;
-    //console.log('Oficios: ', dataOficios);
+    //console.log('Correspondencia: ', dataOficios);
 }
 // Función para llenar la tabla de oficios
 function llenarTablaOficios(data, tableId) {
@@ -232,6 +232,23 @@ function llenarTablaOficios(data, tableId) {
                 render: function (data) {
                     if (!data) return '';
                     return data.length > 100 ? data.slice(-100) : data;
+                }
+            },
+            {
+                data: "ArchivoScaneado",
+                render: function (data, type, row) {
+                    if (data && data !== "N/A" && data !== "Array") {
+                        const basePath = 'assets/uploads/Correspondencia/';
+
+                        // Botón para abrir en nueva pestaña (sin atributo download)
+                        return `<a href="${basePath}${data}" 
+                      class="btn btn-sm btn-info" 
+                      target="_blank"
+                      title="Abrir PDF">
+                    <i class="fas fa-eye"></i> Ver PDF
+                   </a>`;
+                    }
+                    return "Sin archivo";
                 }
             },
             {
@@ -361,7 +378,7 @@ function setValueIfExists(id, value) {
 function llenarformEditarOficios(oficioID) {
     const idNumerico = Number(oficioID);
     const oficio = dataOficios.find(oficio => oficio.ID === idNumerico);
-
+    console.log('oficio: ', oficio);
     if (!oficio) {
         console.error("No se encontró el oficio con ID:", oficioID);
         return;
@@ -380,10 +397,10 @@ function llenarformEditarOficios(oficioID) {
     setValueIfExists("Asunto", oficio.Asunto);
     setValueIfExists("Concepto", oficio.Concepto);
     setValueIfExists("Monto", oficio.Monto);
-    setValueIfExists("FechaVencimiento", oficio.FechaVencimiento);
+    setValueIfExists("FechaVencimiento", oficio.FechaVencimiento?.substring(0, 10));
     setValueIfExists("Turnado", oficio.Turnado);
     setValueIfExists("RespuestaConocimiento", oficio.RespuestaConocimiento);
-    setValueIfExists("FechaRetroactiva", oficio.FechaRetroactiva);
+    setValueIfExists("FechaRetroactiva", oficio.FechaRetroactiva?.substring(0, 10));
     setValueIfExists("Estado", oficio.Estado);
     setValueIfExists("UsuarioRegistro", oficio.UsuarioRegistro);
     setValueIfExists("Comentarios", oficio.Comentarios);
@@ -391,16 +408,13 @@ function llenarformEditarOficios(oficioID) {
 }
 // Función para actualizar un oficio
 function actualizarOficio(data) {
-    //console.log('📤 Enviando oficio:', data);
-
     const fetchOptions = {
-        method: 'POST'
+        method: 'POST',
+        body: data // ✅ Si es FormData, no uses JSON.stringify
     };
 
-    // Detecta si ya es FormData (viene de un <form> con archivo)
-    if (data instanceof FormData) {
-        fetchOptions.body = data;
-    } else {
+    // Solo añadir headers si es JSON
+    if (!(data instanceof FormData)) {
         fetchOptions.headers = { 'Content-Type': 'application/json' };
         fetchOptions.body = JSON.stringify(data);
     }
@@ -424,7 +438,7 @@ function actualizarOficio(data) {
         });
 }
 // Eliminar oficio por id
-window.eliminarOficio = function(id) {
+window.eliminarOficio = function (id) {
     //console.log('Eliminar oficio:', id);
     try {
         // Confirmación del usuario antes de eliminar

@@ -4,6 +4,12 @@ const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^
 const URL_BASE = `${URL_B}index.php?action=`;
 
 let ltRemesas = [];
+
+// Obtener el nombre + apellido del usuario de LocalStorage
+const usuario = JSON.parse(localStorage.getItem('usuario'));
+const NombreUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;
+
+
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -57,7 +63,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 DepartamentoTurnado: document.getElementById('DepartamentoTurnado').value,
                 FechaPago: document.getElementById('FechaPago').value,
                 Estatus: document.getElementById('Estatus').value,
-                Comentarios: document.getElementById('Comentarios').value
+                Comentarios: document.getElementById('Comentarios').value,
+                Analista: NombreUser
             };
             //updateRemesa
             updateRemesa(data);
@@ -80,7 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 ID_CONTRATO  : document.getElementById('ID_TRAMITE').value,
                 Estatus: document.getElementById('Estatus').value,
                 RemesaNumero: document.getElementById('NumeroRemesa').value,
-                MotivoModificacion: document.getElementById('Comentarios').value
+                MotivoModificacion: document.getElementById('Comentarios').value,
+                Analista: NombreUser
             };
             updateTramiteCompleto(data);
         });
@@ -101,7 +109,8 @@ async function cambiarEstatusRemesa(consecutivo, estatus) {
     const data = { 
         FKNumeroRemesa: consecutivo, 
         estatus: estatus,
-        ID_CONTRATO: idsContrato // ✅ Aquí ya estás pasando todos los IDs
+        ID_CONTRATO: idsContrato, // ✅ Aquí ya estás pasando todos los IDs
+        Analista: NombreUser
     };
 
     try {
@@ -271,7 +280,10 @@ function formatoMoneda(valor) {
 }
 // Funcion para armar la remesa 
 async function armarRemesa(consecutivo) {
-    const data = { consecutivo: consecutivo };
+    const data = { 
+        consecutivo: consecutivo,
+        Analista: NombreUser
+    };
     try {
         const response = await fetch(URL_BASE + 'getDetalleRemesas', {
             method: 'POST',
@@ -339,7 +351,8 @@ async function configurarRemesa(grupo) {
         DepartamentoTurnado: 'GLOSA',
         FKNumeroRemesa: grupo,
         Estatus: 'Pendiente',
-        Comentarios: ''
+        Comentarios: '',
+        Analista: NombreUser
     }
 
     try {

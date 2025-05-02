@@ -73,9 +73,9 @@ async function cargarApp() {
             formData.delete('ArchivoAdjuntoName');
 
             actualizarContestacion(formData); // Enviar FormData directamente
-            // setTimeout(() => {
-            //     window.location.href = "ContestacionPanelControl.html";
-            // }, 3000); // 5 segundos
+            setTimeout(() => {
+                window.location.href = "ContestacionPanelControl.html";
+            }, 3000); // 5 segundos
         });
     }
     // Evento para validar el formulario de ver contestacion

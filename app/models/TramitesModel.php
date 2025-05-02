@@ -201,6 +201,7 @@ class TramitesModel
     public function getSeguimientoTramites()
     {
         $query = "SELECT 
+                    ISN.InicioSesionID,
                     ISN.NombreUser AS Analista,
                     ISN.ApellidoUser AS Apellido,
                     SUM(CASE WHEN CGT.TipoTramite = 'OC' THEN 1 ELSE 0 END) AS OC,
@@ -216,7 +217,7 @@ class TramitesModel
                 FROM ConsentradoGeneralTramites CGT
                 INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
                 WHERE CGT.Estatus IN ('Turnado', 'Observaciones')  -- Filtra solo los estatus requeridos
-                GROUP BY ISN.NombreUser, ISN.ApellidoUser
+                GROUP BY ISN.InicioSesionID, ISN.NombreUser, ISN.ApellidoUser
                 ORDER BY Total DESC;";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -388,5 +389,35 @@ class TramitesModel
         } else {
             return ["message" => "No hubo cambios en el trámite."];
         }
+    }
+    // Obtener lista de talles de trámites de getSeguimientoTramites por InicioSesionID
+    public function getTallesTramites($data)
+    {
+        $query = "
+        			SELECT 
+                        CGT.NoTramite,
+                        CGT.TipoTramite,
+                        CGT.Dependencia,
+                        CGT.Proveedor,
+                        CGT.Concepto,
+                        CGT.Importe,
+                        CGT.Estatus,
+                        CGT.FechaRecepcion,
+                        CGT.FechaLimite,
+                        CGT.FechaTurnado,
+                        CGT.Comentarios,
+                        CGT.DocSAP,
+                        CGT.IntegraSAP,
+                        CGT.OfPeticion
+                    FROM ConsentradoGeneralTramites CGT
+                    INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
+                    WHERE CGT.Estatus IN ('Turnado', 'Observaciones')
+                    AND ISN.InicioSesionID = :InicioSesionID
+                    ORDER BY CGT.FechaRecepcion DESC;
+        ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':InicioSesionID', $data['InicioSesionID'], PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);   
     }
 }

@@ -55,5 +55,11 @@ class TramitesController {
         $result = $this->model->updateTramiteCompleto($data);
         return $result;
     }
+
+    // Obtener lista de talles de trámites de getSeguimientoTramites por InicioSesionID
+    public function getTallesTramites($data) {
+        $result = $this->model->getTallesTramites($data);
+        return $result;
+    }
 }
 ?>

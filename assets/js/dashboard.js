@@ -20,6 +20,11 @@ const URL_BASE = `${URL_B}index.php?action=`;
 let tramitesArray = [];
 let nombreAnalista = "";
 
+let tramitesHoy = [];
+let tramitesVencidos = [];
+let tramitesFuturos = [];
+
+
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
     // Referencia al Select de Estado
@@ -63,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fechaRecepcion: '',
             fechaVencimiento: ''
         };
-        filtrarTramites(filtrosIniciales); 
+        filtrarTramites(filtrosIniciales);
 
         /* 
         // Listener para capturar el cambio de selección
@@ -81,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Valida si existe la tabla de seguimiento de trámites por analista
     if (tramitesTableJS) {
         getSeguimientoTramites();
-    }    
+    }
     // Verifica si el botón existe antes de agregar el listener
     const downloadButton = document.getElementById("downloadExcelTramites");
     if (downloadButton) {
@@ -92,10 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
         btnResumen.addEventListener("click", function () {
             let tramites = [];
             let dataTable = $('#tableTramites').DataTable(); // Acceder a DataTable
-    
+
             // Obtener TODAS las filas del DataTable, sin importar la paginación
-            let allRows = dataTable.rows().data(); 
-    
+            let allRows = dataTable.rows().data();
+
             allRows.each(function (row) { // Iterar sobre cada fila
                 tramites.push({
                     mes: row.Mes,
@@ -109,30 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     estatus: row.Estatus
                 });
             });
-    
+
             if (tramites.length === 0) {
                 alert("No hay datos en la tabla para analizar.");
                 return;
             }
-    
+
             // Enviar los datos al servidor PHP para análisis con ChatGPT
             fetch(URL_B + 'api/gpt_request.php', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ tramites })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById("resumenGPT").innerHTML = `<b>Error:</b> ${data.error}`;
-                } else {
-                    document.getElementById("resumenGPT").innerHTML = `<b>Resumen GPT:</b><br>${data.choices[0].message.content}`;
-                }
-            })
-            .catch(error => {
-                console.error("Error en la solicitud:", error);
-                document.getElementById("resumenGPT").innerHTML = "<b>Error al generar el resumen.</b>";
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById("resumenGPT").innerHTML = `<b>Error:</b> ${data.error}`;
+                    } else {
+                        document.getElementById("resumenGPT").innerHTML = `<b>Resumen GPT:</b><br>${data.choices[0].message.content}`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en la solicitud:", error);
+                    document.getElementById("resumenGPT").innerHTML = "<b>Error al generar el resumen.</b>";
+                });
         });
     }
     // Limpiar filtros
@@ -166,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             filtrarTramites(filtrosIniciales);
         });
-    }   
+    }
     // Filtrar trámites
     if (btnFiltrar) {
         btnFiltrar.addEventListener('click', function () {
@@ -214,8 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-
 // Función para obtener la lista de trámites
 function getTramites() {
     fetch(URL_BASE + 'getTramites', {
@@ -262,14 +265,14 @@ function getSeguimientoTramites() {
             return await response.json();
         })
         .then(result => {
-            // console.log('Result:', result);
+            console.log('Result:', result);
             // Renderizar la tabla
             renderTable(result.data);
         })
         .catch(error => {
             console.error('Error al obtener el seguimiento de trámites:', error.message);
         });
-}  
+}
 //funcion para obtener el conteo de estatus
 function getConteoEstatus() {
     fetch(URL_BASE + 'getConteoEstatus', {
@@ -361,7 +364,7 @@ function actualizarTablaTramites(data, tableId) {
         style: "currency",
         currency: "MXN",
         minimumFractionDigits: 2,
-      });
+    });
     // Inicializar DataTable con datos dinámicos
     $(`#${tableId}`).DataTable({
         data: data,
@@ -370,41 +373,41 @@ function actualizarTablaTramites(data, tableId) {
             { data: "Mes" },
             {
                 data: "FechaRecepcion",
-                render: function(data) {
+                render: function (data) {
                     if (!data) return "";
                     const [fecha] = data.split(" ");
                     const [año, mes, dia] = fecha.split("-");
                     return `${dia}-${mes}-${año}`; // Formato DD-MM-YYYY
                 }
-            },                                                                                          
-            { 
+            },
+            {
                 data: "FechaLimite",
-                render: function(data) {
+                render: function (data) {
                     if (!data) return "";
                     const [fecha] = data.split(" ");
                     const [año, mes, dia] = fecha.split("-");
                     return `${dia}-${mes}-${año}`; // Formato DD-MM-YYYY
                 }
-            },  
+            },
             { data: "TipoTramite" },
             { data: "Dependencia" },
             { data: "Proveedor" },
             { data: "Concepto" },
-            { 
+            {
                 data: "Importe",
                 render: function (data) {
                     return data ? formatoMoneda.format(data) : "$0.00";
                 }
             },
-            { 
+            {
                 data: null,
                 render: function (data) {
                     nombreAnalista = `${data.NombreUser} ${data.ApellidoUser}`;
                     return nombreAnalista;
                 }
             },
-            { data: "Estatus" },          
-            { data: "Fondo" },   
+            { data: "Estatus" },
+            { data: "Fondo" },
             { data: "RemesaNumero" },
             { data: "DocSAP" },
             { data: "IntegraSAP" },
@@ -431,19 +434,19 @@ function actualizarTablaTramites(data, tableId) {
                     }
                     botones += `<button class="btn btn-info" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
                     botones += `<button class="btn btn-dark" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'">Detalle</button>`;
-                    
+
                     return botones;
                 }
-            },       
+            },
             {
                 data: "Comentarios",
-                render: function(data) {
+                render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
                     return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
                 }
-            } 
-            
+            }
+
         ],
         paging: true,
         searching: true,
@@ -500,39 +503,39 @@ function actualizarTablaTurnados(data, tableId) {
         columns: [
             { data: "ID_CONTRATO", visible: true }, // Campo oculto
             { data: "Mes" },
-            { 
-                data: "FechaRecepcion", 
+            {
+                data: "FechaRecepcion",
                 render: function (data) {
                     // Mostrar la fecha y la hora de la fechaLimite
                     return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' + new Date(data).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "";
                 }
             },
-            { 
+            {
                 data: "FechaLimite",
                 render: function (data) {
                     //mostrar solo la fecha de la fechaLimite 
                     return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) : "";
                 }
-            },  
+            },
             { data: "TipoTramite" },
             { data: "Dependencia" },
             { data: "Proveedor" },
             { data: "Concepto" },
-            { 
+            {
                 data: "Importe",
                 render: function (data) {
                     return data ? formatoMoneda.format(data) : "$0.00";
                 }
             },
-            { 
+            {
                 data: null,
                 render: function (data) {
                     nombreAnalista = `${data.NombreUser} ${data.ApellidoUser}`;
                     return nombreAnalista;
                 }
             },
-            { data: "Estatus" }, 
-            { data: "Fondo" },  
+            { data: "Estatus" },
+            { data: "Fondo" },
             { data: "RemesaNumero" },
             { data: "DocSAP" },
             { data: "IntegraSAP" },
@@ -549,7 +552,7 @@ function actualizarTablaTurnados(data, tableId) {
             },
             {
                 data: "Comentarios",
-                render: function(data) {
+                render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
                     return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
@@ -736,7 +739,7 @@ function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecep
     const fechaRecepcionFormateada = formatoFecha(fechaRecepcion);
 
     //console.log('Editar tramite:', id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia);
-    
+
     window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}&nombreUser=${encodeURIComponent(nombreUser)}`;
 }
 // Eliminar tramite por id
@@ -794,7 +797,7 @@ function renderTable(data) {
     const tableBody = table.querySelector("tbody");
 
     // Limpiar la tabla antes de insertar nuevos datos
-    tableHead.innerHTML = "<th>Analista</th>";
+    tableHead.innerHTML = "<th>InicioSesionID</th>";
     tableBody.innerHTML = "";
 
     if (data.length === 0) {
@@ -803,7 +806,7 @@ function renderTable(data) {
     }
 
     // Obtener los nombres de los tipos de trámites dinámicamente
-    const columns = Object.keys(data[0]).filter(key => key !== "Analista");
+    const columns = Object.keys(data[0]).filter(key => key !== "InicioSesionID");
 
     // Generar encabezados de tabla dinámicos
     columns.forEach(col => {
@@ -818,13 +821,33 @@ function renderTable(data) {
 
         // Celda del analista
         const tdAnalista = document.createElement("td");
-        tdAnalista.textContent = row.Analista;
+        tdAnalista.textContent = row.InicioSesionID;
         tr.appendChild(tdAnalista);
 
         // Celdas de conteo de trámites
         columns.forEach(col => {
             const td = document.createElement("td");
-            td.textContent = row[col] || 0; // Si no hay valor, pone 0
+
+            if (col === "Total") {
+                // Hacer el Total clickeable
+                const link = document.createElement("a");
+                link.href = `#`;
+                link.textContent = row[col] || 0;
+                link.style.cursor = "pointer";
+                link.style.color = "#007bff";
+                link.style.textDecoration = "underline";
+
+                // Agregar evento click para mostrar detalles
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    showTramitesDetails(row.InicioSesionID);
+                });
+
+                td.appendChild(link);
+            } else {
+                td.textContent = row[col] || 0;
+            }
+
             tr.appendChild(td);
         });
 
@@ -865,6 +888,8 @@ function renderTable(data) {
         responsive: true,
         order: [[11, "DESC"]],
     });
+
+
 }
 // Mostrar comentario en modal
 function mostrarComentario(comentario) {
@@ -897,45 +922,124 @@ function modificarTramite(id) {
 }
 // Funcion para obtener KPI'S  Total Hoy, Total Vencidos, Total a vencer
 function obtenerSemaforoTurnado(tramitesTurnados) {
-    // Obtener la fecha actual en formato YYYY-MM-DD
+    // console.log('Trámites Turnados:', tramitesTurnados);
+    // // Obtener la fecha actual en formato YYYY-MM-DD
+    // const hoy = new Date();
+    // const fechaActual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+
+    // //console.log('Fecha actual:', fechaActual); // Ejemplo: "2025-03-06"
+
+    // // Obtener el total de trámites
+    // const totalTramites = tramitesTurnados.length;
+    // //console.log('Total de trámites:', totalTramites);
+
+    // // Lista de estatus válidos
+    // const estatusValidos = ['Turnado', 'Devuelto', 'DevueltoOrdenPago'];
+
+    // // Trámites que vencen hoy
+    // const tramitesHoy = tramitesTurnados.filter(tramite =>
+    //     estatusValidos.includes(tramite.Estatus) &&
+    //     obtenerFechaSinHora(tramite.FechaLimite) === fechaActual
+    // );
+    // const idsHoy = tramitesHoy.map(tramite => tramite.ID_CONTRATO);
+    // console.log('Trámites Hoy:', idsHoy);
+    // //console.log('Total de trámites en estado Turnado, Devuelto o DevueltoOrdenPago que vencen hoy:', idsHoy.length, idsHoy);
+    // document.getElementById('total_hoy').textContent = idsHoy.length || 0;
+
+    // // Trámites vencidos (FechaLimite < fecha actual)
+    // const tramitesVencidos = tramitesTurnados.filter(tramite =>
+    //     estatusValidos.includes(tramite.Estatus) &&
+    //     obtenerFechaSinHora(tramite.FechaLimite) < fechaActual
+    // );
+    // const idsVencidos = tramitesVencidos.map(tramite => tramite.ID_CONTRATO);
+    // //console.log('Total de trámites vencidos:', idsVencidos.length, idsVencidos);
+    // document.getElementById('total_vencidos').textContent = idsVencidos.length || 0;
+
+    // // Trámites a vencer (FechaLimite > fecha actual)
+    // const tramitesFuturos = tramitesTurnados.filter(tramite =>
+    //     estatusValidos.includes(tramite.Estatus) &&
+    //     obtenerFechaSinHora(tramite.FechaLimite) > fechaActual
+    // );
+    // const idsFuturos = tramitesFuturos.map(tramite => tramite.ID_CONTRATO);
+    // //console.log('Total de trámites a vencer:', idsFuturos.length, idsFuturos);
+    // document.getElementById('total_futuros').textContent = idsFuturos.length || 0;
+
+
+
+
+    // // Trámites que vencen hoy - Detalle
+    // console.log('===== DETALLE TRÁMITES QUE VENCEN HOY =====');
+    // tramitesHoy.forEach(t => {
+    //     console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+    // });
+
+    // // Trámites vencidos - Detalle
+    // console.log('===== DETALLE TRÁMITES VENCIDOS =====');
+    // tramitesVencidos.forEach(t => {
+    //     console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+    // });
+
+    // // Trámites a vencer - Detalle
+    // console.log('===== DETALLE TRÁMITES A VENCER =====');
+    // tramitesFuturos.forEach(t => {
+    //     console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+    // });
+
+
+
+
+
+    console.log('Trámites Turnados:', tramitesTurnados);
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
-
-    //console.log('Fecha actual:', fechaActual); // Ejemplo: "2025-03-06"
-
-    // Obtener el total de trámites
-    const totalTramites = tramitesTurnados.length;
-    //console.log('Total de trámites:', totalTramites);
-    
-    // Lista de estatus válidos
     const estatusValidos = ['Turnado', 'Devuelto', 'DevueltoOrdenPago'];
 
-    // Trámites que vencen hoy
-    const tramitesHoy = tramitesTurnados.filter(tramite =>
-        estatusValidos.includes(tramite.Estatus) &&
-        obtenerFechaSinHora(tramite.FechaLimite) === fechaActual
+    // Clasificación
+    tramitesHoy = tramitesTurnados.filter(t =>
+        estatusValidos.includes(t.Estatus) &&
+        obtenerFechaSinHora(t.FechaLimite) === fechaActual
     );
-    const idsHoy = tramitesHoy.map(tramite => tramite.ID_CONTRATO);
-    //console.log('Total de trámites en estado Turnado, Devuelto o DevueltoOrdenPago que vencen hoy:', idsHoy.length, idsHoy);
-    document.getElementById('total_hoy').textContent = idsHoy.length || 0;
+    tramitesVencidos = tramitesTurnados.filter(t =>
+        estatusValidos.includes(t.Estatus) &&
+        obtenerFechaSinHora(t.FechaLimite) < fechaActual
+    );
+    tramitesFuturos = tramitesTurnados.filter(t =>
+        estatusValidos.includes(t.Estatus) &&
+        obtenerFechaSinHora(t.FechaLimite) > fechaActual
+    );
 
-    // Trámites vencidos (FechaLimite < fecha actual)
-    const tramitesVencidos = tramitesTurnados.filter(tramite =>
-        estatusValidos.includes(tramite.Estatus) &&
-        obtenerFechaSinHora(tramite.FechaLimite) < fechaActual
-    );
-    const idsVencidos = tramitesVencidos.map(tramite => tramite.ID_CONTRATO);
-    //console.log('Total de trámites vencidos:', idsVencidos.length, idsVencidos);
-    document.getElementById('total_vencidos').textContent = idsVencidos.length || 0;
+    // Mostrar totales
+    document.getElementById('total_hoy').textContent = tramitesHoy.length || 0;
+    document.getElementById('total_vencidos').textContent = tramitesVencidos.length || 0;
+    document.getElementById('total_futuros').textContent = tramitesFuturos.length || 0;
 
-    // Trámites a vencer (FechaLimite > fecha actual)
-    const tramitesFuturos = tramitesTurnados.filter(tramite =>
-        estatusValidos.includes(tramite.Estatus) &&
-        obtenerFechaSinHora(tramite.FechaLimite) > fechaActual
-    );
-    const idsFuturos = tramitesFuturos.map(tramite => tramite.ID_CONTRATO);
-    //console.log('Total de trámites a vencer:', idsFuturos.length, idsFuturos);
-    document.getElementById('total_futuros').textContent = idsFuturos.length || 0;
+    // Mostrar en consola
+    console.log('===== DETALLE TRÁMITES QUE VENCEN HOY =====');
+    tramitesHoy.forEach(t => {
+        console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+    });
+
+    console.log('===== DETALLE TRÁMITES VENCIDOS =====');
+    tramitesVencidos.forEach(t => {
+        console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+    });
+
+    console.log('===== DETALLE TRÁMITES A VENCER =====');
+    tramitesFuturos.forEach(t => {
+        console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+    });
+
+    // Eventos de clic para mostrar modales
+    document.getElementById('total_hoy').closest('.card').addEventListener('click', () => {
+        showTramitesModal('Trámites que vencen hoy', tramitesHoy, 'bg-primary');
+    });
+    document.getElementById('total_vencidos').closest('.card').addEventListener('click', () => {
+        showTramitesModal('Trámites vencidos', tramitesVencidos, 'bg-danger');
+    });
+    document.getElementById('total_futuros').closest('.card').addEventListener('click', () => {
+        showTramitesModal('Trámites a vencer', tramitesFuturos, 'bg-success');
+    });
+
 }
 // Función para obtener solo la fecha en formato YYYY-MM-DD
 function obtenerFechaSinHora(fecha) {
@@ -1020,4 +1124,219 @@ function generarQR(id, nombreAnalista, noTramite) {
         }
     }, 500);
 }
+// Función para mostrar los detalles de los trámites
+function showTramitesDetails(InicioSesionID) {
+    const data = {
+        InicioSesionID: InicioSesionID
+    };
 
+    // Obtener los trámites del analista
+    fetch(URL_BASE + 'getTallesTramites', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(response => {
+            // Verificar si la respuesta tiene la estructura esperada
+            if (!response.data || !Array.isArray(response.data)) {
+                throw new Error('La estructura de datos no es válida');
+            }
+
+            const tramites = response.data;
+
+            // Crear modal o ventana con los detalles
+            const modalHtml = `
+            <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="tramitesModalLabel">Trámites</h5>
+                            
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive">
+                                <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>No. Trámite</th>
+                                            <th>Tipo</th>
+                                            <th>Dependencia</th>
+                                            <th>Proveedor</th>
+                                            <th>Concepto</th>
+                                            <th>Importe</th>
+                                            <th>Estatus</th>
+                                            <th>Fecha Recepción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${tramites.map(tramite => `
+                                            <tr>
+                                                <td>${tramite.NoTramite || 'N/A'}</td>
+                                                <td>${tramite.TipoTramite || 'N/A'}</td>
+                                                <td>${tramite.Dependencia || 'N/A'}</td>
+                                                <td>${tramite.Proveedor || 'N/A'}</td>
+                                                <td>${tramite.Concepto || 'N/A'}</td>
+                                                <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
+                                                <td><span class="badge ${tramite.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${tramite.Estatus || 'N/A'}</span></td>
+                                                <td>${formatDate(tramite.FechaRecepcion)}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        `;
+
+            // Agregar el modal al body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // Mostrar el modal
+            $('#tramitesModal').modal('show');
+
+            // Inicializar DataTable en la tabla de detalles
+            $('#detalleTramitesTable').DataTable({
+                language: {
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    infoPostFix: "",
+                    loadingRecords: "Cargando...",
+                    zeroRecords: "No se encontraron resultados",
+                    emptyTable: "No hay datos disponibles en la tabla",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Último"
+                    },
+                    aria: {
+                        sortAscending: ": Activar para ordenar la columna de manera ascendente",
+                        sortDescending: ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
+                responsive: true,
+                dom: '<"top"Bf>rt<"bottom"lip><"clear">',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Exportar a Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir',
+                        className: 'btn btn-info'
+                    }
+                ]
+            });
+
+            // Eliminar el modal cuando se cierre
+            $('#tramitesModal').on('hidden.bs.modal', function () {
+                $(this).remove();
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener los trámites:', error);
+            alert('Error al cargar los detalles de los trámites: ' + error.message);
+        });
+}
+// Función auxiliar para formatear fechas
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString; // Si no es una fecha válida, devolver el string original
+
+    return date.toLocaleDateString('es-MX', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function showTramitesModal(titulo, tramites) {
+    // Elimina el modal anterior si existe
+    const existingModal = document.getElementById('tramitesModal');
+    if (existingModal) existingModal.remove();
+
+    const modalHtml = `
+        <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="tramitesModalLabel">${titulo}</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>No. Trámite</th>
+                                        <th>Tipo</th>
+                                        <th>Dependencia</th>
+                                        <th>Proveedor</th>
+                                        <th>Concepto</th>
+                                        <th>Importe</th>
+                                        <th>Estatus</th>
+                                        <th>Fecha Recepción</th>
+                                        <th>Fecha Limite</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${tramites.map(t => `
+                                        <tr>
+                                            <td>${t.ID_CONTRATO  || 'N/A'}</td>
+                                            <td>${t.TipoTramite || 'N/A'}</td>
+                                            <td>${t.Dependencia || 'N/A'}</td>
+                                            <td>${t.Proveedor || 'N/A'}</td>
+                                            <td>${t.Concepto || 'N/A'}</td>
+                                            <td>$${t.Importe ? parseFloat(t.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2 }) : '0.00'}</td>
+                                            <td><span class="badge ${t.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${t.Estatus || 'N/A'}</span></td>
+                                            <td>${formatDate(t.FechaRecepcion)}</td>
+                                            <td>${formatDate(t.FechaLimite)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    $('#tramitesModal').modal('show');
+
+    $('#detalleTramitesTable').DataTable({
+        language: { /* ... */ }, // Usa tu configuración actual
+        pageLength: 10,
+        buttons: [
+            { extend: 'excel', text: 'Exportar a Excel', className: 'btn btn-success' },
+            { extend: 'print', text: 'Imprimir', className: 'btn btn-info' }
+        ]
+    });
+
+    $('#tramitesModal').on('hidden.bs.modal', function () {
+        $(this).remove();
+    });
+}

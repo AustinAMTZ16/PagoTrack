@@ -422,6 +422,41 @@
         </div>
     </div>
 
+    <style>
+        .modal-backdrop.show {
+            z-index: 1040;
+        }
+
+        #comentarioModal.modal {
+            z-index: 1060;
+        }
+    </style>
+
+
+    <script>
+        $('#comentarioModal').modal({ backdrop: false });
+
+    </script>
+
+    <style>
+        .comentario-card {
+            background-color: #f8f9fa;
+            border-left: 5px solid #007bff;
+        }
+
+        .comentario-texto {
+            white-space: pre-wrap;
+            color: #343a40;
+            font-size: 0.95rem;
+        }
+
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+    </style>
+
+
     <!-- Modal para mostrar el comentario completo -->
     <div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="comentarioModalLabel"
         aria-hidden="true">

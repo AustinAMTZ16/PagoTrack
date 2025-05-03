@@ -395,6 +395,7 @@ class TramitesModel
     {
         $query = "
         			SELECT 
+                        CGT.ID_CONTRATO,
                         CGT.NoTramite,
                         CGT.TipoTramite,
                         CGT.Dependencia,
@@ -408,7 +409,8 @@ class TramitesModel
                         CGT.Comentarios,
                         CGT.DocSAP,
                         CGT.IntegraSAP,
-                        CGT.OfPeticion
+                        CGT.OfPeticion,
+                        CGT.Comentarios
                     FROM ConsentradoGeneralTramites CGT
                     INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
                     WHERE CGT.Estatus IN ('Turnado', 'Observaciones')

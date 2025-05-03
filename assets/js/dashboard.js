@@ -893,28 +893,38 @@ function renderTable(data) {
 }
 // Mostrar comentario en modal
 function mostrarComentario(comentario) {
-    // Decodificar el comentario
-    var comentarioDecoded = decodeURIComponent(comentario);
+    const comentarioDecoded = decodeURIComponent(comentario);
+    let htmlContenido = '';
 
     try {
-        // Intentar convertir el comentario a formato JSON con indentación
-        var comentarioJson = JSON.parse(comentarioDecoded);
+        const comentarios = JSON.parse(comentarioDecoded);
 
-        // Si existe el campo "Comentario", aplicar saltos de línea automáticos
-        if (comentarioJson.Comentario) {
-            comentarioJson.Comentario = comentarioJson.Comentario.replace(/(.{50})/g, "$1\n");
+        if (Array.isArray(comentarios)) {
+            htmlContenido = comentarios.map(entry => `
+                <div class="comentario-card mb-3 p-3 border rounded shadow-sm">
+                    <div><strong># Contrato:</strong> ${entry.ID_CONTRATO || 'N/A'}</div>
+                    <div><strong>Fecha:</strong> ${entry.Fecha || 'N/A'}</div>
+                    <div><strong>Estatus:</strong> ${entry.Estatus || 'N/A'}</div>
+                    <div><strong>Modificado_Por:</strong> ${entry.Modificado_Por || 'N/A'}</div>
+                    <div><strong>Comentario:</strong><br><div class="comentario-texto">${entry.Comentario || 'Sin comentario'}</div></div>
+                </div>
+            `).join('');
+        } else {
+            htmlContenido = `
+                <div class="comentario-card p-3 border rounded shadow-sm">
+                    <div><strong>Comentario:</strong><br><div class="comentario-texto">${comentarios.Comentario || comentarioDecoded}</div></div>
+                </div>
+            `;
         }
-
-        // Convertir nuevamente a JSON con formato
-        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);
     } catch (e) {
         console.error('El comentario no es un JSON válido:', e);
+        htmlContenido = `<div class="alert alert-warning">El formato del comentario no es válido.</div>`;
     }
 
-    // Mostrar el comentario en el modal con formato adecuado
-    $('#comentarioModal .modal-body').html('<pre style="white-space: pre-wrap; word-wrap: break-word;">' + comentarioDecoded + '</pre>');
+    $('#comentarioModal .modal-body').html(htmlContenido);
     $('#comentarioModal').modal('show');
 }
+
 // Modificar tramite por id
 function modificarTramite(id) {
     //console.log('Editar tramite:', id);
@@ -1149,9 +1159,7 @@ function showTramitesDetails(InicioSesionID) {
             if (!response.data || !Array.isArray(response.data)) {
                 throw new Error('La estructura de datos no es válida');
             }
-
             const tramites = response.data;
-
             // Crear modal o ventana con los detalles
             const modalHtml = `
             <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
@@ -1166,7 +1174,7 @@ function showTramitesDetails(InicioSesionID) {
                                 <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th>No. Trámite</th>
+                                            <th>ID Tramite</th>
                                             <th>Tipo</th>
                                             <th>Dependencia</th>
                                             <th>Proveedor</th>
@@ -1174,22 +1182,32 @@ function showTramitesDetails(InicioSesionID) {
                                             <th>Importe</th>
                                             <th>Estatus</th>
                                             <th>Fecha Recepción</th>
+                                            <th>Fecha Limite</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        ${tramites.map(tramite => `
-                                            <tr>
-                                                <td>${tramite.NoTramite || 'N/A'}</td>
-                                                <td>${tramite.TipoTramite || 'N/A'}</td>
-                                                <td>${tramite.Dependencia || 'N/A'}</td>
-                                                <td>${tramite.Proveedor || 'N/A'}</td>
-                                                <td>${tramite.Concepto || 'N/A'}</td>
-                                                <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
-                                                <td><span class="badge ${tramite.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${tramite.Estatus || 'N/A'}</span></td>
-                                                <td>${formatDate(tramite.FechaRecepcion)}</td>
-                                            </tr>
-                                        `).join('')}
+                                        ${tramites.map(tramite => {
+                                                    const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
+                                                    return `
+                                                <tr>
+                                                    <td>${tramite.ID_CONTRATO || 'N/A'}</td>
+                                                    <td>${tramite.TipoTramite || 'N/A'}</td>
+                                                    <td>${tramite.Dependencia || 'N/A'}</td>
+                                                    <td>${tramite.Proveedor || 'N/A'}</td>
+                                                    <td>${tramite.Concepto || 'N/A'}</td>
+                                                    <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
+                                                    <td><span class="badge ${tramite.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${tramite.Estatus || 'N/A'}</span></td>
+                                                    <td>${formatDate(tramite.FechaRecepcion)}</td>
+                                                    <td>${formatDate(tramite.FechaLimite)}</td>
+                                                    <td>
+                                                        <button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                                }).join('')}
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
@@ -1299,22 +1317,29 @@ function showTramitesModal(titulo, tramites) {
                                         <th>Estatus</th>
                                         <th>Fecha Recepción</th>
                                         <th>Fecha Limite</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${tramites.map(t => `
-                                        <tr>
-                                            <td>${t.ID_CONTRATO  || 'N/A'}</td>
-                                            <td>${t.TipoTramite || 'N/A'}</td>
-                                            <td>${t.Dependencia || 'N/A'}</td>
-                                            <td>${t.Proveedor || 'N/A'}</td>
-                                            <td>${t.Concepto || 'N/A'}</td>
-                                            <td>$${t.Importe ? parseFloat(t.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2 }) : '0.00'}</td>
-                                            <td><span class="badge ${t.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${t.Estatus || 'N/A'}</span></td>
-                                            <td>${formatDate(t.FechaRecepcion)}</td>
-                                            <td>${formatDate(t.FechaLimite)}</td>
-                                        </tr>
-                                    `).join('')}
+                                        ${tramites.map(tramite => {
+                                                    const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
+                                                    return `
+                                                <tr>
+                                                    <td>${tramite.ID_CONTRATO || 'N/A'}</td>
+                                                    <td>${tramite.TipoTramite || 'N/A'}</td>
+                                                    <td>${tramite.Dependencia || 'N/A'}</td>
+                                                    <td>${tramite.Proveedor || 'N/A'}</td>
+                                                    <td>${tramite.Concepto || 'N/A'}</td>
+                                                    <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
+                                                    <td><span class="badge ${tramite.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${tramite.Estatus || 'N/A'}</span></td>
+                                                    <td>${formatDate(tramite.FechaRecepcion)}</td>
+                                                    <td>${formatDate(tramite.FechaLimite)}</td>
+                                                    <td>
+                                                        <button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                                }).join('')}
                                 </tbody>
                             </table>
                         </div>

@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             // console.log('data: ', data);
             crearContestacion(data);
-            setTimeout(() => {
-                window.location.href = "ContestacionPanelControl.html";
-            }, 3000);
+            // setTimeout(() => {
+            //     window.location.href = "ContestacionPanelControl.html";
+            // }, 3000);
         });
     }
 });

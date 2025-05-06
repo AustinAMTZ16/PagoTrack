@@ -5,4 +5,5 @@
 /app/config/Database.php
 /assets/data/*.mp3
 /assets/uploads/
+/dataformatocorrecto.json
 

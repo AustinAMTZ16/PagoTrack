@@ -236,3 +236,48 @@
         "Comentarios": "[\n {\n \"ID_CONTRATO\": \"2412\",\n \"Modificado_Por\": \"Antonio Castañon Ruiz\",\n \"Fecha\": \"2025-04-30 12:01:54\",\n \"Estatus\": \"Turnado\",\n \"Comentario\": \"RECIBIDO REVISADO Y TURNADO\"\n },\n {\n \"ID_CONTRATO\": \"2412\",\n \"Modificado_Por\": \"Xochil Cuatepitzi Torres\",\n \"Fecha\": \"2025-04-30 14:54:26\",\n \"Estatus\": \"RegistradoSAP\",\n \"Comentario\": \"REGISTRADO \"\n },\n {\n \"ID_CONTRATO\": 2412,\n \"Modificado_Por\": null,\n \"Fecha\": \"2025-04-30 16:10:21\",\n \"Estatus\": \"Remesa\",\n \"Comentario\": \"TRAMITE PARA REMESA\"\n },\n {\n \"ID_CONTRATO\": 2412,\n \"Modificado_Por\": null,\n \"Fecha\": \"2025-04-30 16:10:26\",\n \"Estatus\": \"Remesa\",\n \"Comentario\": \"Remesa creada\"\n },\n {\n \"ID_CONTRATO\": 2412,\n \"Modificado_Por\": \"Carlos Pola Nandayapa\",\n \"Fecha\": \"2025-04-30 20:16:50\",\n \"Estatus\": \"RemesaAprobada\",\n \"Comentario\": \"La remesa fue aprobada\"\n }\n]"
     }
 ]
+
+
+
+✅ Coincidencias claras (igual o con pequeñas variantes):
+| Lista A                                     | Lista B                                     | Observación     |
+| ------------------------------------------- | ------------------------------------------- | --------------- |
+| **Oficios**                                 | **Oficios**                                 | Coinciden       |
+| **Memorandos**                              | **Memos**                                   | Equivalentes    |
+| **Circulares**                              | **Circulares**                              | Coinciden       |
+| **Recalendarizacion**                       | **Recalendarizaciones**                     | Singular/plural |
+| **Transferencias**                          | **Transferencias**                          | Coinciden       |
+| **Uso de Partida**                          | **Usos de partida**                         | Singular/plural |
+| **Lic Romay**                               | **Lic Romay**                               | Coinciden       |
+| **Suficiencia Presupuestal**                | **Suficiencia Presupuestal**                | Coinciden       |
+| **Suficiencia Compromiso Gasto**            | **Suficiencia Compromiso Gasto**            | Coinciden       |
+| **Suficiencia Anticipada**                  | **Suficiencia Anticipada**                  | Coinciden       |
+| **Modificaciones Suficiencia Presupuestal** | **Modificaciones Suficiencia Presupuestal** | Coinciden       |
+| **Suficiencia Ampliación**                  | **Suficiencia Ampliación**                  | Coinciden       |
+| **Resignación**                             | **Resignación**                             | Coinciden       |
+
+
+⚠️ Presentes solo en Lista A (faltan en Lista B):
+| Elemento                       |
+| ------------------------------ |
+| **Regularizacion**             |
+| **Ampliación Presupuestal**    |
+| **Ampliación Liquida**         |
+| **Disposicion y Reasignacion** |
+| **Disposicion**                |
+| **Apertura de fondo fijo**     |
+| **Multi Anuales**              |
+| **Transparencia**              |
+
+
+⚠️ Presentes solo en Lista B (faltan en Lista A):
+| Elemento                           |
+| ---------------------------------- |
+| **Oficios DGE**                    |
+| **Memos DGE**                      |
+| **Circulares DGE**                 |
+| **Ampliaciones**                   |
+| **Disposiciones**                  |
+| **Disposiciones y Reasignaciones** |
+| **Reducciones**                    |
+

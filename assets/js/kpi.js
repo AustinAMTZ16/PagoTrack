@@ -61,6 +61,7 @@ function obtenerKPI() {
                     document.getElementById('estatus_ordenesPago').textContent = conteo_estatus.OrdenesPago || 0;
                     document.getElementById('estatus_devueltoOrdenesPago').textContent = conteo_estatus.DevueltoOrdenesPago || 0;
                     document.getElementById('estatus_cancelado').textContent = conteo_estatus.Cancelado || 0;
+                    document.getElementById('estatus_procesando').textContent = conteo_estatus.Procesando || 0;
                 } else {
                     console.error("conteo_estatus no es un array:", data.conteo_estatus);
                 }

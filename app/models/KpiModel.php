@@ -17,7 +17,7 @@ class KpiModel {
                 SUM(CASE WHEN DATE(FechaLimite) < CURDATE() THEN 1 ELSE 0 END) AS total_vencidos,
                 SUM(CASE WHEN DATE(FechaLimite) > CURDATE() THEN 1 ELSE 0 END) AS total_futuros
             FROM ConsentradoGeneralTramites
-            WHERE Estatus IN ('Turnado', 'Devuelto', 'DevueltoOrdenPago')");
+            WHERE Estatus IN ('Turnado','Observaciones', 'Devuelto', 'DevueltoOrdenPago')");
 
             $stmt->execute();
             $totales = $stmt->fetch(PDO::FETCH_ASSOC) ?: ["total_hoy" => 0, "total_vencidos" => 0, "total_futuros" => 0];
@@ -29,7 +29,7 @@ class KpiModel {
                         INNER JOIN InicioSesion is2 
                         ON ct.AnalistaID  = is2.InicioSesionID 
                         WHERE DATE(FechaLimite) $condicion CURDATE()
-                        AND Estatus IN ('Turnado', 'Devuelto', 'DevueltoOrdenPago')";
+                        AND Estatus IN ('Turnado', 'Observaciones', 'Devuelto', 'DevueltoOrdenPago')";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];

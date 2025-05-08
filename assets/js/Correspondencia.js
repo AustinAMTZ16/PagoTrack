@@ -242,7 +242,7 @@ function llenarTablaOficios(data, tableId) {
 
                         // Botón para abrir en nueva pestaña (sin atributo download)
                         return `<a href="${basePath}${data}" 
-                      class="btn btn-sm btn-info" 
+                      class="btn btn-primary toggleButton" 
                       target="_blank"
                       title="Abrir PDF">
                     <i class="fas fa-eye"></i> Ver PDF
@@ -257,17 +257,17 @@ function llenarTablaOficios(data, tableId) {
                     let botones = "";
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
-                        botones += `<button class="btn btn-primary" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Actualizar</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Actualizar</button>`;
                     }
                     if (usuario && usuario.RolUser === "Admin") {
-                        botones += `<button class="btn btn-danger" onclick="eliminarOficio(${data.ID})">Eliminar</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarOficio(${data.ID})">Eliminar</button>`;
                     }
                     if (data.Estado === "CREADO") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}">TURNADO</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}">TURNADO</button>`;
                         //RESULTADO DE LA VISTA OFICIOTURNADO = OBSERVACIONES, DEVUELTO O FIRMA-DG
                     }
                     if (data.Estado === "FIRMA-DG") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ACUSE</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ACUSE</button>`;
                         //RESULTADO DE LA VISTA OFICIOSCANEOFIRMAS = ESCANEO-FIRMAS
                     }
                     if (data.Estado === "ESCANEO-FIRMAS") {
@@ -275,15 +275,15 @@ function llenarTablaOficios(data, tableId) {
                         //RESULTADO DE LA VISTA OFICIORESPUESTA = ACUSE
                     }
                     if (data.Estado === "ACUSE") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}">ESCANEO-SELLOS</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}">ESCANEO-SELLOS</button>`;
                         //RESULTADO DE LA VISTA OFICIOESCANEOSSELLOS = ESCANEO-SELLOS
                     }
                     if (data.Estado === "ESCANEO-SELLOS") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ARCHIVADO</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ARCHIVADO</button>`;
                         //RESULTADO DE LA VISTA OFICIOARCHIVADO = ARCHIVADO
                     }
                     if (data.Estado === "TURNADO" || data.Estado === "OBSERVACIONES" || data.Estado === "DEVUELTO") {
-                        botones += `<button class="btn btn-secondary" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}">ACTUALIZAR</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}">ACTUALIZAR</button>`;
                     }
 
                     return botones;

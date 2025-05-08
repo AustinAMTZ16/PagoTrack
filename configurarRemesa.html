@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurar Remesa</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="./assets/css/style.css">
 
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
@@ -14,66 +13,76 @@
 
     <script src="./assets/js/RemesaController.js"></script>
 
+    <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (necesario para DataTables) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <style>
-        input[readonly],
-        textarea[readonly],
-        select[readonly] {
-            background-color: #333 !important;
-            color: #fff !important;
-            border: 1px solid #555;
-            cursor: not-allowed;
-        }
-    </style>
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Estilos Personalizados  lugar si importa-->
+    <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <header>
+        <img src="./assets/images/lg_banner.jpg" alt="Logo" class="logo" style="width: 30%; height: 50%;">
+        <h1>Sistema Institucional</h1>
+    </header>
+
+    <nav class="navbar navbar-expand-lg">
     </nav>
 
-    <div class="contenedor">
-        <h1>Configurar Remesa</h1>
+    <main class="container py-4">
+        <h1 class="mb-4">Configurar Remesa</h1>
         <form id="formConfigurarRemesa" method="post">
-            <label for="ID_REMESA">Identificador de la Remesa</label>
-            <input type="text" id="ID_REMESA" name="ID_REMESA" placeholder="ID_REMESA" readonly>
-            <label for="DepartamentoTurnado">Departamento Responsable</label>
-            <select type="text" id="DepartamentoTurnado" name="DepartamentoTurnado" placeholder="DepartamentoTurnado"
-                required>
-                <option value="PRESUPUESTO">PRESUPUESTO</option>
-                <option value="GLOSA">GLOSA</option>
-                <option value="ORDENES-PAGO">ORDENES DE PAGO</option>
-            </select>
-            <label for="FechaRemesa">Fecha de la Remesa</label>
-            <input type="date" id="FechaRemesa" name="FechaRemesa" placeholder="FechaRemesa" readonly>
-            <label for="FKNumeroRemesa">Numero de Remesa</label>
-            <input type="text" id="FKNumeroRemesa" name="FKNumeroRemesa" placeholder="FKNumeroRemesa" readonly>
-            <label for="FechaPago">Fecha de Pago Limite</label>
-            <input type="date" id="FechaPago" name="FechaPago" placeholder="FechaPago" required>
-            <label for="Estatus">Estatus</label>
-            <select type="text" id="Estatus" name="Estatus" placeholder="Estatus" required>
-                <option value="Pendiente">Pendiente</option>
-                <option value="Pagada">Pagada</option>
-                <option value="Cancelada">Cancelada</option>
-            </select>
-            <label for="Comentarios">Comentarios</label>
-            <textarea type="text" id="Comentarios" name="Comentarios" placeholder="Comentarios" required></textarea>
+            <div class="row g-3">
+                <label for="ID_REMESA">Identificador de la Remesa</label>
+                <input type="text" id="ID_REMESA" name="ID_REMESA" placeholder="ID_REMESA" readonly class="form-control">
 
+                <label for="DepartamentoTurnado">Departamento Responsable</label>
+                <select type="text" id="DepartamentoTurnado" name="DepartamentoTurnado"
+                    placeholder="DepartamentoTurnado" required class="form-select">
+                    <option value="PRESUPUESTO">PRESUPUESTO</option>
+                    <option value="GLOSA">GLOSA</option>
+                    <option value="ORDENES-PAGO">ORDENES DE PAGO</option>
+                </select>
 
+                <label for="FechaRemesa">Fecha de la Remesa</label>
+                <input type="date" id="FechaRemesa" name="FechaRemesa" placeholder="FechaRemesa" readonly class="form-control">
 
-            <button type="submit">Actualizar Remesa</button>
-            <button onclick="window.location.href = 'seguimientoRemesas.html';"
-                class="btn btn-secondary">Regresar</button>
+                <label for="FKNumeroRemesa">Numero de Remesa</label>
+                <input type="text" id="FKNumeroRemesa" name="FKNumeroRemesa" placeholder="FKNumeroRemesa" readonly class="form-control">
+
+                <label for="FechaPago">Fecha de Pago Limite</label>
+                <input type="date" id="FechaPago" name="FechaPago" placeholder="FechaPago" required class="form-control">
+
+                <label for="Estatus">Estatus</label>
+                <select type="text" id="Estatus" name="Estatus" placeholder="Estatus" required class="form-select">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Pagada">Pagada</option>
+                    <option value="Cancelada">Cancelada</option>
+                </select>
+
+                <label for="Comentarios">Comentarios</label>
+                <textarea type="text" id="Comentarios" name="Comentarios" placeholder="Comentarios" required class="form-control"></textarea>
+
+                <div class="col-12 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary toggleButton">Actualizar Remesa</button>
+                    <button onclick="window.location.href = 'seguimientoRemesas.html';"
+                        class="btn btn-primary toggleButton">Regresar</button>
+                </div>
+            </div>
         </form>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    </main>
+    
+    <footer>
+        <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
+    </footer>
 </body>
 
 </html>

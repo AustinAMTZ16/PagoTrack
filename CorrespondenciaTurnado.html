@@ -6,94 +6,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turnar Tramite</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
 
     <script type="module" src="./assets/js/Correspondencia.js"></script>
 
+    <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        input[readonly],
-        textarea[readonly],
-        select[readonly] {
-            background-color: #333 !important;
-            color: #fff !important;
-            border: 1px solid #555;
-            cursor: not-allowed;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (necesario para DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Estilos Personalizados  lugar si importa-->
+    <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <header>
+        <img src="./assets/images/lg_banner.jpg" alt="Logo" class="logo" style="width: 30%; height: 50%;">
+        <h1>Sistema Institucional</h1>
+    </header>
+
+    <nav class="navbar navbar-expand-lg">
     </nav>
 
-    <div class="container">
-        <img src="./assets/images/lg_seccion.jpg" alt="" width="20%" style="display: block; margin: 0 auto;">
-        <h1>Sistema de Gestión de Trámites</h1>
-        <h1>Turnar Oficio</h1>
+
+    <main class="container py-4">
+        <h2 class="mb-4">Turnar Oficio</h2>
         <form id="formTurnarOficio" method="post">
-            <input type="text" id="ID" name="ID" placeholder="ID del Oficio" readonly>
-            <select name="Estado" id="Estado" placeholder="Estado" disabled>
-                <option value="Turnado" selected>Turnado</option>
-                <option value="Procesando">Procesando</option>
-                <option value="Devuelto">Devuelto</option>
-                <option value="Terminado">Terminado</option>
-            </select>
-            <!-- Campo oculto para enviar el valor -->
-            <input type="hidden" name="Estado" id="Estado" value="Turnado">
-            <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required>
-                <option value="" disabled selected>Seleccione el Analista</option>
-                <option value="36">Leobardo Armenta Suárez</option>
-                <option value="39">Gloria Dolores Rodríguez Medina</option>
-                <option value="35">Eugenia Bermejo García</option>
-                <option value="29">Laura Hernandez Garcia</option>
-                <option value="24">Alan Michell Navarrete Flores</option>
-                <option value="41">José Gilberto Bello Ramírez</option>
-                <option value="4">Juan Carlos García Tagle</option>
-                <option value="8">Isabel Cristina Pavón Nava</option>
-                <option value="11">Isabel Cortes Varillas</option>
-                <option value="20">Maria Isabel Marín León</option>
-                <option value="21">Ariosto Emilio Lechuga Aparicio</option>
-                <option value="22">Gonzalo Ochoa Huerta</option>
-                <option value="23">Laura Alatriste Torres</option>
-                <option value="5">Maria Blanca Soriano Rojas</option>
-                <option value="1">Agustín Arenas Martinez</option>
-                <option value="17">Maria Del Carmen Damian Aguilar</option>
-                <option value="10">Maria De Lourdes Molina Quiroz</option>
-                <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
-                <option value="16">Maria Valeria Corro Stefanoni</option>
-                <option value="12">Ariadna Michel Sánchez Rodríguez</option>
-                <option value="13">Michelle Córdova Torres</option>
-                <option value="19">Francisco Javier Rivera Castillo</option>
-                <option value="15">Antonio Castañon Ruiz</option>
-                <option value="18">Ofelia Olguin Aguilar</option>
-                <option value="6">Xochil Cuatepitzi Torres</option>
-                <option value="14">Daniel Rodríguez Cardenas</option>
-                <option value="9">Roberta Marcela Uvera Saucedo</option>
-                <option value="42">Elisa Castillo Ramírez</option>
-                <option value="41">Cèsar Andrès Marìn Àlvarez</option>
-                <option value="31">Sonia Pavon Nava</option>
-                <option value="32">Yamil Méndez Valdez</option>
-                <option value="27">Gisela González Martínez</option>
-                <option value="25">Alejandra Rojas Hernández</option>
-                <option value="26">Arnulfo Sánchez Mora</option>
-            </select>
-            <input type="text" id="Comentarios" name="Comentarios" placeholder="Observaciones de Turnado o del Oficio"
-                required>
-
-            <button type="submit">Turnar Oficio</button>
-            <button onclick="window.location.href = 'CorrespondenciaPanelControl.html';"
-                class="btn btn-secondary">Regresar</button>
+            <div class="row g-3">
+                <input type="text" id="ID" name="ID" placeholder="ID del Oficio" readonly class="form-control">
+                <select name="Estado" id="Estado" placeholder="Estado" disabled class="form-select">
+                    <option value="Turnado" selected>Turnado</option>
+                    <option value="Procesando">Procesando</option>
+                    <option value="Devuelto">Devuelto</option>
+                    <option value="Terminado">Terminado</option>
+                </select>
+                <!-- Campo oculto para enviar el valor -->
+                <input type="hidden" name="Estado" id="Estado" value="Turnado" class="form-control">
+                <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required class="form-select">
+                    <option value="" disabled selected>Seleccione el Analista</option>
+                    <option value="36">Leobardo Armenta Suárez</option>
+                    <option value="39">Gloria Dolores Rodríguez Medina</option>
+                    <option value="35">Eugenia Bermejo García</option>
+                    <option value="29">Laura Hernandez Garcia</option>
+                    <option value="24">Alan Michell Navarrete Flores</option>
+                    <option value="41">José Gilberto Bello Ramírez</option>
+                    <option value="4">Juan Carlos García Tagle</option>
+                    <option value="8">Isabel Cristina Pavón Nava</option>
+                    <option value="11">Isabel Cortes Varillas</option>
+                    <option value="20">Maria Isabel Marín León</option>
+                    <option value="21">Ariosto Emilio Lechuga Aparicio</option>
+                    <option value="22">Gonzalo Ochoa Huerta</option>
+                    <option value="23">Laura Alatriste Torres</option>
+                    <option value="5">Maria Blanca Soriano Rojas</option>
+                    <option value="1">Agustín Arenas Martinez</option>
+                    <option value="17">Maria Del Carmen Damian Aguilar</option>
+                    <option value="10">Maria De Lourdes Molina Quiroz</option>
+                    <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
+                    <option value="16">Maria Valeria Corro Stefanoni</option>
+                    <option value="12">Ariadna Michel Sánchez Rodríguez</option>
+                    <option value="13">Michelle Córdova Torres</option>
+                    <option value="19">Francisco Javier Rivera Castillo</option>
+                    <option value="15">Antonio Castañon Ruiz</option>
+                    <option value="18">Ofelia Olguin Aguilar</option>
+                    <option value="6">Xochil Cuatepitzi Torres</option>
+                    <option value="14">Daniel Rodríguez Cardenas</option>
+                    <option value="9">Roberta Marcela Uvera Saucedo</option>
+                    <option value="42">Elisa Castillo Ramírez</option>
+                    <option value="41">Cèsar Andrès Marìn Àlvarez</option>
+                    <option value="31">Sonia Pavon Nava</option>
+                    <option value="32">Yamil Méndez Valdez</option>
+                    <option value="27">Gisela González Martínez</option>
+                    <option value="25">Alejandra Rojas Hernández</option>
+                    <option value="26">Arnulfo Sánchez Mora</option>
+                </select>
+                <input type="text" id="Comentarios" name="Comentarios"
+                    placeholder="Observaciones de Turnado o del Oficio" required class="form-control">
+                <div class="col-12 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary toggleButton">Turnar Oficio</button>
+                    <button onclick="window.location.href = 'CorrespondenciaPanelControl.html';"
+                        class="btn btn-primary toggleButton">Regresar</button>
+                </div>
+            </div>
         </form>
-    </div>
+    </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <footer>
+        <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
+    </footer>
 </body>
 
 </html>

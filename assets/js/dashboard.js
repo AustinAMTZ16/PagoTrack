@@ -417,23 +417,23 @@ function actualizarTablaTramites(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Creado") {
-                        botones += `<button class="btn btn-primary" onclick="turnarTramite(${data.ID_CONTRATO})">Turnar</button> `;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="turnarTramite(${data.ID_CONTRATO})">Turnar</button> `;
                     }
                     if (data.Estatus === "VoBO") {
-                        botones += `<button class="btn btn-success" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
                     }
                     if (data.Estatus === "RegistradoSAP") {
-                        botones += `<button class="btn btn-warning" onclick="createRemesa(${data.ID_CONTRATO})">Asignar Remesa</button> `;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="createRemesa(${data.ID_CONTRATO})">Asignar Remesa</button> `;
                     }
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "Operador") || usuario.RolUser === "KPI") {
-                        botones += `<button class="btn btn-success" onclick="modificarTramite(${data.ID_CONTRATO})">Modificar</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="modificarTramite(${data.ID_CONTRATO})">Modificar</button>`;
                     }
                     if (usuario && usuario.RolUser === "Admin") {
-                        botones += `<button class="btn btn-danger" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
                     }
-                    botones += `<button class="btn btn-info" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
-                    botones += `<button class="btn btn-dark" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'">Detalle</button>`;
+                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
+                    botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'">Detalle</button>`;
 
                     return botones;
                 }
@@ -443,7 +443,7 @@ function actualizarTablaTramites(data, tableId) {
                 render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
                 }
             }
 
@@ -474,8 +474,8 @@ function actualizarTablaTramites(data, tableId) {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        pageLength: 30, // Número de filas por página
-        lengthMenu: [[30, 50, 100, -1], [30, 50, 100, "Todos"]],
+        pageLength: 5, // Número de filas por página
+        lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
         responsive: true,
         order: [[0, "DESC"]],
     });
@@ -544,9 +544,9 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
-                        botones += `<button class="btn btn-primary" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}', '${data.NombreUser} ${data.ApellidoUser}')">Actualizar Estado</button> `;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}', '${data.NombreUser} ${data.ApellidoUser}')">Actualizar Estado</button> `;
                     }
-                    botones += `<button class="btn btn-info" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
+                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
                     return botones;
                 }
             },
@@ -555,7 +555,7 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
                 }
             }
         ],
@@ -924,7 +924,6 @@ function mostrarComentario(comentario) {
     $('#comentarioModal .modal-body').html(htmlContenido);
     $('#comentarioModal').modal('show');
 }
-
 // Modificar tramite por id
 function modificarTramite(id) {
     //console.log('Editar tramite:', id);
@@ -1164,11 +1163,7 @@ function showTramitesDetails(InicioSesionID) {
             const modalHtml = `
             <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="tramitesModalLabel">Trámites</h5>
-                            
-                        </div>
+                    <div class="modal-content">                        
                         <div class="modal-body">
                             <div class="table-responsive">
                                 <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
@@ -1188,8 +1183,8 @@ function showTramitesDetails(InicioSesionID) {
                                     </thead>
                                     <tbody>
                                         ${tramites.map(tramite => {
-                                                    const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
-                                                    return `
+                const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
+                return `
                                                 <tr>
                                                     <td>${tramite.ID_CONTRATO || 'N/A'}</td>
                                                     <td>${tramite.TipoTramite || 'N/A'}</td>
@@ -1197,15 +1192,19 @@ function showTramitesDetails(InicioSesionID) {
                                                     <td>${tramite.Proveedor || 'N/A'}</td>
                                                     <td>${tramite.Concepto || 'N/A'}</td>
                                                     <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
-                                                    <td><span class="badge ${tramite.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${tramite.Estatus || 'N/A'}</span></td>
+                                                    <td>
+                                                        <span class="badge ${tramite.Estatus === 'Observaciones' ? 'bg-warning' : 'bg-primary'}">
+                                                            ${tramite.Estatus || 'N/A'}
+                                                        </span>
+                                                    </td>
                                                     <td>${formatDate(tramite.FechaRecepcion)}</td>
                                                     <td>${formatDate(tramite.FechaLimite)}</td>
                                                     <td>
-                                                        <button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
+                                                        <button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
                                                     </td>
                                                 </tr>
                                             `;
-                                                }).join('')}
+            }).join('')}
                                     </tbody>
 
                                 </table>
@@ -1290,7 +1289,7 @@ function formatDate(dateString) {
         minute: '2-digit'
     });
 }
-
+// Función para mostrar los detalles de los trámites de los analistas
 function showTramitesModal(titulo, tramites) {
     // Elimina el modal anterior si existe
     const existingModal = document.getElementById('tramitesModal');
@@ -1300,9 +1299,6 @@ function showTramitesModal(titulo, tramites) {
         <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="tramitesModalLabel">${titulo}</h5>
-                    </div>
                     <div class="modal-body">
                         <div class="table-responsive">
                             <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
@@ -1322,8 +1318,8 @@ function showTramitesModal(titulo, tramites) {
                                 </thead>
                                 <tbody>
                                         ${tramites.map(tramite => {
-                                                    const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
-                                                    return `
+                                            const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
+                                            return `
                                                 <tr>
                                                     <td>${tramite.ID_CONTRATO || 'N/A'}</td>
                                                     <td>${tramite.TipoTramite || 'N/A'}</td>
@@ -1331,15 +1327,19 @@ function showTramitesModal(titulo, tramites) {
                                                     <td>${tramite.Proveedor || 'N/A'}</td>
                                                     <td>${tramite.Concepto || 'N/A'}</td>
                                                     <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
-                                                    <td><span class="badge ${tramite.Estatus === 'Observaciones' ? 'badge-warning' : 'badge-primary'}">${tramite.Estatus || 'N/A'}</span></td>
+                                                    <td>
+                                                        <span class="badge ${tramite.Estatus === 'Observaciones' ? 'bg-warning' : 'bg-primary'}">
+                                                            ${tramite.Estatus || 'N/A'}
+                                                        </span>
+                                                    </td>
                                                     <td>${formatDate(tramite.FechaRecepcion)}</td>
                                                     <td>${formatDate(tramite.FechaLimite)}</td>
                                                     <td>
-                                                        <button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
+                                                        <button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
                                                     </td>
                                                 </tr>
                                             `;
-                                                }).join('')}
+    }).join('')}
                                 </tbody>
                             </table>
                         </div>

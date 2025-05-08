@@ -2,328 +2,308 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Tramite</title>
-    <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="./assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Tramite</title>
+  <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
 
-    <script src="./assets/js/SesionUser.js"></script>
-    <script src="./assets/js/MenuContenido.js"></script>
-    <script src="./assets/js/MenuSistema.js"></script>
+  <script src="./assets/js/SesionUser.js"></script>
+  <script src="./assets/js/MenuContenido.js"></script>
+  <script src="./assets/js/MenuSistema.js"></script>
 
-    <script src="./assets/js/TramitesController.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            /* Espacio entre los campos */
-        }
+  <script src="./assets/js/TramitesController.js"></script>
 
-        .input-group {
-            width: 48%;
-            /* Cada input toma un 48% del ancho para caber en dos por fila */
-        }
-
-        .small-text {
-            font-size: 0.8em;
-            /* Reduce el tamaño del texto */
-            color: #666;
-            /* Cambia el color si lo deseas, un gris suave es ideal */
-        }
-
-
-        @media (max-width: 768px) {
-            .input-group {
-                width: 100%;
-                /* En pantallas más pequeñas, los inputs se apilan uno sobre otro */
-            }
-        }
-    </style>
+  <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- jQuery (necesario para DataTables) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- QRCode Generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Estilos Personalizados  lugar si importa-->
+  <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    </nav>
+  <header>
+    <img src="./assets/images/lg_banner.jpg" alt="Logo" class="logo" style="width: 30%; height: 50%;">
+    <h1>Sistema Institucional</h1>
+  </header>
 
-    <div class="container">
-        <img src="./assets/images/lg_seccion.jpg" alt="" width="20%" style="display: block; margin: 0 auto;">
-        <h1>Sistema de Gestión de Trámites</h1>
-        <h1>Crear Trámite</h1>
-        <form id="formcreateTramite" method="post">
-            <div class="input-group">
-                <label for="Dependencia">Institución</label>
-                <select name="Dependencia" id="Dependencia" placeholder="Institución" required>
-                    <option value="" disabled selected>Institución</option>
-                    <!-- Dependencias -->
-                    <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
-                    <option value="Presidencia Municipal">Presidencia Municipal</option>
-                    <option value="Sindicatura Municipal">Sindicatura Municipal</option>
-                    <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
-                    <option value="Contraloría Municipal">Contraloría Municipal</option>
-                    <option value="Tesorería Municipal">Tesorería Municipal</option>
-                    <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
-                    <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y
-                        Participación Ciudadana</option>
-                    <option value="Secretaría para la Igualdad Sustantiva de Género">Secretaría para la Igualdad
-                        Sustantiva de Género</option>
-                    <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de
-                        Administración y Tecnologías de la Información</option>
-                    <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo Urbano
-                    </option>
-                    <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro Histórico y
-                        Patrimonio Cultural</option>
-                    <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
-                    <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e Infraestructura
-                    </option>
-                    <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
-                    <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
-                    <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
-                    <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación General de
-                        Transparencia y Municipio Abierto</option>
-                    <option value="Coordinación General de Comunicación Social">Coordinación General de Comunicación
-                        Social</option>
-                    <option value="Dirección General de Desarrollo y Formación Profesional">Dirección General de
-                        Desarrollo y Formación Profesional</option>
+  <nav class="navbar navbar-expand-lg">
+  </nav>
 
-                    <!-- Organismos -->
-                    <option value="Sistema Municipal DIF">Sistema Municipal DIF</option>
-                    <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de Puebla
-                    </option>
-                    <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud del
-                        Municipio de Puebla</option>
-                    <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte y
-                        Cultura de Puebla</option>
-                    <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo Operador
-                        del Servicio de Limpia del Municipio de Puebla</option>
-                    <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
-                    <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
+  <main class="container py-4">
+    <h2 class="mb-4">Crear Trámite</h2>
+    <form id="formcreateTramite" method="post">
+      <div class="row g-3">
+        
+        <div class="col-md-6">
+          <label for="Dependencia" class="form-label">Institución</label>
+          <select name="Dependencia" id="Dependencia" class="form-select" required>
+            <option value="" disabled selected>Institución</option>
+            <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
+            <option value="Presidencia Municipal">Presidencia Municipal</option>
+            <option value="Sindicatura Municipal">Sindicatura Municipal</option>
+            <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
+            <option value="Contraloría Municipal">Contraloría Municipal</option>
+            <option value="Tesorería Municipal">Tesorería Municipal</option>
+            <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
+            <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y Participación
+              Ciudadana</option>
+            <option value="Secretaría para la Igualdad Sustantiva de Género">Secretaría para la Igualdad Sustantiva de
+              Género</option>
+            <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de Administración y
+              Tecnologías de la Información</option>
+            <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo Urbano</option>
+            <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro Histórico y
+              Patrimonio Cultural</option>
+            <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
+            <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e Infraestructura</option>
+            <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
+            <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
+            <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
+            <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación General de
+              Transparencia y Municipio Abierto</option>
+            <option value="Coordinación General de Comunicación Social">Coordinación General de Comunicación Social
+            </option>
+            <option value="Dirección General de Desarrollo y Formación Profesional">Dirección General de Desarrollo y
+              Formación Profesional</option>
+            <option value="Sistema Municipal DIF">Sistema Municipal DIF</option>
+            <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de Puebla</option>
+            <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud del Municipio de
+              Puebla</option>
+            <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte y Cultura de
+              Puebla</option>
+            <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo Operador del
+              Servicio de Limpia del Municipio de Puebla</option>
+            <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
+            <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
+          </select>
+        </div>
 
-                </select>
+        <div class="col-md-6">
+          <label for="Proveedor" class="form-label">Proveedor</label>
+          <input type="text" name="Proveedor" id="Proveedor" class="form-control" placeholder="Proveedor" required>
+        </div>
+
+        <div class="col-12">
+          <label for="Concepto" class="form-label">Concepto</label>
+          <textarea name="Concepto" id="Concepto" class="form-control" rows="3" required
+            placeholder="Ejemplo: Describa el tipo de pago (servicio, producto o egreso)."></textarea>
+        </div>
+
+        <div class="col-md-6">
+          <label for="Importe" class="form-label">Importe <span class="small-text">(suma de los fondos
+              automáticamente)</span></label>
+          <input type="text" name="Importe" id="Importe" class="form-control" placeholder="Ejemplo: 999999999.99"
+            required readonly>
+        </div>
+
+        <div class="col-md-6">
+          <label for="Mes" class="form-label">Mes</label>
+          <select name="Mes" id="Mes" class="form-select" required>
+            <option value="" disabled selected>Mes</option>
+            <option value="Enero">Enero</option>
+            <option value="Febrero">Febrero</option>
+            <option value="Marzo">Marzo</option>
+            <option value="Abril">Abril</option>
+            <option value="Mayo">Mayo</option>
+            <option value="Junio">Junio</option>
+            <option value="Julio">Julio</option>
+            <option value="Agosto">Agosto</option>
+            <option value="Septiembre">Septiembre</option>
+            <option value="Octubre">Octubre</option>
+            <option value="Noviembre">Noviembre</option>
+            <option value="Diciembre">Diciembre</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label for="TipoTramite" class="form-label">Tipo de Trámite</label>
+          <select name="TipoTramite" id="TipoTramite" class="form-select" required>
+            <option value="" disabled selected>Tipo de Trámite</option>
+            <option value="OC">OC Ordenes Compromiso</option>
+            <option value="OP">OP Órdenes de Pago</option>
+            <option value="SRF">SRF Solicitud de Recurso Financieros</option>
+            <option value="CRF">CRF Comprobación de Recurso Financieros</option>
+            <option value="JA">Juntas Auxiliares</option>
+            <option value="IPS">Inspectorías</option>
+            <option value="OCO">Ordenes Compromiso Obras</option>
+            <option value="OPO">Ordenes Pago Obras</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label for="AnalistaID" class="form-label">Analista</label>
+          <select name="AnalistaID" id="AnalistaID" class="form-select">
+            <option value="">Seleccionar Analista</option>
+            <option value="1">Agustín Arenas Martinez</option>
+            <option value="4">Juan Carlos García Tagle</option>
+            <option value="22">Gonzalo Ochoa Huerta</option>
+            <option value="8">Isabel Cristina Pavón Nava</option>
+            <option value="11">Isabel Cortes Varillas</option>
+            <option value="20">Maria Isabel Marín León</option>
+            <option value="21">Ariosto Emilio Lechuga Aparicio</option>
+            <option value="23">Laura Alatriste Torres</option>
+            <option value="5">Maria Blanca Soriano Rojas</option>
+            <option value="17">Maria Del Carmen Damian Aguilar</option>
+            <option value="10">Maria De Lourdes Molina Quiroz</option>
+            <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
+            <option value="16">Maria Valeria Corro Stefanoni</option>
+            <option value="12">Ariadna Michel Sánchez Rodríguez</option>
+            <option value="13">Michelle Córdova Torres</option>
+            <option value="19">Francisco Javier Rivera Castillo</option>
+            <option value="15">Antonio Castañon Ruiz</option>
+            <option value="18">Ofelia Olguin Aguilar</option>
+            <option value="6">Xochil Cuatepitzi Torres</option>
+            <option value="14">Daniel Rodríguez Cardenas</option>
+            <option value="9">Roberta Marcela Uvera Saucedo</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label for="Estatus" class="form-label">Estatus</label>
+          <select name="Estatus" id="Estatus" class="form-select" required>
+            <option value="" disabled selected>Estatus</option>
+            <option value="Creado">Creado</option>
+            <option value="Turnado">Turnado</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Agregar Fondo</label>
+          <div class="row g-2">
+            <div class="col-md-6">
+              <input type="text" id="FondoInput" placeholder="Ejemplo: 10050" class="form-control">
             </div>
-
-            <div class="input-group">
-                <label for="Proveedor">Proveedor</label>
-                <input type="text" name="Proveedor" id="Proveedor" placeholder="Proveedor" required>
+            <div class="col-md-6">
+              <input type="text" id="ImporteInput" placeholder="Ejemplo: 200000" class="form-control">
             </div>
+          </div>
+          <div class="mt-2">
+            <button type="button" id="addFondoBtn" class="btn btn-primary toggleButton">Agregar Fondo</button>
+          </div>
+          <table id="fondosTable" class="table mt-3">
+            <thead>
+              <tr>
+                <th>Fondo</th>
+                <th>Importe</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Aquí se agregarán los fondos dinámicamente -->
+            </tbody>
+          </table>
+          <input type="hidden" name="Fondo" id="Fondo">
+        </div>
 
-            <div class="input-group">
-                <label for="Concepto">Concepto</label>
-                <textarea type="text" name="Concepto" id="Concepto"
-                    placeholder="Ejemplo: Describa el tipo de pago (servicio, producto o egreso)." required
-                    rows="3"></textarea>
-            </div>
+        <div class="col-md-6">
+          <label for="FechaLimite" class="form-label">Fecha Límite <span class="small-text">(máximo 5 días hábiles si no
+              tiene fecha de vencimiento)</span></label>
+          <input type="date" name="FechaLimite" id="FechaLimite" class="form-control" required>
+        </div>
 
-            <div class="input-group">
-                <label for="Importe">Importe <span class="small-text">(suma de los fondos
-                        automáticamente)</span></label>
-                <input type="text" name="Importe" id="Importe" placeholder="Ejemplo: 999999999.99" required step="0.01"
-                    readonly>
-            </div>
+        <div class="col-md-6">
+          <label for="OfPeticion" class="form-label">OfPeticion</label>
+          <input type="text" name="OfPeticion" id="OfPeticion" class="form-control"
+            placeholder="Ejemplo: SECATI-DEA-EA-TM-SRF-002/2025" required>
+        </div>
 
-            <div class="input-group">
-                <label for="Mes">Mes</label>
-                <select name="Mes" id="Mes" aria-placeholder="Mes" required>
-                    <option value="" disabled selected>Mes</option>
-                    <option value="Enero">Enero</option>
-                    <option value="Febrero">Febrero</option>
-                    <option value="Marzo">Marzo</option>
-                    <option value="Abril">Abril</option>
-                    <option value="Mayo">Mayo</option>
-                    <option value="Junio">Junio</option>
-                    <option value="Julio">Julio</option>
-                    <option value="Agosto">Agosto</option>
-                    <option value="Septiembre">Septiembre</option>
-                    <option value="Octubre">Octubre</option>
-                    <option value="Noviembre">Noviembre</option>
-                    <option value="Diciembre">Diciembre</option>
-                </select>
-            </div>
+        <div class="col-md-6">
+          <label for="NoTramite" class="form-label">NoTrámite</label>
+          <input type="text" name="NoTramite" id="NoTramite" class="form-control" placeholder="Ejemplo: 803" required>
+        </div>
 
-            <div class="input-group">
-                <label for="TipoTramite">Tipo de Tramite</label>
-                <select name="TipoTramite" id="TipoTramite" placeholder="Tipo de Tramite" required>
-                    <option value="" disabled selected>Tipo de Tramite</option>
-                    <option value="OC">OC Ordenes Compromiso</option>
-                    <option value="OP">OP Órdenes de Pago</option>
-                    <option value="SRF">SRF Solicitud de Recurso Financieros</option>
-                    <option value="CRF">CRF Comprobación de Recurso Financieros</option>
-                    <option value="JA">Juntas Auxiliares</option>
-                    <option value="IPS">Inspectorías</option>
-                    <option value="OCO">Ordenes Compromiso Obras</option>
-                    <option value="OPO">Ordenes Pago Obras</option>
-                </select>
-            </div>
+        <div class="col-md-6">
+          <label for="DoctacionAnexo" class="form-label">Doctación Anexo</label>
+          <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" class="form-control"
+            placeholder="Ejemplo: Se entregó CD, Ruta del archivo" required>
+        </div>
 
-            <div class="input-group">
-                <label for="AnalistaID">Analista</label>
-                <select name="AnalistaID" id="AnalistaID">
-                    <option value="4">Juan Carlos García Tagle</option>
-                    <option value="22">Gonzalo Ochoa Huerta</option>
-                    <option value="8">Isabel Cristina Pavón Nava</option>
-                    <option value="11">Isabel Cortes Varillas</option>
-                    <option value="20">Maria Isabel Marín León</option>
-                    <option value="21">Ariosto Emilio Lechuga Aparicio</option>
-                    <option value="23">Laura Alatriste Torres</option>
-                    <option value="5">Maria Blanca Soriano Rojas</option>
-                    <option value="1">Agustín Arenas Martinez</option>
-                    <option value="17">Maria Del Carmen Damian Aguilar</option>
-                    <option value="10">Maria De Lourdes Molina Quiroz</option>
-                    <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
-                    <option value="16">Maria Valeria Corro Stefanoni</option>
-                    <option value="12">Ariadna Michel Sánchez Rodríguez</option>
-                    <option value="13">Michelle Córdova Torres</option>
-                    <option value="19">Francisco Javier Rivera Castillo</option>
-                    <option value="15">Antonio Castañon Ruiz</option>
-                    <option value="18">Ofelia Olguin Aguilar</option>
-                    <option value="6">Xochil Cuatepitzi Torres</option>
-                    <option value="14">Daniel Rodríguez Cardenas</option>
-                    <option value="9">Roberta Marcela Uvera Saucedo</option>
-                </select>
-            </div>
+        <div class="col-12">
+          <label for="Comentarios" class="form-label">Comentarios</label>
+          <textarea name="Comentarios" id="Comentarios" class="form-control" rows="4"
+            placeholder="Ejemplo: Describa las acciones a realizar, el responsable de la tarea y los plazos establecidos."
+            required></textarea>
+        </div>
 
-            <div class="input-group">
-                <label for="Estatus">Estatus</label>
-                <select name="Estatus" id="Estatus" placeholder="Estatus" required>
-                    <option value="" disabled selected>Estatus</option>
-                    <option value="Creado">Creado</option>
-                    <option value="Turnado">Turnado</option>
-                </select>
-            </div>
+        <div class="col-12 d-flex justify-content-between">
+          <button type="submit" class="btn btn-primary toggleButton">Crear Trámite</button>
+          <a href="dashboard.html" class="btn btn-primary toggleButton">Regresar</a>
+        </div>
+      </div>
+    </form>
+  </main>
 
-            <div class="input-group">
-                <div class="input-group">
-                    <label for="Fondo">Fondo</label>
-                    <input type="text" id="FondoInput" placeholder="Ejemplo: 10050">
-                </div>
+  <footer>
+    <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
+  </footer>
 
-                <div class="input-group">
-                    <label for="Importe">Importe</label>
-                    <input type="text" id="ImporteInput" placeholder="Ejemplo: 200000">
-                </div>
+  <script>
+    let importesFF = {};
 
-                <button type="button" id="addFondoBtn">Agregar Fondo</button>
+    document.getElementById('addFondoBtn').addEventListener('click', function () {
+      let fondo = document.getElementById('FondoInput').value.trim();
+      let importe = document.getElementById('ImporteInput').value.trim();
 
-                <table id="fondosTable" border="1">
-                    <thead>
-                        <tr>
-                            <th>Fondo</th>
-                            <th>Importe</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Aquí se agregarán los fondos dinámicamente -->
-                    </tbody>
-                </table>
+      if (fondo === '' || importe === '') {
+        alert("Debes ingresar un fondo y un importe");
+        return;
+      }
 
-                <input type="hidden" name="Fondo" id="Fondo">
-            </div>
+      if (importesFF[fondo]) {
+        alert("Este fondo ya ha sido agregado.");
+        return;
+      }
 
-            <div class="input-group">
-                <label for="FechaLimite">Fecha Limite <strong><span class="small-text">(máximo 5 días hábiles si no
-                            tiene fecha de vencimiento)</span></strong></label>
+      importesFF[fondo] = importe;
+      actualizarTabla();
+      actualizarCampoOculto();
+      limpiarInputs();
+    });
 
-                <input type="date" name="FechaLimite" id="FechaLimite" required>
-            </div>
+    function actualizarTabla() {
+      let tbody = document.querySelector('#fondosTable tbody');
+      tbody.innerHTML = '';
 
-            <div class="input-group">
-                <label for="OfPeticion">OfPeticion</label>
-                <input type="text" name="OfPeticion" id="OfPeticion"
-                    placeholder="Ejemplo: SECATI-DEA-EA-TM-SRF-002/2025" required>
-            </div>
-
-            <div class="input-group">
-                <label for="NoTramite">NoTramite</label>
-                <input type="text" name="NoTramite" id="NoTramite" placeholder="Ejemplo: 803" required>
-            </div>
-
-            <div class="input-group">
-                <label for="DoctacionAnexo">DoctacionAnexo</label>
-                <input type="text" name="DoctacionAnexo" id="DoctacionAnexo"
-                    placeholder="Ejemplo: Se entrego CD, Ruta del archivo" required>
-            </div>
-
-            <div class="input-group">
-                <label for="Comentarios">Comentarios</label>
-                <textarea type="text" name="Comentarios" id="Comentarios"
-                    placeholder="Ejemplo: Describa las acciones a realizar, el responsable de la tarea y los plazos establecidos."
-                    rows="4" required></textarea>
-            </div>
-
-
-            <button type="submit">Crear Trámite</button>
-            <button onclick="window.location.href = 'dashboard.html';" class="btn btn-secondary">Regresar</button>
-        </form>
-
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-    <script>
-        let importesFF = {};
-
-        document.getElementById('addFondoBtn').addEventListener('click', function () {
-            let fondo = document.getElementById('FondoInput').value.trim();
-            let importe = document.getElementById('ImporteInput').value.trim();
-
-            if (fondo === '' || importe === '') {
-                alert("Debes ingresar un fondo y un importe");
-                return;
-            }
-
-            if (importesFF[fondo]) {
-                alert("Este fondo ya ha sido agregado.");
-                return;
-            }
-
-            importesFF[fondo] = importe;
-            actualizarTabla();
-            actualizarCampoOculto();
-            limpiarInputs();
-        });
-
-        function actualizarTabla() {
-            let tbody = document.querySelector('#fondosTable tbody');
-            tbody.innerHTML = '';
-
-            for (let fondo in importesFF) {
-                let row = `<tr>
+      for (let fondo in importesFF) {
+        let row = `<tr>
                             <td>${fondo}</td>
                             <td>${importesFF[fondo]}</td>
                             <td><button type="button" onclick="eliminarFondo('${fondo}')">Eliminar</button></td>
                         </tr>`;
-                tbody.innerHTML += row;
-            }
-        }
+        tbody.innerHTML += row;
+      }
+    }
 
-        function eliminarFondo(fondo) {
-            delete importesFF[fondo];
-            actualizarTabla();
-            actualizarCampoOculto();
-        }
+    function eliminarFondo(fondo) {
+      delete importesFF[fondo];
+      actualizarTabla();
+      actualizarCampoOculto();
+    }
 
-        function actualizarCampoOculto() {
-            document.getElementById('Fondo').value = JSON.stringify(importesFF);
-            //console.log(document.getElementById('Fondo').value);
+    function actualizarCampoOculto() {
+      document.getElementById('Fondo').value = JSON.stringify(importesFF);
+      //console.log(document.getElementById('Fondo').value);
 
-            // Convertimos los valores del objeto a números y sumamos
-            let sumaTotal = Object.values(importesFF).reduce((total, valor) => total + parseFloat(valor), 0);
+      // Convertimos los valores del objeto a números y sumamos
+      let sumaTotal = Object.values(importesFF).reduce((total, valor) => total + parseFloat(valor), 0);
 
-            // Asignamos el resultado al input con formato de 2 decimales
-            document.getElementById('Importe').value = sumaTotal.toFixed(2);
-        }
+      // Asignamos el resultado al input con formato de 2 decimales
+      document.getElementById('Importe').value = sumaTotal.toFixed(2);
+    }
 
-        function limpiarInputs() {
-            document.getElementById('FondoInput').value = '';
-            document.getElementById('ImporteInput').value = '';
-        }
-    </script>
+    function limpiarInputs() {
+      document.getElementById('FondoInput').value = '';
+      document.getElementById('ImporteInput').value = '';
+    }
+  </script>
 </body>
 
 </html>

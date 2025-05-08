@@ -8,8 +8,8 @@ class Database {
     private $user = 'engranetmx';
     private $password = 'huaweiP20!';
 
-    private $dbname = 'system_recepcion_pagos_dependencias';
-    // private $dbname = 'QAPagoTrack';
+    // private $dbname = 'system_recepcion_pagos_dependencias';
+    private $dbname = 'QAPagoTrack';
     public $conn;
 
     public function __construct() {

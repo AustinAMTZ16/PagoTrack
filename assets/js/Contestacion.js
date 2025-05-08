@@ -119,9 +119,9 @@ function llenarTablaContestaciones(data, tableId) {
                     let botones = "";
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
-                        botones += `<button class="btn btn-primary" onclick="window.location.href='ContestacionEditar.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}">Editar Contestacion</button>`;
-                        botones += `<button class="btn btn-success" onclick="window.location.href='ContestacionVer.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}">Ver Contestacion</button>`;
-                        botones += `<button class="btn btn-danger" onclick="eliminarContestacion(${data.ID_RegistroOficios})">Eliminar</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='ContestacionEditar.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}">Modificar</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='ContestacionVer.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}">Detalles</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarContestacion(${data.ID_RegistroOficios})">Eliminar</button>`;
                     }
                     return botones;
                 }
@@ -157,7 +157,7 @@ function llenarTablaContestaciones(data, tableId) {
 
                         // Crear botón de descarga
                         return `<a href="${basePath}${data}" 
-                      class="btn btn-sm btn-info" 
+                      class="btn btn-primary toggleButton" 
                       target="_blank"
                       title="Abrir PDF">
                     <i class="fas fa-eye"></i> Ver PDF

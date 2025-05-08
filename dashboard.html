@@ -6,70 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de control</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
 
     <script src="./assets/js/dashboard.js"></script>
 
+    <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (necesario para DataTables) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- QRCode Generator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-
-
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <!-- jQuery y Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Descarga de EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <!-- Estilos Personalizados  lugar si importa-->
+    <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <header>
+        <img src="./assets/images/lg_banner.jpg" alt="Logo" class="logo" style="width: 30%; height: 50%;">
+        <h1>Sistema Institucional</h1>
+    </header>
+
+    <nav class="navbar navbar-expand-lg">
     </nav>
 
-    <h1>Panel de control</h1>
+    <main>
+        <h1 class="mb-4">Panel de control</h1>
+        <div class="table-responsive">
+            <button id="generarResumen" class="btn btn-info" hidden>Generar Resumen Corporativo</button>
+            <div id="resumenGPT" class="mt-3 p-3 border rounded bg-light" hidden></div>
+            <h2 style="text-align: center;">Seguimiento de Trámites</h2>
 
-    <button id="generarResumen" class="btn btn-info" hidden>Generar Resumen Corporativo</button>
-    <div id="resumenGPT" class="mt-3 p-3 border rounded bg-light" hidden></div>
+            <table id="tramitesTable" class="table table-bordered table-hover display nowrap" style="width:100%">
+                <thead>
+                    <tr id="tableHead">
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
 
-
-    <div class="contenedor">
-        <div class="table-container">
             <div>
-                <h2 style="text-align: center;">Seguimiento de Trámites</h2>
-                <table id="tramitesTable">
-                    <thead>
-                        <tr id="tableHead">
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                    </tbody>
-                </table>
-            </div>
-
-            <br> <br>
-            <div class="filtros-container">
                 <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Trámites</h2>
 
-                <div class="grid-filtros">
+                <div class="row g-3">
                     <!-- Columna Id -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="ID_CONTRATO">Identificador Unico</label>
-                        <input type="text" id="ID_CONTRATO" class="filtro-input">
+                        <input type="text" id="ID_CONTRATO" class="form-control">
                     </div>
-
                     <!-- Columna Estado -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="estadoSelect">Estado</label>
-                        <select name="estadoSelect" id="estadoSelect" class="filtro-select">
+                        <select name="estadoSelect" id="estadoSelect" class="form-select">
                             <option value="Todos">Todos</option>
                             <option value="Creado">Creado</option>
                             <option value="Turnado">Turnado</option>
@@ -87,11 +84,10 @@
                             <option value="Cancelado">Cancelado</option>
                         </select>
                     </div>
-
                     <!-- Columna Mes -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="mesSelect">Mes</label>
-                        <select name="mesSelect" id="mesSelect" class="filtro-select">
+                        <select name="mesSelect" id="mesSelect" class="form-select">
                             <option value="Todos">Todos</option>
                             <option value="Enero">Enero</option>
                             <option value="Febrero">Febrero</option>
@@ -107,11 +103,10 @@
                             <option value="Diciembre">Diciembre</option>
                         </select>
                     </div>
-
                     <!-- Columna Tipo de Trámite -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="tipoTramiteSelect">Tipo de Trámite</label>
-                        <select name="tipoTramiteSelect" id="tipoTramiteSelect" class="filtro-select">
+                        <select name="tipoTramiteSelect" id="tipoTramiteSelect" class="form-select">
                             <option value="Todos">Todos</option>
                             <option value="OC">OC Ordenes Compromiso</option>
                             <option value="OP">OP Órdenes de Pago</option>
@@ -123,11 +118,10 @@
                             <option value="OPO">Ordenes Pago Obras</option>
                         </select>
                     </div>
-
                     <!-- Columna Analista -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="analistaSelect">Analista</label>
-                        <select name="analistaSelect" id="analistaSelect" class="filtro-select">
+                        <select name="analistaSelect" id="analistaSelect" class="form-select">
                             <option value="Todos">Todos</option>
                             <option value="4">Juan Carlos García Tagle</option>
                             <option value="22">Gonzalo Ochoa Huerta</option>
@@ -152,311 +146,185 @@
                             <option value="9">Roberta Marcela Uvera Saucedo</option>
                         </select>
                     </div>
-
                     <!-- Columna Dependencia -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="dependenciaSelect">Institución</label>
-                        <select name="dependenciaSelect" id="dependenciaSelect" class="filtro-select">
+                        <select name="dependenciaSelect" id="dependenciaSelect" class="form-select">
                             <option value="Todos">Todos</option>
-                            <option value="Coordinación de las Regidurias">Coordinación de las Regidurias</option>
+                            <option value="Coordinación de las Regidurias">Coordinación de las Regidurias
+                            </option>
                             <option value="Presidencia Municipal">Presidencia Municipal</option>
                             <option value="Sindicatura Municipal">Sindicatura Municipal</option>
                             <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
                             <option value="Tesorería Municipal">Tesorería Municipal</option>
                             <option value="Contraloría Municipal">Contraloría Municipal</option>
-                            <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
-                            <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y
+                            <option value="Secretaría General de Gobierno">Secretaría General de Gobierno
+                            </option>
+                            <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de
+                                Bienestar y
                                 Participación Ciudadana</option>
                             <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e
                                 Infraestructura
                             </option>
-                            <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo
+                            <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y
+                                Desarrollo
                                 Urbano
                             </option>
-                            <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
-                            <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de
+                            <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo
+                            </option>
+                            <option value="Secretaría de Administración y Tecnologías de la Información">
+                                Secretaría
+                                de
                                 Administración y Tecnologías de la Información</option>
-                            <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
-                            <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación
+                            <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana
+                            </option>
+                            <option value="Coordinación General de Transparencia y Municipio Abierto">
+                                Coordinación
                                 General de
                                 Transparencia y Municipio Abierto</option>
                             <option value="Sistemas Municipal DIF">Sistemas Municipal DIF</option>
-                            <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo
+                            <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">
+                                Organismo
                                 Operador
                                 del
                                 Servicio de Limpia del Municipio de Puebla</option>
-                            <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte
+                            <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal
+                                de
+                                Arte
                                 y
                                 Cultura de
                                 Puebla</option>
-                            <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
-                            <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de
+                            <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación
+                            </option>
+                            <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del
+                                Deporte de
                                 Puebla
                             </option>
-                            <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud
+                            <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la
+                                Juventud
                                 del
                                 Municipio
                                 de Puebla</option>
-                            <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
+                            <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla
+                            </option>
                             <option value="Coordinación General de Comunicación Social">Coordinación General de
                                 Comunicación
                                 Social
                             </option>
-                            <option value="Secretaria para la Igualdad Sustantiva de Género">Secretaria para la Igualdad
+                            <option value="Secretaria para la Igualdad Sustantiva de Género">Secretaria para la
+                                Igualdad
                                 Sustantiva
                                 de Género</option>
-                            <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
+                            <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos
+                            </option>
                             <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
-                            <option value="Direccion General De Desarrollo y Formación Profesional">Direccion General De
+                            <option value="Direccion General De Desarrollo y Formación Profesional">Direccion
+                                General De
                                 Desarrollo
                                 y Formación Profesional</option>
-                            <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro
+                            <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del
+                                Centro
                                 Histórico y
                                 Patrimonio Cultural</option>
                         </select>
                     </div>
-
                     <!-- Columna Proveedor -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="proveedorSelect">Proveedor</label>
-                        <input type="text" id="proveedorSelect" class="filtro-input">
+                        <input type="text" id="proveedorSelect" class="form-control">
                     </div>
-
                     <!-- Columna Concepto -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="conceptoSelect">Concepto</label>
-                        <input type="text" id="conceptoSelect" class="filtro-input">
+                        <input type="text" id="conceptoSelect" class="form-control">
                     </div>
-
                     <!-- Columna Importe -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="importeSelect">Importe</label>
-                        <input type="number" id="importeSelect" class="filtro-input">
+                        <input type="number" id="importeSelect" class="form-control">
                     </div>
-
                     <!-- Columna Remesa -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="remesaSelect">Remesa</label>
-                        <input type="text" id="remesaSelect" class="filtro-input">
+                        <input type="text" id="remesaSelect" class="form-control">
                     </div>
-
                     <!-- Columna Integra SAP -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="integracionSAPSelect">Integra SAP</label>
-                        <input type="text" id="integracionSAPSelect" class="filtro-input">
+                        <input type="text" id="integracionSAPSelect" class="form-control">
                     </div>
-
                     <!-- Columna Documento SAP -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="docSAPSelect">Doc SAP</label>
-                        <input type="text" id="docSAPSelect" class="filtro-input">
+                        <input type="text" id="docSAPSelect" class="form-control">
                     </div>
-
                     <!-- Columna Número de Trámite -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="numeroTramiteSelect">Número de Trámite</label>
-                        <input type="text" id="numeroTramiteSelect" class="filtro-input">
+                        <input type="text" id="numeroTramiteSelect" class="form-control">
                     </div>
-
                     <!-- Columna Fecha de Recepción -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="fechaRecepcionSelect">Fecha Recepción</label>
-                        <input type="date" id="fechaRecepcionSelect" class="filtro-date">
+                        <input type="date" id="fechaRecepcionSelect" class="form-control">
                     </div>
-
                     <!-- Columna Fecha de Vencimiento -->
-                    <div class="filtro-group">
+                    <div class="col-md-6">
                         <label for="fechaVencimientoSelect">Fecha Vencimiento</label>
-                        <input type="date" id="fechaVencimientoSelect" class="filtro-date">
+                        <input type="date" id="fechaVencimientoSelect" class="form-control">
                     </div>
                 </div>
 
-                <div class="acciones-filtros">
-                    <button class="btn-filtrar" id="btn-filtrar"><i class="fas fa-search"></i> Aplicar Filtros</button>
-                    <button class="btn-limpiar" id="btn-limpiar"><i class="fas fa-undo"></i> Limpiar Filtros</button>
+                <div class="col-12 d-flex justify-content-between">
+                    <button class="btn btn-primary toggleButton" id="btn-filtrar"><i class="fas fa-search"></i>
+                        Aplicar
+                        Filtros</button>
+                    <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i>
+                        Limpiar
+                        Filtros</button>
                 </div>
             </div>
 
-            <style>
-                .filtros-container {
-                    background: #f8f9fa;
-                    padding: 1.5rem;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                    margin-bottom: 2rem;
+            <h2 style="text-align: center;">Listado de Trámites</h2>
+            <button id="downloadExcelTramites" class="btn btn-primary toggleButton">Descargar Excel</button>
 
-                }
-
-                .titulo-filtros {
-                    color: #2c3e50;
-                    margin-bottom: 1.5rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-
-                .grid-filtros {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                    gap: 1rem;
-                    margin-bottom: 1.5rem;
-                }
-
-                .filtro-group {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-
-                .filtro-group label {
-                    font-weight: 600;
-                    color: #4a5568;
-                    font-size: 0.9rem;
-                }
-
-                .filtro-select,
-                .filtro-date {
-                    padding: 0.5rem 1rem;
-                    border: 1px solid #e2e8f0;
-                    border-radius: 6px;
-                    background: white;
-                    transition: all 0.3s ease;
-                }
-
-                .filtro-select:focus,
-                .filtro-date:focus {
-                    border-color: #4299e1;
-                    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-                    outline: none;
-                }
-
-                .acciones-filtros {
-                    display: flex;
-                    gap: 1rem;
-                    justify-content: center;
-                    margin-top: 1rem;
-                }
-
-                .btn-filtrar,
-                .btn-limpiar {
-                    padding: 0.6rem 1.5rem;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    transition: all 0.3s ease;
-                }
-
-                .btn-filtrar {
-                    background: #4299e1;
-                    color: white;
-                }
-
-                .btn-filtrar:hover {
-                    background: #3182ce;
-                }
-
-                .btn-limpiar {
-                    background: #e53e3e;
-                    color: white;
-                }
-
-                .btn-limpiar:hover {
-                    background: #c53030;
-                }
-
-                .full-width {
-                    grid-column: 1 / -1;
-                }
-
-                @media (max-width: 768px) {
-                    .grid-filtros {
-                        grid-template-columns: 1fr;
-                    }
-
-                    .acciones-filtros {
-                        flex-direction: column;
-                    }
-
-                    .btn-filtrar,
-                    .btn-limpiar {
-                        width: 100%;
-                        justify-content: center;
-                    }
-                }
-            </style>
-
-            <div>
-                <h2 style="text-align: center;">Listado de Trámites</h2>
-                <button id="downloadExcelTramites" class="btn btn-primary toggleButton">Descargar Excel</button>
-                <table id="tableTramites" class="display">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Mes</th>
-                            <th>Fecha de Recepcion</th>
-                            <th>Fecha Limite Solvencia</th>
-                            <th>TipoTramite</th>
-                            <th>Institución</th>
-                            <th>Proveedor</th>
-                            <th>Concepto</th>
-                            <th>Importe</th>
-                            <th>AnalistaTurnado</th>
-                            <th>Estatus</th>
-                            <th>Fondo</th>
-                            <th>Remesa</th>
-                            <th>DocSAP</th>
-                            <th>IntegraSAP</th>
-                            <th>Numero de Trámite</th>
-                            <th>Acciones</th>
-                            <th>Comentarios</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Filas generadas dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
+            <table id="tableTramites" class="table table-bordered table-hover display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Mes</th>
+                        <th>Fecha de Recepcion</th>
+                        <th>Fecha Limite Solvencia</th>
+                        <th>TipoTramite</th>
+                        <th>Institución</th>
+                        <th>Proveedor</th>
+                        <th>Concepto</th>
+                        <th>Importe</th>
+                        <th>AnalistaTurnado</th>
+                        <th>Estatus</th>
+                        <th>Fondo</th>
+                        <th>Remesa</th>
+                        <th>DocSAP</th>
+                        <th>IntegraSAP</th>
+                        <th>Numero de Trámite</th>
+                        <th>Acciones</th>
+                        <th>Comentarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas generadas dinámicamente -->
+                </tbody>
+            </table>
         </div>
-    </div>
+    </main>
 
-    <style>
-        .modal-backdrop.show {
-            z-index: 1040;
-        }
-
-        #comentarioModal.modal {
-            z-index: 1060;
-        }
-    </style>
-
+    <footer>
+        <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
+    </footer>
 
     <script>
         $('#comentarioModal').modal({ backdrop: false });
-
     </script>
-
-    <style>
-        .comentario-card {
-            background-color: #f8f9fa;
-            border-left: 5px solid #007bff;
-        }
-
-        .comentario-texto {
-            white-space: pre-wrap;
-            color: #343a40;
-            font-size: 0.95rem;
-        }
-
-        .modal-body {
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-    </style>
-
-
     <!-- Modal para mostrar el comentario completo -->
     <div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="comentarioModalLabel"
         aria-hidden="true">
@@ -478,9 +346,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+
 </body>
 
 </html>

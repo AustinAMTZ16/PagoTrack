@@ -156,9 +156,9 @@ function llenarTablaRemesas(listadoRemesas) {
             <td>${remesa.Grupo}</td>
             <td>${remesa.TotalRegistros}</td>
             <td>            
-                <button class="btn btn-secondary" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
-                <button class="btn btn-primary" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
-                <button class="btn btn-success" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
+                <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
+                <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
+                <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
             </td>
         `;
         tableListaRemesas.appendChild(row);

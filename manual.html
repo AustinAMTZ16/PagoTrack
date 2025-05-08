@@ -9,34 +9,21 @@
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
-    
+
+    <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (necesario para DataTables) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Estilos Personalizados  lugar si importa-->
+    <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 40px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        h1,
-        h2,
-        h3 {
-            color: #2c3e50;
-        }
-
-        h1 {
-            text-align: center;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 10px;
-        }
-
         ul {
             margin-left: 20px;
         }
@@ -54,486 +41,551 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <header>
+        <img src="./assets/images/lg_banner.jpg" alt="Logo" class="logo" style="width: 30%; height: 50%;">
+        <h1>Sistema Institucional</h1>
+    </header>
+
+    <nav class="navbar navbar-expand-lg">
     </nav>
 
-    <h1>28 marzo de 2025</h1>
-    <h2>Manual de Uso del Sistema PagoTrack</h2>
+    <main>
 
-    <div class="section">
-        <h3>Roles del Sistema</h3>
-        <p>El sistema PagoTrack define una estructura de roles clara, asignando funciones específicas a cada perfil para
-            garantizar un flujo de trabajo ordenado, seguro y eficiente.</p>
-        <p><strong>👨‍💼 Administrador (Admin):</strong> Tiene control total sobre la plataforma. Sus responsabilidades
-            incluyen:</p>
-        <ul>
-            <li>Visualizar y gestionar todos los trámites registrados en el sistema.</li>
-            <li>Crear, modificar y eliminar registros sin restricción.</li>
-            <li>Asignar usuarios y roles.</li>
-            <li>Monitorear el correcto funcionamiento del sistema y garantizar la integridad de la información.</li>
-            <li>Acceder a todos los módulos disponibles, incluyendo configuraciones avanzadas y reportes.</li>
-        </ul>
-        <p><strong>🧱 Coordinador:</strong> Tiene control sobre los trámites asignados a su usuario. Sus
-            responsabilidades incluyen:</p>
-        <ul>
-            <li>Supervisar el avance de los trámites en todas sus etapas.</li>
-            <li>Interpretar y analizar la información consolidada del sistema.</li>
-            <li>Aprobar remesas una vez que los expedientes han sido revisados y validados.</li>
-            <li>Confirmar que los trámites cumplen con los requisitos técnicos y administrativos antes de su ejecución
-                final.</li>
-        </ul>
-        <p><strong>🧑‍💻 Operador:</strong> Es el usuario encargado de iniciar el proceso administrativo. Tiene acceso a
-            funciones clave como:</p>
-        <ul>
-            <li>Crear y registrar nuevos trámites en el sistema.</li>
-            <li>Asignar (turnar) trámites a los analistas correspondientes.</li>
-            <li>Consultar el panel de Tramites con la vista general de trámites por analista.</li>
-            <li>Asignar remesas a trámites aprobados para su seguimiento contable.</li>
-            <li>Modificar trámites (según permisos) y dar seguimiento a observaciones.</li>
-        </ul>
-        <p><strong>👨‍🔬 Analista:</strong> Es el responsable de la validación técnica y documental de los trámites
-            asignados. Sus principales tareas son:</p>
-        <ul>
-            <li>Visualizar únicamente los trámites que han sido turnados a su usuario.</li>
-            <li>Revisar el expediente físico y validar la documentación.</li>
-            <li>Actualizar el estado del trámite según el flujo definido (Observaciones, Devuelto, Registrado SAP,
-                etc.).</li>
-            <li>Enviar Tarjetas Informativas cuando existan observaciones o devoluciones relevantes.</li>
-            <li>Registrar información clave como folios SAP e integración, para continuar con el proceso administrativo.
-            </li>
-        </ul>
-    </div>
+        <h1>28 marzo de 2025</h1>
+        <h2>Manual de Uso del Sistema PagoTrack</h2>
 
-    <div class="section">
-        <h3>Inicio de Sesión</h3>
-        <p>El usuario podrá acceder al sistema ingresando su correo electrónico institucional y la clave proporcionada
-            por la Dirección de Egresos y Control Presupuestal.</p>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT1.png" alt="Inicio de Sesión" width="60%">
-        </div>
-    </div>
-
-    <section class="contenido">
-        <h2>Acceso a la Vista de Panel de Tramites</h2>
-        <p>Al iniciar sesión, el usuario con rol Operador accede directamente al Panel de Control Tramites, el cual
-            presenta una vista general del módulo de Seguimiento de Trámites.
-            En esta sección se despliega una tabla dinámica con el resumen de trámites asignados a cada analista,
-            clasificados por tipo (OC, OP, SRF, CRF, JA, IPS, Obra, OCO, OPO) y mostrando el total de trámites
-            pendientes por resolver. Estos trámites se encuentran en los estados “Turnado” u “Observaciones”.</p>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT2.png" alt="Panel de Tramites" width="60%">
+        <div class="section">
+            <h3>Roles del Sistema</h3>
+            <p>El sistema PagoTrack define una estructura de roles clara, asignando funciones específicas a cada perfil
+                para
+                garantizar un flujo de trabajo ordenado, seguro y eficiente.</p>
+            <p><strong>👨‍💼 Administrador (Admin):</strong> Tiene control total sobre la plataforma. Sus
+                responsabilidades
+                incluyen:</p>
+            <ul>
+                <li>Visualizar y gestionar todos los trámites registrados en el sistema.</li>
+                <li>Crear, modificar y eliminar registros sin restricción.</li>
+                <li>Asignar usuarios y roles.</li>
+                <li>Monitorear el correcto funcionamiento del sistema y garantizar la integridad de la información.</li>
+                <li>Acceder a todos los módulos disponibles, incluyendo configuraciones avanzadas y reportes.</li>
+            </ul>
+            <p><strong>🧱 Coordinador:</strong> Tiene control sobre los trámites asignados a su usuario. Sus
+                responsabilidades incluyen:</p>
+            <ul>
+                <li>Supervisar el avance de los trámites en todas sus etapas.</li>
+                <li>Interpretar y analizar la información consolidada del sistema.</li>
+                <li>Aprobar remesas una vez que los expedientes han sido revisados y validados.</li>
+                <li>Confirmar que los trámites cumplen con los requisitos técnicos y administrativos antes de su
+                    ejecución
+                    final.</li>
+            </ul>
+            <p><strong>🧑‍💻 Operador:</strong> Es el usuario encargado de iniciar el proceso administrativo. Tiene
+                acceso a
+                funciones clave como:</p>
+            <ul>
+                <li>Crear y registrar nuevos trámites en el sistema.</li>
+                <li>Asignar (turnar) trámites a los analistas correspondientes.</li>
+                <li>Consultar el panel de Tramites con la vista general de trámites por analista.</li>
+                <li>Asignar remesas a trámites aprobados para su seguimiento contable.</li>
+                <li>Modificar trámites (según permisos) y dar seguimiento a observaciones.</li>
+            </ul>
+            <p><strong>👨‍🔬 Analista:</strong> Es el responsable de la validación técnica y documental de los trámites
+                asignados. Sus principales tareas son:</p>
+            <ul>
+                <li>Visualizar únicamente los trámites que han sido turnados a su usuario.</li>
+                <li>Revisar el expediente físico y validar la documentación.</li>
+                <li>Actualizar el estado del trámite según el flujo definido (Observaciones, Devuelto, Registrado SAP,
+                    etc.).</li>
+                <li>Enviar Tarjetas Informativas cuando existan observaciones o devoluciones relevantes.</li>
+                <li>Registrar información clave como folios SAP e integración, para continuar con el proceso
+                    administrativo.
+                </li>
+            </ul>
         </div>
 
-        <h3>Filtros y Descarga</h3>
-        <p>Debajo de la tabla de seguimiento, se encuentran disponibles opciones de filtros avanzados que permiten al
-            operador consultar los trámites según diferentes criterios como:</p>
-        <ul>
-            <li>Identificador Único BD</li>
-            <li>Estado</li>
-            <li>Mes</li>
-            <li>Tipo de Trámite</li>
-            <li>Analista</li>
-            <li>Institución</li>
-            <li>Proveedor</li>
-            <li>Concepto</li>
-            <li>Remesa</li>
-            <li>Fecha de Recepción</li>
-            <li>Fecha de Vencimiento</li>
-            <li>Documento SAP</li>
-            <li>Número de Trámite</li>
-            <li>Importe</li>
-            <li>Integración SAP</li>
-        </ul>
-        <p>Una vez definidos los filtros deseados, el operador puede presionar el botón Aplicar Filtros para visualizar
-            los resultados o Limpiar Filtros para restablecer la búsqueda.
-            Además, se cuenta con la opción de descargar la información filtrada en formato Excel mediante el botón
-            Descargar Excel, ubicado justo sobre la tabla de trámites.</p>
-    </section>
-
-    <section class="contenido">
-        <h2>Crear Nuevo Trámite</h2>
-        <p>El Operador puede registrar un nuevo trámite accediendo al menú superior Trámite y seleccionando la opción
-            Crear Trámite. Esta acción despliega un formulario que permite ingresar los datos necesarios para iniciar el
-            trámite dentro del sistema.</p>
-
-        <h3>Campos del Formulario</h3>
-        <p>El formulario contiene los siguientes campos obligatorios y opcionales, clasificados por secciones:</p>
-        <h4>Información General</h4>
-        <ul>
-            <li><strong>Institución:</strong> Seleccionar la dependencia responsable del trámite.</li>
-            <li><strong>Proveedor:</strong> Ingresar el nombre del proveedor involucrado.</li>
-            <li><strong>Concepto:</strong> Describir brevemente el tipo de gasto, producto o servicio relacionado.</li>
-            <li><strong>Importe:</strong> Indicar el monto total del trámite. Este valor se calculará automáticamente
-                con base en los fondos agregados.</li>
-            <li><strong>Mes:</strong> Seleccionar el mes correspondiente al trámite.</li>
-            <li><strong>Tipo de Trámite:</strong> Elegir uno de los siguientes tipos disponibles:
-                <ul>
-                    <li>OC – Órdenes de Compromiso</li>
-                    <li>OP – Órdenes de Pago</li>
-                    <li>SRF – Solicitud de Recursos Financieros</li>
-                    <li>CRF – Comprobación de Recursos Financieros</li>
-                    <li>JA – Juntas Auxiliares</li>
-                    <li>IPS – Inspectorías</li>
-                    <li>OCO – Órdenes de Compromiso de Obras</li>
-                    <li>OPO – Órdenes de Pago de Obras</li>
-                </ul>
-            </li>
-            <li><strong>Analista:</strong> Seleccionar el nombre del analista responsable que recibirá el trámite.</li>
-            <li><strong>Estatus:</strong> Establecer el estado inicial del trámite. Las opciones disponibles son:
-                <ul>
-                    <li>Creado: El expediente se encuentra bajo responsabilidad del operador.</li>
-                    <li>Turnado: El expediente ya ha sido asignado y está en manos del analista.</li>
-                </ul>
-            </li>
-            <li><strong>Fecha Límite:</strong> Indicar la fecha límite de atención o vencimiento (máximo 5 días hábiles
-                si no se especifica una fecha de vencimiento).</li>
-        </ul>
-
-        <h4>Fondos</h4>
-        <ul>
-            <li><strong>Fondo:</strong> Ingresar el número del fondo que respalda el trámite.</li>
-            <li><strong>Importe:</strong> Especificar el monto correspondiente a dicho fondo.</li>
-            <li>Luego, hacer clic en el botón <em>Agregar Fondo</em> para que se refleje en la tabla inferior. Se pueden
-                agregar múltiples fondos por trámite.</li>
-        </ul>
-
-        <h4>Identificadores y Documentación</h4>
-        <ul>
-            <li><strong>OPetición:</strong> Clave identificadora del trámite (ejemplo: SECATI-DEA-EA-TM-SRF-002/2025).
-            </li>
-            <li><strong>NoTrámite:</strong> Número único asignado internamente para seguimiento.</li>
-            <li><strong>Dotación/Anexo:</strong> Detalle del material o documento anexo entregado (por ejemplo: “Se
-                entregó CD, Ruta del archivo”).</li>
-        </ul>
-
-        <h4>Observaciones</h4>
-        <ul>
-            <li><strong>Comentarios:</strong> Espacio para describir las acciones por realizar, responsabilidades y
-                plazos establecidos.</li>
-        </ul>
-
-        <p>Una vez completado el formulario, el operador debe presionar el botón Crear Trámite para guardar la
-            información. Si desea cancelar la acción, puede hacer clic en el botón Regresar.</p>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT3.png" alt="Crear Nuevo Trámite" width="60%">
-        </div>
-    </section>
-
-    <section class="contenido">
-        <h2>Consideraciones sobre el Estatus del Trámite</h2>
-        <p>Al registrar un nuevo trámite, el campo <strong>Estatus</strong> permite identificar en qué etapa se
-            encuentra el expediente. Las opciones disponibles son:</p>
-        <ul>
-            <li>
-                <strong>Creado:</strong> El expediente se encuentra bajo responsabilidad del operador.<br>
-                Este estatus se utiliza cuando no se asigna un analista al momento del registro.<br>
-                <em>Ejemplo:</em> Cuando no hay analistas disponibles o no se encuentra físicamente el analista, el
-                trámite se guarda como <strong>Creado</strong> y permanece en espera de ser turnado posteriormente.
-            </li>
-            <li>
-                <strong>Turnado:</strong> El expediente ha sido entregado a un analista para su atención.<br>
-                Este estatus se selecciona únicamente si se ha entregado el expediente al analista responsable al
-                momento de crear el trámite.
-            </li>
-        </ul>
-        <p><strong>Nota:</strong> Si se selecciona un analista, pero el estatus elegido es “Creado”, el sistema no
-            enviará notificación y el trámite quedará en espera. Es importante asegurar que ambos campos sean
-            consistentes para evitar retrasos.</p>
-    </section>
-
-    <section class="manual-section">
-        <h2>Acciones Disponibles sobre Trámites en Estado “Creado”</h2>
-        <p>Una vez que un trámite ha sido registrado con estatus "Creado", este se visualizará en la tabla de trámites
-            del operador, dentro del Panel de Tramites. Desde esta vista, el operador podrá realizar las siguientes
-            acciones sobre cada trámite:</p>
-        <ol>
-            <li><strong>Turnar:</strong> Permite asignar el trámite a un analista y actualizar su estado a “Turnado”.
-                <p>Al hacer clic en el botón Turnar, se despliega un formulario donde se deben completar los siguientes
-                    campos:</p>
-                <ul>
-                    <li>ID del Trámite: Se carga automáticamente.</li>
-                    <li>Nuevo Estatus: Se establece automáticamente como “Turnado”.</li>
-                    <li>Analista Turnado: Seleccionar el usuario que recibirá el trámite.</li>
-                    <li>Comentarios: Campo obligatorio para describir la instrucción o contexto del turnado.</li>
-                </ul>
-                <p>Una vez confirmado el envío, el trámite será asignado al analista y el sistema lo notificará para su
-                    atención.</p>
-            </li>
-            <li><strong>Modificar:</strong> Permite editar los campos del trámite en caso de que se haya producido un
-                error durante la captura inicial.
-                <p>Esta acción abre el formulario con la información previamente registrada, permitiendo al operador
-                    actualizar datos como:</p>
-                <ul>
-                    <li>Institución, Proveedor, Concepto, Fondos</li>
-                    <li>Fechas, Documentos SAP, Remesa</li>
-                    <li>Datos de analista, comentarios y cualquier otro campo editable</li>
-                </ul>
-                <p>Se debe proporcionar un motivo de modificación antes de guardar los cambios.</p>
-            </li>
-            <li><strong>Eliminar (Disponible solo para usuarios con rol Administrador):</strong> Permite eliminar de
-                forma definitiva el trámite de la base de datos.
-                <p>Esta acción no está disponible para usuarios con rol operador o analista. Una vez ejecutada, el
-                    registro no podrá ser recuperado.</p>
-            </li>
-            <li><strong>Ver Comentario:</strong> Permite visualizar la bitácora de comentarios históricos del trámite.
-                <p>Los comentarios se presentan en formato estructurado JSON e incluyen:</p>
-                <ul>
-                    <li>ID del trámite</li>
-                    <li>Fecha del comentario</li>
-                    <li>Estatus en el que se encontraba</li>
-                    <li>Detalle textual del comentario</li>
-                </ul>
-                <p>Esta opción es útil para dar seguimiento a los cambios de estado y decisiones previas tomadas durante
-                    el flujo del trámite.</p>
-            </li>
-        </ol>
-
-        <div class="imagen">
-            <img src="./assets/images/manual/PT4.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
+        <div class="section">
+            <h3>Inicio de Sesión</h3>
+            <p>El usuario podrá acceder al sistema ingresando su correo electrónico institucional y la clave
+                proporcionada
+                por la Dirección de Egresos y Control Presupuestal.</p>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT1.png" alt="Inicio de Sesión" width="60%">
+            </div>
         </div>
 
-        <h2>Seguimiento de Trámites por el Analista</h2>
-        <p>Una vez que un trámite ha sido turnado, se muestra en el módulo de Seguimiento de Trámites Turnados del
-            analista asignado.</p>
-        <h3>Vista Inicial</h3>
-        <p>Al acceder a su panel, el analista visualiza un resumen de estado a través de un semáforo de vencimientos,
-            que agrupa los trámites turnados según su fecha límite:</p>
-        <ul>
-            <li>🔵 Trámites que vencen hoy</li>
-            <li>🔴 Trámites vencidos</li>
-            <li>🟢 Trámites por vencer</li>
-        </ul>
-        <p>Esta vista le permite priorizar su carga de trabajo de forma efectiva.</p>
+        <section class="contenido">
+            <h2>Acceso a la Vista de Panel de Tramites</h2>
+            <p>Al iniciar sesión, el usuario con rol Operador accede directamente al Panel de Control Tramites, el cual
+                presenta una vista general del módulo de Seguimiento de Trámites.
+                En esta sección se despliega una tabla dinámica con el resumen de trámites asignados a cada analista,
+                clasificados por tipo (OC, OP, SRF, CRF, JA, IPS, Obra, OCO, OPO) y mostrando el total de trámites
+                pendientes por resolver. Estos trámites se encuentran en los estados “Turnado” u “Observaciones”.</p>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT2.png" alt="Panel de Tramites" width="60%">
+            </div>
 
-        <div class="imagen">
-            <img src="./assets/images/manual/PT9.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
+            <h3>Filtros y Descarga</h3>
+            <p>Debajo de la tabla de seguimiento, se encuentran disponibles opciones de filtros avanzados que permiten
+                al
+                operador consultar los trámites según diferentes criterios como:</p>
+            <ul>
+                <li>Identificador Único BD</li>
+                <li>Estado</li>
+                <li>Mes</li>
+                <li>Tipo de Trámite</li>
+                <li>Analista</li>
+                <li>Institución</li>
+                <li>Proveedor</li>
+                <li>Concepto</li>
+                <li>Remesa</li>
+                <li>Fecha de Recepción</li>
+                <li>Fecha de Vencimiento</li>
+                <li>Documento SAP</li>
+                <li>Número de Trámite</li>
+                <li>Importe</li>
+                <li>Integración SAP</li>
+            </ul>
+            <p>Una vez definidos los filtros deseados, el operador puede presionar el botón Aplicar Filtros para
+                visualizar
+                los resultados o Limpiar Filtros para restablecer la búsqueda.
+                Además, se cuenta con la opción de descargar la información filtrada en formato Excel mediante el botón
+                Descargar Excel, ubicado justo sobre la tabla de trámites.</p>
+        </section>
+
+        <section class="contenido">
+            <h2>Crear Nuevo Trámite</h2>
+            <p>El Operador puede registrar un nuevo trámite accediendo al menú superior Trámite y seleccionando la
+                opción
+                Crear Trámite. Esta acción despliega un formulario que permite ingresar los datos necesarios para
+                iniciar el
+                trámite dentro del sistema.</p>
+
+            <h3>Campos del Formulario</h3>
+            <p>El formulario contiene los siguientes campos obligatorios y opcionales, clasificados por secciones:</p>
+            <h4>Información General</h4>
+            <ul>
+                <li><strong>Institución:</strong> Seleccionar la dependencia responsable del trámite.</li>
+                <li><strong>Proveedor:</strong> Ingresar el nombre del proveedor involucrado.</li>
+                <li><strong>Concepto:</strong> Describir brevemente el tipo de gasto, producto o servicio relacionado.
+                </li>
+                <li><strong>Importe:</strong> Indicar el monto total del trámite. Este valor se calculará
+                    automáticamente
+                    con base en los fondos agregados.</li>
+                <li><strong>Mes:</strong> Seleccionar el mes correspondiente al trámite.</li>
+                <li><strong>Tipo de Trámite:</strong> Elegir uno de los siguientes tipos disponibles:
+                    <ul>
+                        <li>OC – Órdenes de Compromiso</li>
+                        <li>OP – Órdenes de Pago</li>
+                        <li>SRF – Solicitud de Recursos Financieros</li>
+                        <li>CRF – Comprobación de Recursos Financieros</li>
+                        <li>JA – Juntas Auxiliares</li>
+                        <li>IPS – Inspectorías</li>
+                        <li>OCO – Órdenes de Compromiso de Obras</li>
+                        <li>OPO – Órdenes de Pago de Obras</li>
+                    </ul>
+                </li>
+                <li><strong>Analista:</strong> Seleccionar el nombre del analista responsable que recibirá el trámite.
+                </li>
+                <li><strong>Estatus:</strong> Establecer el estado inicial del trámite. Las opciones disponibles son:
+                    <ul>
+                        <li>Creado: El expediente se encuentra bajo responsabilidad del operador.</li>
+                        <li>Turnado: El expediente ya ha sido asignado y está en manos del analista.</li>
+                    </ul>
+                </li>
+                <li><strong>Fecha Límite:</strong> Indicar la fecha límite de atención o vencimiento (máximo 5 días
+                    hábiles
+                    si no se especifica una fecha de vencimiento).</li>
+            </ul>
+
+            <h4>Fondos</h4>
+            <ul>
+                <li><strong>Fondo:</strong> Ingresar el número del fondo que respalda el trámite.</li>
+                <li><strong>Importe:</strong> Especificar el monto correspondiente a dicho fondo.</li>
+                <li>Luego, hacer clic en el botón <em>Agregar Fondo</em> para que se refleje en la tabla inferior. Se
+                    pueden
+                    agregar múltiples fondos por trámite.</li>
+            </ul>
+
+            <h4>Identificadores y Documentación</h4>
+            <ul>
+                <li><strong>OPetición:</strong> Clave identificadora del trámite (ejemplo:
+                    SECATI-DEA-EA-TM-SRF-002/2025).
+                </li>
+                <li><strong>NoTrámite:</strong> Número único asignado internamente para seguimiento.</li>
+                <li><strong>Dotación/Anexo:</strong> Detalle del material o documento anexo entregado (por ejemplo: “Se
+                    entregó CD, Ruta del archivo”).</li>
+            </ul>
+
+            <h4>Observaciones</h4>
+            <ul>
+                <li><strong>Comentarios:</strong> Espacio para describir las acciones por realizar, responsabilidades y
+                    plazos establecidos.</li>
+            </ul>
+
+            <p>Una vez completado el formulario, el operador debe presionar el botón Crear Trámite para guardar la
+                información. Si desea cancelar la acción, puede hacer clic en el botón Regresar.</p>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT3.png" alt="Crear Nuevo Trámite" width="60%">
+            </div>
+        </section>
+
+        <section class="contenido">
+            <h2>Consideraciones sobre el Estatus del Trámite</h2>
+            <p>Al registrar un nuevo trámite, el campo <strong>Estatus</strong> permite identificar en qué etapa se
+                encuentra el expediente. Las opciones disponibles son:</p>
+            <ul>
+                <li>
+                    <strong>Creado:</strong> El expediente se encuentra bajo responsabilidad del operador.<br>
+                    Este estatus se utiliza cuando no se asigna un analista al momento del registro.<br>
+                    <em>Ejemplo:</em> Cuando no hay analistas disponibles o no se encuentra físicamente el analista, el
+                    trámite se guarda como <strong>Creado</strong> y permanece en espera de ser turnado posteriormente.
+                </li>
+                <li>
+                    <strong>Turnado:</strong> El expediente ha sido entregado a un analista para su atención.<br>
+                    Este estatus se selecciona únicamente si se ha entregado el expediente al analista responsable al
+                    momento de crear el trámite.
+                </li>
+            </ul>
+            <p><strong>Nota:</strong> Si se selecciona un analista, pero el estatus elegido es “Creado”, el sistema no
+                enviará notificación y el trámite quedará en espera. Es importante asegurar que ambos campos sean
+                consistentes para evitar retrasos.</p>
+        </section>
+
+        <section class="manual-section">
+            <h2>Acciones Disponibles sobre Trámites en Estado “Creado”</h2>
+            <p>Una vez que un trámite ha sido registrado con estatus "Creado", este se visualizará en la tabla de
+                trámites
+                del operador, dentro del Panel de Tramites. Desde esta vista, el operador podrá realizar las siguientes
+                acciones sobre cada trámite:</p>
+            <ol>
+                <li><strong>Turnar:</strong> Permite asignar el trámite a un analista y actualizar su estado a
+                    “Turnado”.
+                    <p>Al hacer clic en el botón Turnar, se despliega un formulario donde se deben completar los
+                        siguientes
+                        campos:</p>
+                    <ul>
+                        <li>ID del Trámite: Se carga automáticamente.</li>
+                        <li>Nuevo Estatus: Se establece automáticamente como “Turnado”.</li>
+                        <li>Analista Turnado: Seleccionar el usuario que recibirá el trámite.</li>
+                        <li>Comentarios: Campo obligatorio para describir la instrucción o contexto del turnado.</li>
+                    </ul>
+                    <p>Una vez confirmado el envío, el trámite será asignado al analista y el sistema lo notificará para
+                        su
+                        atención.</p>
+                </li>
+                <li><strong>Modificar:</strong> Permite editar los campos del trámite en caso de que se haya producido
+                    un
+                    error durante la captura inicial.
+                    <p>Esta acción abre el formulario con la información previamente registrada, permitiendo al operador
+                        actualizar datos como:</p>
+                    <ul>
+                        <li>Institución, Proveedor, Concepto, Fondos</li>
+                        <li>Fechas, Documentos SAP, Remesa</li>
+                        <li>Datos de analista, comentarios y cualquier otro campo editable</li>
+                    </ul>
+                    <p>Se debe proporcionar un motivo de modificación antes de guardar los cambios.</p>
+                </li>
+                <li><strong>Eliminar (Disponible solo para usuarios con rol Administrador):</strong> Permite eliminar de
+                    forma definitiva el trámite de la base de datos.
+                    <p>Esta acción no está disponible para usuarios con rol operador o analista. Una vez ejecutada, el
+                        registro no podrá ser recuperado.</p>
+                </li>
+                <li><strong>Ver Comentario:</strong> Permite visualizar la bitácora de comentarios históricos del
+                    trámite.
+                    <p>Los comentarios se presentan en formato estructurado JSON e incluyen:</p>
+                    <ul>
+                        <li>ID del trámite</li>
+                        <li>Fecha del comentario</li>
+                        <li>Estatus en el que se encontraba</li>
+                        <li>Detalle textual del comentario</li>
+                    </ul>
+                    <p>Esta opción es útil para dar seguimiento a los cambios de estado y decisiones previas tomadas
+                        durante
+                        el flujo del trámite.</p>
+                </li>
+            </ol>
+
+            <div class="imagen">
+                <img src="./assets/images/manual/PT4.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
+
+            <h2>Seguimiento de Trámites por el Analista</h2>
+            <p>Una vez que un trámite ha sido turnado, se muestra en el módulo de Seguimiento de Trámites Turnados del
+                analista asignado.</p>
+            <h3>Vista Inicial</h3>
+            <p>Al acceder a su panel, el analista visualiza un resumen de estado a través de un semáforo de
+                vencimientos,
+                que agrupa los trámites turnados según su fecha límite:</p>
+            <ul>
+                <li>🔵 Trámites que vencen hoy</li>
+                <li>🔴 Trámites vencidos</li>
+                <li>🟢 Trámites por vencer</li>
+            </ul>
+            <p>Esta vista le permite priorizar su carga de trabajo de forma efectiva.</p>
+
+            <div class="imagen">
+                <img src="./assets/images/manual/PT9.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
+
+            <h3>Filtros Inteligentes</h3>
+            <p>El módulo incluye un conjunto de filtros avanzados que permiten consultar los trámites asignados por
+                diversos
+                criterios:</p>
+            <ul>
+                <li>Identificador Único</li>
+                <li>Estado</li>
+                <li>Mes</li>
+                <li>Tipo de Trámite</li>
+                <li>Institución</li>
+                <li>Proveedor</li>
+                <li>Concepto</li>
+                <li>Importe</li>
+                <li>Remesa</li>
+                <li>Documento SAP</li>
+                <li>Número de Trámite</li>
+                <li>Fechas de Recepción y Vencimiento</li>
+            </ul>
+            <p>Una vez seleccionados los criterios, se debe hacer clic en <em>Aplicar Filtros</em> para obtener los
+                resultados deseados.</p>
+
+            <h3>Acciones Disponibles</h3>
+            <p>En la tabla de resultados, cada trámite cuenta con las siguientes acciones:</p>
+            <ol>
+                <li><strong>Actualizar Estado</strong>
+                    <p>Esta acción permite al analista registrar el avance del expediente y actualizar su situación
+                        actual
+                        dentro del flujo de trabajo. Las opciones disponibles son:</p>
+                    <ul>
+                        <li><strong>Observaciones:</strong> El analista identifica errores u omisiones en el expediente,
+                            notifica a la institución y solicita correcciones.<br><em>Nota:</em> El expediente permanece
+                            en
+                            manos del analista.</li>
+                        <li><strong>Devuelto:</strong> El analista genera un volante de devolución y entrega el
+                            expediente
+                            físicamente al representante de la institución.</li>
+                        <li><strong>Registrado SAP:</strong> El analista realiza el registro del trámite en SAP,
+                            incluyendo
+                            el número de documento SAP e Integra SAP, y remite el expediente al operador para su
+                            seguimiento.</li>
+                        <li><strong>Juntas Auxiliares:</strong> Aplica a comprobaciones de gasto de juntas auxiliares.
+                            El
+                            analista valida el trámite y entrega el expediente al operador para continuar con el
+                            proceso.
+                        </li>
+                        <li><strong>Inspectoría:</strong> Aplica a comprobaciones de gasto de inspectorías. El analista
+                            valida el trámite y remite el expediente al operador para su procesamiento.</li>
+                    </ul>
+                    <p><strong>Importante:</strong> En los estados Observaciones y Devuelto, el sistema habilita un
+                        botón
+                        adicional para enviar una Tarjeta Informativa con la información clave del trámite y las
+                        observaciones registradas. (Este botón copia el contenido relevante para seguimiento
+                        interno)<br><em>Nota:</em> El analista debe regresar al sistema y guardar los cambios del
+                        trámite.
+                    </p>
+                </li>
+                <li><strong>Ver Comentarios</strong>
+                    <p>Esta opción muestra el historial completo de comentarios asociados al trámite, permitiendo al
+                        analista consultar acciones anteriores, fechas y observaciones registradas.</p>
+                </li>
+            </ol>
+
+            <div class="imagen">
+                <img src="./assets/images/manual/PT13.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+                <img src="./assets/images/manual/PT12.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
+
+            <h2>Ciclo de Vida del Trámite</h2>
+            <p>El sistema PagoTrack incorpora una lógica de transición automática entre estados, la cual permite
+                gestionar
+                el flujo de trabajo de forma ordenada y eficiente. A continuación, se describe el comportamiento del
+                sistema
+                en función del estado del trámite:</p>
+            <ul>
+                <li><strong>Observaciones:</strong> Cuando un analista actualiza el estado del trámite a Observaciones,
+                    se
+                    notifica a la institución para que realice las correcciones el mismo día.<br>Si la institución no
+                    resuelve las observaciones al finalizar el día, el trámite deberá ser actualizado manualmente a
+                    Devuelto
+                    y se deberá generar un volante de entrega dirigido a la dependencia correspondiente.</li>
+                <li><strong>Devuelto:</strong> Una vez que el estado ha sido actualizado a Devuelto, el expediente se
+                    considera entregado físicamente a la institución.<br>Si el trámite permanece en estado “Devuelto”
+                    por
+                    más de dos días, el sistema lo actualizará automáticamente a Rechazado.</li>
+                <li><strong>Rechazado:</strong> Los trámites en estado Rechazado representan expedientes que no
+                    cumplieron
+                    con los requisitos ni fueron corregidos a tiempo.<br>Al iniciar un nuevo mes, el sistema actualizará
+                    automáticamente estos trámites a estado Cancelado, indicando que deberán ser reintegrados como
+                    nuevos
+                    registros si aún se requiere su procesamiento.</li>
+                <li><strong>Estados de Éxito:</strong>
+                    <ul>
+                        <li>Registrado SAP</li>
+                        <li>Juntas Auxiliares</li>
+                        <li>Inspectoría</li>
+                    </ul>
+                    <p>Cuando el analista selecciona alguno de estos estados, se considera que el trámite fue revisado
+                        exitosamente y el expediente ha sido entregado al operador.<br>El sistema lo descontabiliza
+                        automáticamente del semáforo de seguimiento del analista.</p>
+                </li>
+            </ul>
+        </section>
+
+        <div class="section">
+            <h3>Asignación de Remesa y visibilidad para el Operador</h3>
+            <p>Cuando un analista actualiza el estado del trámite a Registrado SAP, el expediente pasa automáticamente a
+                estar visible nuevamente en el Panel de Tramites del operador.</p>
+            <p>En esta etapa, el trámite se considera revisado y validado, por lo que se habilita una nueva acción en el
+                sistema:</p>
+            <p><strong>Botón: Asignar Remesa</strong></p>
+            <p>Esta funcionalidad permite al operador asignar un número de Remesa a los trámites validados, agrupándolos
+                para su gestión contable y seguimiento administrativo.</p>
+            <p><strong>Procedimiento</strong></p>
+            <ol>
+                <li>Desde la tabla de trámites, el operador deberá hacer clic en el botón Crear Remesa.</li>
+                <li>El sistema mostrará un formulario con los siguientes campos:
+                    <ul>
+                        <li>ID del Trámite: Campo precargado de solo lectura.</li>
+                        <li>Número de Remesa: Ingresar el código de remesa correspondiente (ejemplo: 270325-84-1).</li>
+                        <li>Comentarios: (Opcional) Breve justificación o nota relacionada a la remesa.</li>
+                    </ul>
+                </li>
+                <li>Una vez completada la información, presionar el botón Asignar Remesa.</li>
+            </ol>
+            <p>El sistema actualizará el registro y mostrará el número de remesa asignado directamente en la tabla de
+                trámites.</p>
+            <p><strong>Consideraciones</strong></p>
+            <ul>
+                <li>Todos los trámites con estatus Remesa ya no aparecerán en la sección de trámites pendientes del
+                    analista.</li>
+                <li>El número de remesa permite agrupar múltiples expedientes bajo una misma clave para su seguimiento
+                    financiero.</li>
+                <li>Esta acción también estará disponible para edición en caso de que se detecte un error, a través del
+                    botón Modificar.</li>
+            </ul>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT15.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+                <img src="./assets/images/manual/PT16.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
         </div>
 
-        <h3>Filtros Inteligentes</h3>
-        <p>El módulo incluye un conjunto de filtros avanzados que permiten consultar los trámites asignados por diversos
-            criterios:</p>
-        <ul>
-            <li>Identificador Único</li>
-            <li>Estado</li>
-            <li>Mes</li>
-            <li>Tipo de Trámite</li>
-            <li>Institución</li>
-            <li>Proveedor</li>
-            <li>Concepto</li>
-            <li>Importe</li>
-            <li>Remesa</li>
-            <li>Documento SAP</li>
-            <li>Número de Trámite</li>
-            <li>Fechas de Recepción y Vencimiento</li>
-        </ul>
-        <p>Una vez seleccionados los criterios, se debe hacer clic en <em>Aplicar Filtros</em> para obtener los
-            resultados deseados.</p>
+        <div class="section">
+            <h3>Gestión de Remesas</h3>
+            <p>Una vez que un trámite ha sido asignado a una remesa, el operador puede acceder al módulo "Remesas" desde
+                el
+                menú superior en la opción Trámite → Remesas.</p>
+            <p>En esta vista, se listan todas las remesas creadas, agrupando los trámites registrados bajo el mismo
+                número
+                de remesa.</p>
 
-        <h3>Acciones Disponibles</h3>
-        <p>En la tabla de resultados, cada trámite cuenta con las siguientes acciones:</p>
-        <ol>
-            <li><strong>Actualizar Estado</strong>
-                <p>Esta acción permite al analista registrar el avance del expediente y actualizar su situación actual
-                    dentro del flujo de trabajo. Las opciones disponibles son:</p>
-                <ul>
-                    <li><strong>Observaciones:</strong> El analista identifica errores u omisiones en el expediente,
-                        notifica a la institución y solicita correcciones.<br><em>Nota:</em> El expediente permanece en
-                        manos del analista.</li>
-                    <li><strong>Devuelto:</strong> El analista genera un volante de devolución y entrega el expediente
-                        físicamente al representante de la institución.</li>
-                    <li><strong>Registrado SAP:</strong> El analista realiza el registro del trámite en SAP, incluyendo
-                        el número de documento SAP e Integra SAP, y remite el expediente al operador para su
-                        seguimiento.</li>
-                    <li><strong>Juntas Auxiliares:</strong> Aplica a comprobaciones de gasto de juntas auxiliares. El
-                        analista valida el trámite y entrega el expediente al operador para continuar con el proceso.
-                    </li>
-                    <li><strong>Inspectoría:</strong> Aplica a comprobaciones de gasto de inspectorías. El analista
-                        valida el trámite y remite el expediente al operador para su procesamiento.</li>
-                </ul>
-                <p><strong>Importante:</strong> En los estados Observaciones y Devuelto, el sistema habilita un botón
-                    adicional para enviar una Tarjeta Informativa con la información clave del trámite y las
-                    observaciones registradas. (Este botón copia el contenido relevante para seguimiento
-                    interno)<br><em>Nota:</em> El analista debe regresar al sistema y guardar los cambios del trámite.
-                </p>
-            </li>
-            <li><strong>Ver Comentarios</strong>
-                <p>Esta opción muestra el historial completo de comentarios asociados al trámite, permitiendo al
-                    analista consultar acciones anteriores, fechas y observaciones registradas.</p>
-            </li>
-        </ol>
+            <h4>Estructura de la Vista</h4>
+            <ul>
+                <li>Número de Remesa</li>
+                <li>Cantidad de Trámites Asociados</li>
+                <li>Acciones Disponibles:
+                    <ul>
+                        <li>Configurar</li>
+                        <li>Imprimir</li>
+                        <li>Aprobar Remesa</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT20.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
 
-        <div class="imagen">
-            <img src="./assets/images/manual/PT13.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-            <img src="./assets/images/manual/PT12.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
+            <h4>Funcionalidades de Remesa</h4>
+            <h5>1. Configurar</h5>
+            <p>Esta acción es obligatoria y el primer paso para trabajar con una remesa.</p>
+            <p>Al hacer clic por primera vez en el botón Configurar, el sistema crea internamente el registro de remesa
+                en
+                la base de datos y muestra una alerta de confirmación: "Remesa creada correctamente".</p>
+            <p>Al hacer clic nuevamente, se abrirá un formulario con los siguientes campos para su configuración:</p>
+            <table>
+                <tr>
+                    <th>Campo</th>
+                    <th>Descripción</th>
+                </tr>
+                <tr>
+                    <td>Identificador de la Remesa</td>
+                    <td>Generado automáticamente por el sistema</td>
+                </tr>
+                <tr>
+                    <td>Departamento Responsable</td>
+                    <td>Seleccionar entre "GLOSA", "Presupuesto", u "Órdenes de Pago"</td>
+                </tr>
+                <tr>
+                    <td>Fecha de Remesa</td>
+                    <td>Fecha oficial de creación de la remesa</td>
+                </tr>
+                <tr>
+                    <td>Número de Remesa</td>
+                    <td>Clave de remesa asignada previamente (ej. 270325-889)</td>
+                </tr>
+                <tr>
+                    <td>Fecha de Pago Límite</td>
+                    <td>Fecha en la que debe liquidarse la remesa</td>
+                </tr>
+                <tr>
+                    <td>Estatus</td>
+                    <td>Estado de la remesa: Pendiente, Aprobada, Pagada, Rechazada, Cancelada</td>
+                </tr>
+                <tr>
+                    <td>Comentarios</td>
+                    <td>Observaciones relevantes. Este campo será visible al imprimir la remesa</td>
+                </tr>
+            </table>
+            <p>Una vez completado el formulario, hacer clic en Actualizar Remesa para guardar los datos. La
+                configuración de
+                remesa es requisito obligatorio para habilitar las funciones de Imprimir y Aprobar Remesa.</p>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT21.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
+
+            <h5>2. Imprimir</h5>
+            <p>Al presionar este botón, el sistema genera un formato de impresión oficial de la remesa, consolidando
+                todos
+                los trámites asociados al número de remesa. El documento incluye:</p>
+            <ul>
+                <li>Encabezado con fecha y número de remesa</li>
+                <li>Tabla detallada por trámite (ID, SAP, Integra, Institución, Proveedor, Importe, etc.)</li>
+                <li>Observaciones desde la configuración</li>
+                <li>Espacios de firma: Revisión, Validación y Recepción</li>
+            </ul>
+            <p>Este documento puede ser descargado e impreso para gestión física y respaldo documental.</p>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT22.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
+
+            <h5>3. Aprobar Remesa</h5>
+            <p>Este botón está destinado al coordinador o responsable final. Cuando el expediente físico y la validación
+                en
+                SAP han sido revisados y confirmados, se procede a aprobar la remesa. Una vez aprobada:</p>
+            <ul>
+                <li>El estado del trámite cambia a RemesaAprobada</li>
+                <li>El expediente avanza a la etapa final de pago</li>
+                <li>Ya no podrá ser modificado por el operador</li>
+            </ul>
+            <div class="imagen">
+                <img src="./assets/images/manual/PT23.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+                <img src="./assets/images/manual/PT24.png" alt="Consideraciones sobre el Estatus del Trámite"
+                    width="60%">
+            </div>
         </div>
+    </main>
 
-        <h2>Ciclo de Vida del Trámite</h2>
-        <p>El sistema PagoTrack incorpora una lógica de transición automática entre estados, la cual permite gestionar
-            el flujo de trabajo de forma ordenada y eficiente. A continuación, se describe el comportamiento del sistema
-            en función del estado del trámite:</p>
-        <ul>
-            <li><strong>Observaciones:</strong> Cuando un analista actualiza el estado del trámite a Observaciones, se
-                notifica a la institución para que realice las correcciones el mismo día.<br>Si la institución no
-                resuelve las observaciones al finalizar el día, el trámite deberá ser actualizado manualmente a Devuelto
-                y se deberá generar un volante de entrega dirigido a la dependencia correspondiente.</li>
-            <li><strong>Devuelto:</strong> Una vez que el estado ha sido actualizado a Devuelto, el expediente se
-                considera entregado físicamente a la institución.<br>Si el trámite permanece en estado “Devuelto” por
-                más de dos días, el sistema lo actualizará automáticamente a Rechazado.</li>
-            <li><strong>Rechazado:</strong> Los trámites en estado Rechazado representan expedientes que no cumplieron
-                con los requisitos ni fueron corregidos a tiempo.<br>Al iniciar un nuevo mes, el sistema actualizará
-                automáticamente estos trámites a estado Cancelado, indicando que deberán ser reintegrados como nuevos
-                registros si aún se requiere su procesamiento.</li>
-            <li><strong>Estados de Éxito:</strong>
-                <ul>
-                    <li>Registrado SAP</li>
-                    <li>Juntas Auxiliares</li>
-                    <li>Inspectoría</li>
-                </ul>
-                <p>Cuando el analista selecciona alguno de estos estados, se considera que el trámite fue revisado
-                    exitosamente y el expediente ha sido entregado al operador.<br>El sistema lo descontabiliza
-                    automáticamente del semáforo de seguimiento del analista.</p>
-            </li>
-        </ul>
-    </section>
-
-    <div class="section">
-        <h3>Asignación de Remesa y visibilidad para el Operador</h3>
-        <p>Cuando un analista actualiza el estado del trámite a Registrado SAP, el expediente pasa automáticamente a
-            estar visible nuevamente en el Panel de Tramites del operador.</p>
-        <p>En esta etapa, el trámite se considera revisado y validado, por lo que se habilita una nueva acción en el
-            sistema:</p>
-        <p><strong>Botón: Asignar Remesa</strong></p>
-        <p>Esta funcionalidad permite al operador asignar un número de Remesa a los trámites validados, agrupándolos
-            para su gestión contable y seguimiento administrativo.</p>
-        <p><strong>Procedimiento</strong></p>
-        <ol>
-            <li>Desde la tabla de trámites, el operador deberá hacer clic en el botón Crear Remesa.</li>
-            <li>El sistema mostrará un formulario con los siguientes campos:
-                <ul>
-                    <li>ID del Trámite: Campo precargado de solo lectura.</li>
-                    <li>Número de Remesa: Ingresar el código de remesa correspondiente (ejemplo: 270325-84-1).</li>
-                    <li>Comentarios: (Opcional) Breve justificación o nota relacionada a la remesa.</li>
-                </ul>
-            </li>
-            <li>Una vez completada la información, presionar el botón Asignar Remesa.</li>
-        </ol>
-        <p>El sistema actualizará el registro y mostrará el número de remesa asignado directamente en la tabla de
-            trámites.</p>
-        <p><strong>Consideraciones</strong></p>
-        <ul>
-            <li>Todos los trámites con estatus Remesa ya no aparecerán en la sección de trámites pendientes del
-                analista.</li>
-            <li>El número de remesa permite agrupar múltiples expedientes bajo una misma clave para su seguimiento
-                financiero.</li>
-            <li>Esta acción también estará disponible para edición en caso de que se detecte un error, a través del
-                botón Modificar.</li>
-        </ul>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT15.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-            <img src="./assets/images/manual/PT16.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Gestión de Remesas</h3>
-        <p>Una vez que un trámite ha sido asignado a una remesa, el operador puede acceder al módulo "Remesas" desde el
-            menú superior en la opción Trámite → Remesas.</p>
-        <p>En esta vista, se listan todas las remesas creadas, agrupando los trámites registrados bajo el mismo número
-            de remesa.</p>
-
-        <h4>Estructura de la Vista</h4>
-        <ul>
-            <li>Número de Remesa</li>
-            <li>Cantidad de Trámites Asociados</li>
-            <li>Acciones Disponibles:
-                <ul>
-                    <li>Configurar</li>
-                    <li>Imprimir</li>
-                    <li>Aprobar Remesa</li>
-                </ul>
-            </li>
-        </ul>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT20.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-        </div>
-
-        <h4>Funcionalidades de Remesa</h4>
-        <h5>1. Configurar</h5>
-        <p>Esta acción es obligatoria y el primer paso para trabajar con una remesa.</p>
-        <p>Al hacer clic por primera vez en el botón Configurar, el sistema crea internamente el registro de remesa en
-            la base de datos y muestra una alerta de confirmación: "Remesa creada correctamente".</p>
-        <p>Al hacer clic nuevamente, se abrirá un formulario con los siguientes campos para su configuración:</p>
-        <table>
-            <tr>
-                <th>Campo</th>
-                <th>Descripción</th>
-            </tr>
-            <tr>
-                <td>Identificador de la Remesa</td>
-                <td>Generado automáticamente por el sistema</td>
-            </tr>
-            <tr>
-                <td>Departamento Responsable</td>
-                <td>Seleccionar entre "GLOSA", "Presupuesto", u "Órdenes de Pago"</td>
-            </tr>
-            <tr>
-                <td>Fecha de Remesa</td>
-                <td>Fecha oficial de creación de la remesa</td>
-            </tr>
-            <tr>
-                <td>Número de Remesa</td>
-                <td>Clave de remesa asignada previamente (ej. 270325-889)</td>
-            </tr>
-            <tr>
-                <td>Fecha de Pago Límite</td>
-                <td>Fecha en la que debe liquidarse la remesa</td>
-            </tr>
-            <tr>
-                <td>Estatus</td>
-                <td>Estado de la remesa: Pendiente, Aprobada, Pagada, Rechazada, Cancelada</td>
-            </tr>
-            <tr>
-                <td>Comentarios</td>
-                <td>Observaciones relevantes. Este campo será visible al imprimir la remesa</td>
-            </tr>
-        </table>
-        <p>Una vez completado el formulario, hacer clic en Actualizar Remesa para guardar los datos. La configuración de
-            remesa es requisito obligatorio para habilitar las funciones de Imprimir y Aprobar Remesa.</p>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT21.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-        </div>
-
-        <h5>2. Imprimir</h5>
-        <p>Al presionar este botón, el sistema genera un formato de impresión oficial de la remesa, consolidando todos
-            los trámites asociados al número de remesa. El documento incluye:</p>
-        <ul>
-            <li>Encabezado con fecha y número de remesa</li>
-            <li>Tabla detallada por trámite (ID, SAP, Integra, Institución, Proveedor, Importe, etc.)</li>
-            <li>Observaciones desde la configuración</li>
-            <li>Espacios de firma: Revisión, Validación y Recepción</li>
-        </ul>
-        <p>Este documento puede ser descargado e impreso para gestión física y respaldo documental.</p>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT22.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-        </div>
-
-        <h5>3. Aprobar Remesa</h5>
-        <p>Este botón está destinado al coordinador o responsable final. Cuando el expediente físico y la validación en
-            SAP han sido revisados y confirmados, se procede a aprobar la remesa. Una vez aprobada:</p>
-        <ul>
-            <li>El estado del trámite cambia a RemesaAprobada</li>
-            <li>El expediente avanza a la etapa final de pago</li>
-            <li>Ya no podrá ser modificado por el operador</li>
-        </ul>
-        <div class="imagen">
-            <img src="./assets/images/manual/PT23.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-            <img src="./assets/images/manual/PT24.png" alt="Consideraciones sobre el Estatus del Trámite" width="60%">
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <footer>
+        <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
+    </footer>
 </body>
 
 </html>

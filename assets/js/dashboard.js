@@ -544,7 +544,16 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="editarTramite('${data.ID_CONTRATO}', '${data.Proveedor}', '${data.Concepto}', '${data.Importe}', '${data.FechaLimite}', '${data.FechaRecepcion}', '${data.Dependencia}', '${data.NombreUser} ${data.ApellidoUser}')">Actualizar Estado</button> `;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="editarTramite(
+                            decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Concepto)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Importe)}'),
+                            decodeURIComponent('${encodeURIComponent(data.FechaLimite)}'),
+                            decodeURIComponent('${encodeURIComponent(data.FechaRecepcion)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Dependencia)}'),
+                            decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}')
+                        )">Actualizar Estado</button>`;
                     }
                     botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
                     return botones;

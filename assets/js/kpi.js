@@ -182,26 +182,35 @@ function rellenarTabla(tableId, tramites) {
 }
 //Funcion para mostrar el comentario en el modal
 function mostrarComentario(comentario) {
-    // Decodificar el comentario
-    var comentarioDecoded = decodeURIComponent(comentario);
+    const comentarioDecoded = decodeURIComponent(comentario);
+    let htmlContenido = '';
 
     try {
-        // Intentar convertir el comentario a formato JSON con indentación
-        var comentarioJson = JSON.parse(comentarioDecoded);
+        const comentarios = JSON.parse(comentarioDecoded);
 
-        // Si existe el campo "Comentario", aplicar saltos de línea automáticos
-        if (comentarioJson.Comentario) {
-            comentarioJson.Comentario = comentarioJson.Comentario.replace(/(.{50})/g, "$1\n");
+        if (Array.isArray(comentarios)) {
+            htmlContenido = comentarios.map(entry => `
+                <div class="comentario-card mb-3 p-3 border rounded shadow-sm">
+                    <div><strong># Contrato:</strong> ${entry.ID_CONTRATO || 'N/A'}</div>
+                    <div><strong>Fecha:</strong> ${entry.Fecha || 'N/A'}</div>
+                    <div><strong>Estatus:</strong> ${entry.Estatus || 'N/A'}</div>
+                    <div><strong>Modificado_Por:</strong> ${entry.Modificado_Por || 'N/A'}</div>
+                    <div><strong>Comentario:</strong><br><div class="comentario-texto">${entry.Comentario || 'Sin comentario'}</div></div>
+                </div>
+            `).join('');
+        } else {
+            htmlContenido = `
+                <div class="comentario-card p-3 border rounded shadow-sm">
+                    <div><strong>Comentario:</strong><br><div class="comentario-texto">${comentarios.Comentario || comentarioDecoded}</div></div>
+                </div>
+            `;
         }
-
-        // Convertir nuevamente a JSON con formato
-        comentarioDecoded = JSON.stringify(comentarioJson, null, 4);
     } catch (e) {
         console.error('El comentario no es un JSON válido:', e);
+        htmlContenido = `<div class="alert alert-warning">El formato del comentario no es válido.</div>`;
     }
 
-    // Mostrar el comentario en el modal con formato adecuado
-    $('#comentarioModal .modal-body').html('<pre style="white-space: pre-wrap; word-wrap: break-word;">' + comentarioDecoded + '</pre>');
+    $('#comentarioModal .modal-body').html(htmlContenido);
     $('#comentarioModal').modal('show');
 }
 // Generar resumen con ChatGPT

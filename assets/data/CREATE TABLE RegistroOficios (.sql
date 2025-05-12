@@ -14,7 +14,7 @@ CREATE TABLE RegistroOficios (
         'Disposiciones',
         'Disposiciones y Reasignaciones',
         'Reducciones',
-        'Resignación',
+        'Reasignación',
         'Lic Romay',
         'Transparencia',
         'Multi Anuales',

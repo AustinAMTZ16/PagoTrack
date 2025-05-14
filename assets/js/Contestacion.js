@@ -93,7 +93,7 @@ async function listarContestaciones() {
     let jsonContestaciones = await resContestaciones.json();
     // Guardar respuesta en variable global
     dataContestaciones = jsonContestaciones.data;
-    console.log('Contestaciones: ', dataContestaciones);
+    // console.log('Contestaciones: ', dataContestaciones);
 }
 // Función para llenar la tabla de contestaciones
 function llenarTablaContestaciones(data, tableId) {

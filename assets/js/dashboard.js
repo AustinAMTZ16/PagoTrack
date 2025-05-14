@@ -69,19 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fechaVencimiento: ''
         };
         filtrarTramites(filtrosIniciales);
-
-        /* 
-        // Listener para capturar el cambio de selección
-        estadoSelect.addEventListener("change", function () {
-            const selectedValue = estadoSelect.value; // Obtiene el valor seleccionado
-            if (selectedValue) {
-                // Llama a la función con el valor seleccionado
-            } else if (selectedValue === 'Todos') {
-                //console.log('Todos');
-                //actualizarTablaTramites(tramitesArray, "tableTramites"); 
-                filtrarTramitesOperador();
-            }
-        }); */
     }
     // Valida si existe la tabla de seguimiento de trámites por analista
     if (tramitesTableJS) {
@@ -265,7 +252,7 @@ function getSeguimientoTramites() {
             return await response.json();
         })
         .then(result => {
-            console.log('Result:', result);
+            // console.log('Result:', result);
             // Renderizar la tabla
             renderTable(result.data);
         })
@@ -941,73 +928,6 @@ function modificarTramite(id) {
 // Funcion para obtener KPI'S  Total Hoy, Total Vencidos, Total a vencer
 function obtenerSemaforoTurnado(tramitesTurnados) {
     // console.log('Trámites Turnados:', tramitesTurnados);
-    // // Obtener la fecha actual en formato YYYY-MM-DD
-    // const hoy = new Date();
-    // const fechaActual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
-
-    // //console.log('Fecha actual:', fechaActual); // Ejemplo: "2025-03-06"
-
-    // // Obtener el total de trámites
-    // const totalTramites = tramitesTurnados.length;
-    // //console.log('Total de trámites:', totalTramites);
-
-    // // Lista de estatus válidos
-    // const estatusValidos = ['Turnado', 'Devuelto', 'DevueltoOrdenPago'];
-
-    // // Trámites que vencen hoy
-    // const tramitesHoy = tramitesTurnados.filter(tramite =>
-    //     estatusValidos.includes(tramite.Estatus) &&
-    //     obtenerFechaSinHora(tramite.FechaLimite) === fechaActual
-    // );
-    // const idsHoy = tramitesHoy.map(tramite => tramite.ID_CONTRATO);
-    // console.log('Trámites Hoy:', idsHoy);
-    // //console.log('Total de trámites en estado Turnado, Devuelto o DevueltoOrdenPago que vencen hoy:', idsHoy.length, idsHoy);
-    // document.getElementById('total_hoy').textContent = idsHoy.length || 0;
-
-    // // Trámites vencidos (FechaLimite < fecha actual)
-    // const tramitesVencidos = tramitesTurnados.filter(tramite =>
-    //     estatusValidos.includes(tramite.Estatus) &&
-    //     obtenerFechaSinHora(tramite.FechaLimite) < fechaActual
-    // );
-    // const idsVencidos = tramitesVencidos.map(tramite => tramite.ID_CONTRATO);
-    // //console.log('Total de trámites vencidos:', idsVencidos.length, idsVencidos);
-    // document.getElementById('total_vencidos').textContent = idsVencidos.length || 0;
-
-    // // Trámites a vencer (FechaLimite > fecha actual)
-    // const tramitesFuturos = tramitesTurnados.filter(tramite =>
-    //     estatusValidos.includes(tramite.Estatus) &&
-    //     obtenerFechaSinHora(tramite.FechaLimite) > fechaActual
-    // );
-    // const idsFuturos = tramitesFuturos.map(tramite => tramite.ID_CONTRATO);
-    // //console.log('Total de trámites a vencer:', idsFuturos.length, idsFuturos);
-    // document.getElementById('total_futuros').textContent = idsFuturos.length || 0;
-
-
-
-
-    // // Trámites que vencen hoy - Detalle
-    // console.log('===== DETALLE TRÁMITES QUE VENCEN HOY =====');
-    // tramitesHoy.forEach(t => {
-    //     console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
-    // });
-
-    // // Trámites vencidos - Detalle
-    // console.log('===== DETALLE TRÁMITES VENCIDOS =====');
-    // tramitesVencidos.forEach(t => {
-    //     console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
-    // });
-
-    // // Trámites a vencer - Detalle
-    // console.log('===== DETALLE TRÁMITES A VENCER =====');
-    // tramitesFuturos.forEach(t => {
-    //     console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
-    // });
-
-
-
-
-
-    console.log('Trámites Turnados:', tramitesTurnados);
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
     const estatusValidos = ['Turnado', 'Devuelto', 'DevueltoOrdenPago'];
@@ -1032,19 +952,19 @@ function obtenerSemaforoTurnado(tramitesTurnados) {
     document.getElementById('total_futuros').textContent = tramitesFuturos.length || 0;
 
     // Mostrar en consola
-    console.log('===== DETALLE TRÁMITES QUE VENCEN HOY =====');
+    // console.log('===== DETALLE TRÁMITES QUE VENCEN HOY =====');
     tramitesHoy.forEach(t => {
-        console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+        // console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
     });
 
-    console.log('===== DETALLE TRÁMITES VENCIDOS =====');
+    // console.log('===== DETALLE TRÁMITES VENCIDOS =====');
     tramitesVencidos.forEach(t => {
-        console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+        // console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
     });
 
-    console.log('===== DETALLE TRÁMITES A VENCER =====');
+    // console.log('===== DETALLE TRÁMITES A VENCER =====');
     tramitesFuturos.forEach(t => {
-        console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
+        // console.log(`${t.NoTramite} | ${t.TipoTramite} | ${t.Dependencia} | ${t.Proveedor} | ${t.Concepto} | $${t.Importe}`);
     });
 
     // Eventos de clic para mostrar modales
@@ -1327,8 +1247,8 @@ function showTramitesModal(titulo, tramites) {
                                 </thead>
                                 <tbody>
                                         ${tramites.map(tramite => {
-                                            const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
-                                            return `
+        const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
+        return `
                                                 <tr>
                                                     <td>${tramite.ID_CONTRATO || 'N/A'}</td>
                                                     <td>${tramite.TipoTramite || 'N/A'}</td>

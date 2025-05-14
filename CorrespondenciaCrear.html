@@ -39,23 +39,23 @@
 
     <main class="container py-4">
         <h2 class="mb-4">Crear Oficio</h2>
-        <form id="formCrearOficios" method="POST">
+        <form id="formCrearOficios" method="POST" enctype="multipart/form-data">
             <div class="row g-3">
                 <!-- Folio -->
                 <div class="col-md-6">
                     <label for="Folio" class="form-label">Folio</label>
-                    <input type="text" class="form-control" id="Folio" name="Folio" placeholder="ddmmyy-nn">
+                    <input type="text" class="form-control" id="Folio" name="Folio" placeholder="ddmmyy-nn" required>
                 </div>
                 <!-- Fecha de Recepción -->
                 <div class="col-md-6">
                     <label for="FechaRecepcion" class="form-label">Fecha de Recepción</label>
-                    <input type="datetime-local" class="form-control" id="FechaRecepcion" name="FechaRecepcion">
+                    <input type="datetime-local" class="form-control" id="FechaRecepcion" name="FechaRecepcion" required>
                 </div>
                 <!-- Solicitante -->
                 <div class="col-md-6">
                     <label for="Solicitante" class="form-label">Solicitante</label>
                     <input type="text" class="form-control" id="Solicitante" name="Solicitante"
-                        placeholder="Nombre del Solicitante">
+                        placeholder="Nombre del Solicitante" required>
                 </div>
                 <!-- Dependencia -->
                 <div class="col-md-6">
@@ -111,13 +111,14 @@
                         <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
 
                         <!--Estatales-->
-                        <option value="Secretaría de Planeación, Finanzas y Administración">Secretaría de Planeación, Finanzas y Administración</option>
+                        <option value="Secretaría de Planeación, Finanzas y Administración">Secretaría de Planeación,
+                            Finanzas y Administración</option>
                     </select>
                 </div>
                 <!-- Departamento -->
                 <div class="col-md-6">
                     <label for="Departamento" class="form-label">Departamento</label>
-                    <select class="form-select" id="Departamento" name="Departamento">
+                    <select class="form-select" id="Departamento" name="Departamento" required>
                         <option value="">Seleccione el Departamento</option>
                         <option value="Direccion_Egresos_Control_Presupuestal">Dirección de Egresos y Control
                             Presupuestal</option>
@@ -131,12 +132,12 @@
                 <div class="col-md-6">
                     <label for="NumeroOficio" class="form-label">Número de Oficio</label>
                     <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio"
-                        placeholder="OF-2025-010">
+                        placeholder="OF-2025-010" required>
                 </div>
                 <!-- Tipo de Oficio -->
                 <div class="col-md-6">
                     <label for="tipoOficio" class="form-label">Tipo de Oficio</label>
-                    <select class="form-select" id="tipoOficio" name="tipoOficio">
+                    <select class="form-select" id="tipoOficio" name="tipoOficio" required>
                         <option value="">Seleccione el Tipo de Oficio</option>
                         <option value="Regularizacion">Regularización</option>
                         <option value="Suficiencia_Presupuestal">Suficiencia Presupuestal</option>
@@ -165,29 +166,29 @@
                 <!-- Asunto -->
                 <div class="col-md-6">
                     <label for="Asunto" class="form-label">Asunto</label>
-                    <input type="text" class="form-control" id="Asunto" name="Asunto" placeholder="Asunto del Oficio">
+                    <input type="text" class="form-control" id="Asunto" name="Asunto" placeholder="Asunto del Oficio" required>
                 </div>
                 <!-- Concepto -->
                 <div class="col-12">
                     <label for="Concepto" class="form-label">Concepto</label>
                     <textarea class="form-control" id="Concepto" name="Concepto" rows="3"
-                        placeholder="Concepto del Oficio"></textarea>
+                        placeholder="Concepto del Oficio" required></textarea>
                 </div>
                 <!-- Monto -->
                 <div class="col-md-6">
                     <label for="Monto" class="form-label">Monto</label>
                     <input type="number" step="0.01" class="form-control" id="Monto" name="Monto"
-                        placeholder="Monto del Oficio Ejemplo: 1000000.00">
+                        placeholder="Monto del Oficio Ejemplo: 1000000.00" required>
                 </div>
                 <!-- Fecha de Vencimiento -->
                 <div class="col-md-6">
                     <label for="FechaVencimiento" class="form-label">Fecha de Vencimiento</label>
-                    <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento">
+                    <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento" required>
                 </div>
                 <!-- Turnado A -->
                 <div class="col-md-6">
                     <label for="Turnado" class="form-label">Turnado A</label>
-                    <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required class="form-select">
+                    <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required class="form-select" required>
                         <option value="" disabled selected>Seleccione el Analista</option>
                         <option value="36">Leobardo Armenta Suárez</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
@@ -223,33 +224,25 @@
                         <option value="27">Gisela González Martínez</option>
                         <option value="25">Alejandra Rojas Hernández</option>
                         <option value="26">Arnulfo Sánchez Mora</option>
+                        <option value="37">Dora Maria Torres Herrera</option>
                     </select>
                 </div>
                 <!-- Fecha Retroactiva -->
                 <div class="col-md-6">
                     <label for="FechaRetroactiva" class="form-label">Fecha Retroactiva</label>
-                    <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva">
+                    <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva" required>
                 </div>
                 <!-- Estado -->
                 <div class="col-md-6">
                     <label for="Estado" class="form-label">Estado del Oficio</label>
-                    <select class="form-select" id="Estado" name="Estado">
+                    <select class="form-select" id="Estado" name="Estado" readonly>
                         <option value="CREADO" selected>CREADO</option>
-                        <option value="TURNADO">TURNADO</option>
-                        <option value="OBSERVACIONES">OBSERVACIONES</option>
-                        <option value="DEVUELTO">DEVUELTO</option>
-                        <option value="FIRMA-DG">FIRMA POR DIRECTORA TESORERIA</option>
-                        <option value="ESCANEO-FIRMAS">ESCANEO DE FIRMAS</option>
-                        <option value="ACUSE">ACUSE</option>
-                        <option value="ESCANEO-SELLOS">ESCANEO DE SELLOS</option>
-                        <option value="ARCHIVADO">ARCHIVADO</option>
-                        <option value="CANCELADO">CANCELADO</option>
                     </select>
                 </div>
                 <!-- UsuarioRegistro -->
                 <div class="col-md-6">
                     <label for="UsuarioRegistro" class="form-label">Usuario que registra</label>
-                    <select name="UsuarioRegistro" id="UsuarioRegistro" placeholder="Usuario" class="form-select">
+                    <select name="UsuarioRegistro" id="UsuarioRegistro" placeholder="Usuario" class="form-select" required>
                         <option value="" disabled selected>Seleccione el Usuario</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
                         <option value="35">Eugenia Bermejo García</option>
@@ -259,7 +252,12 @@
                 <div class="col-12">
                     <label for="Comentarios" class="form-label">Comentarios</label>
                     <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2"
-                        placeholder="Comentarios del Oficio"></textarea>
+                        placeholder="Comentarios del Oficio" required></textarea>
+                </div>
+                <!--Input para subir el archivo-->
+                <div class="col-12">
+                    <label for="ArchivoScaneado">Archivo</label>
+                    <input type="file" class="form-control" id="Archivo" name="Archivo" placeholder="Archivo" required>
                 </div>
 
                 <div class="col-12 d-flex justify-content-between">

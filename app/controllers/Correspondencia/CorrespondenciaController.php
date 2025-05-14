@@ -26,6 +26,10 @@ class CorrespondenciaController {
 
     public function actualizarOficioArchivo($data, $archivos){
         return $this->model->actualizarOficioArchivo($data, $archivos);
-    }   
+    }  
+    
+    public function crearOficioArchivo($data, $Archivo){
+        return $this->model->crearOficioArchivo($data, $Archivo);
+    }
 }   
 ?>

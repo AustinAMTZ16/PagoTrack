@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oficios Panel Analista</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
@@ -24,6 +23,8 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <!-- QRCode Generator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Descarga de EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <!-- Estilos Personalizados  lugar si importa-->
     <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
 </head>
@@ -39,12 +40,16 @@
 
     <main>
         <div class="contenedor">
-            <div class="table-container">
+            <div class="table-responsive">
                 <h1>Listado de Oficios</h1>
                 <button id="descargarExcelOficiosAnalista" class="btn btn-primary toggleButton">Descargar Excel</button>
-                <table id="tableOficiosAnalista" class="display">
+                <table id="tableOficiosAnalista" class="table table-bordered table-hover display nowrap"
+                    style="width:100%">
                     <thead>
                         <tr>
+                            <th>Acciones</th>
+                            <th>Comentarios</th>
+                            <th>ArchivoScaneado</th>
                             <th>ID</th>
                             <th>Folio</th>
                             <th>FechaRecepcion</th>
@@ -63,8 +68,6 @@
                             <th>Estado</th>
                             <th>FechaCreacion</th>
                             <th>UsuarioRegistro</th>
-                            <th>Comentarios</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,6 +78,20 @@
         </div>
     </main>
 
+    <!-- Modal para mostrar el comentario completo -->
+    <div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="comentarioModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="comentarioModalLabel">Comentario Completo</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- El comentario completo se insertará aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>

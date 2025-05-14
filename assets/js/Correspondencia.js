@@ -19,11 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
         formCrearOficios.addEventListener("submit", function (e) {
             e.preventDefault(); // ✅ evita el envío automático
             const formData = new FormData(formCrearOficios);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-            crearOficio(data);
+            // ⚠️ Interrumpir si la validación falla
+            const esValido = validarArchivoPDF("formOficioAnalistaScaneoFirmas", "Archivo");
+            if (!esValido) return;
+            crearOficioArchivo(formData);
+            setTimeout(() => {
+                window.location.href = "CorrespondenciaPanelControl.html";
+            }, 3000); // 5 segundos 
         });
     }
     // Evento para validar el formulario de turnado de oficios
@@ -66,13 +68,11 @@ async function cargarApp() {
         // Obtener el usuario logueado de localStorage
         const usuario = JSON.parse(localStorage.getItem("usuario"));
         const usuarioID = usuario.InicioSesionID;
-        //console.log('usuarioID: ', usuarioID);
+        // console.log('usuarioID: ', usuarioID);
         //Filtrar dataOficios por usuario
         const dataOficiosAnalista = dataOficios.filter(oficio => oficio.Turnado === String(usuarioID) && (oficio.Estado === "TURNADO" || oficio.Estado === "OBSERVACIONES" || oficio.Estado === "DEVUELTO"));
         // Llenar tabla de oficios analista
         llenarTablaOficios(dataOficiosAnalista, "tableOficiosAnalista");
-
-        //console.log('dataOficiosAnalista: ', dataOficiosAnalista);
     }
     // Verifica si el botón existe crear downloadExcelSuficiencias
     const downloadButton = document.getElementById("descargarExcelOficios");
@@ -145,10 +145,10 @@ async function cargarApp() {
         const usuario = JSON.parse(localStorage.getItem("usuario"));
         const RolUser = usuario.RolUser;
         const DepartamentoUser = usuario.DepartamentoUser;
-        // SI EL USUARIO ES ANALISTA Y TRAMITE FILTRAR POR FIRMA-DG
+        // SI EL USUARIO ES ANALISTA Y TRAMITE FILTRAR POR PROCESO-FIRMA-TITULAR
         if (RolUser === "Analista" && DepartamentoUser === "Tramite") {
             //Filtrar dataOficios por usuario
-            const dataOficiosAnalistaArchivo = dataOficios.filter(oficio => oficio.Estado === "FIRMA-DG");
+            const dataOficiosAnalistaArchivo = dataOficios.filter(oficio => oficio.Estado === "PROCESO-FIRMA-TITULAR");
             // Llenar tabla de oficios analista archivo
             llenarTablaOficios(dataOficiosAnalistaArchivo, "tableOficiosAnalistaArchivo");
         }
@@ -188,6 +188,7 @@ async function listarOficios() {
 }
 // Función para llenar la tabla de oficios
 function llenarTablaOficios(data, tableId) {
+    // console.log('dataff: ', data);
     // Verificar si DataTable ya está inicializado y destruirlo para actualizar
     if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
         $(`#${tableId}`).DataTable().clear().destroy();
@@ -204,8 +205,65 @@ function llenarTablaOficios(data, tableId) {
     $(`#${tableId}`).DataTable({
         data: data,
         columns: [
+            {
+                data: null,
+                render: function (data) {
+                    let botones = "";
+                    const usuario = JSON.parse(localStorage.getItem("usuario"));
+                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Actualizar</button>`;
+                    }
+                    if (usuario && usuario.RolUser === "Admin") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarOficio(${data.ID})">Eliminar</button>`;
+                    }
+                    if (data.Estado === "CREADO") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}">Turnar</button>`;
+                        //RESULTADO DE LA VISTA OFICIOTURNADO = OBSERVACIONES, DEVUELTO O PROCESO-FIRMA-TITULAR
+                    }
+                    if (data.Estado === "PROCESO-FIRMA-TITULAR") {
+                        // botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ACUSE</button>`;
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}">Escaneado</button>`;
+                        //RESULTADO DE LA VISTA OFICIOSCANEOFIRMAS = ESCANEO-FIRMAS
+                    }
+                    if (data.Estado === "ACUSE-EXPEDIENTE") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Archivado</button>`;
+                        //RESULTADO DE LA VISTA OFICIOARCHIVADO = ARCHIVADO
+                    }
+                    if (data.Estado === "TURNADO" || data.Estado === "OBSERVACIONES" || data.Estado === "DEVUELTO") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}">Firma Titular</button>`;
+                    }
+
+                    return botones;
+                }
+            },
+            {
+                data: "Comentarios",
+                render: function (data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            },
+            {
+                data: "ArchivoScaneado",
+                render: function (data, type, row) {
+                    if (data && data !== "N/A" && data !== "Array") {
+                        const basePath = 'assets/uploads/Correspondencia/';
+
+                        // Botón para abrir en nueva pestaña (sin atributo download)
+                        return `<a href="${basePath}${data}" 
+                                    class="btn btn-primary toggleButton" 
+                                    target="_blank"
+                                    title="Abrir PDF">
+                                    <i class="fas fa-eye"></i> Ver PDF
+                                </a>`;
+                    }
+                    return "Sin archivo";
+                }
+            },
             { data: "ID" },
             { data: "Folio" },
+            { data: "FechaCreacion" },
             { data: "FechaRecepcion" },
             { data: "Solicitante" },
             { data: "Dependencia" },
@@ -225,70 +283,7 @@ function llenarTablaOficios(data, tableId) {
             { data: "RespuestaConocimiento" },
             { data: "FechaRetroactiva" },
             { data: "Estado" },
-            { data: "FechaCreacion" },
-            { data: "UsuarioRegistro" },
-            {
-                data: "Comentarios",
-                render: function (data) {
-                    if (!data) return '';
-                    return data.length > 100 ? data.slice(-100) : data;
-                }
-            },
-            {
-                data: "ArchivoScaneado",
-                render: function (data, type, row) {
-                    if (data && data !== "N/A" && data !== "Array") {
-                        const basePath = 'assets/uploads/Correspondencia/';
-
-                        // Botón para abrir en nueva pestaña (sin atributo download)
-                        return `<a href="${basePath}${data}" 
-                      class="btn btn-primary toggleButton" 
-                      target="_blank"
-                      title="Abrir PDF">
-                    <i class="fas fa-eye"></i> Ver PDF
-                   </a>`;
-                    }
-                    return "Sin archivo";
-                }
-            },
-            {
-                data: null,
-                render: function (data) {
-                    let botones = "";
-                    const usuario = JSON.parse(localStorage.getItem("usuario"));
-                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Actualizar</button>`;
-                    }
-                    if (usuario && usuario.RolUser === "Admin") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarOficio(${data.ID})">Eliminar</button>`;
-                    }
-                    if (data.Estado === "CREADO") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}">TURNADO</button>`;
-                        //RESULTADO DE LA VISTA OFICIOTURNADO = OBSERVACIONES, DEVUELTO O FIRMA-DG
-                    }
-                    if (data.Estado === "FIRMA-DG") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ACUSE</button>`;
-                        //RESULTADO DE LA VISTA OFICIOSCANEOFIRMAS = ESCANEO-FIRMAS
-                    }
-                    if (data.Estado === "ESCANEO-FIRMAS") {
-                        // botones += `<button class="btn btn-secondary" onclick="window.location.href='OficioRespuesta.html?id=' + ${data.ID}">ACUSE</button>`;
-                        //RESULTADO DE LA VISTA OFICIORESPUESTA = ACUSE
-                    }
-                    if (data.Estado === "ACUSE") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}">ESCANEO-SELLOS</button>`;
-                        //RESULTADO DE LA VISTA OFICIOESCANEOSSELLOS = ESCANEO-SELLOS
-                    }
-                    if (data.Estado === "ESCANEO-SELLOS") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ARCHIVADO</button>`;
-                        //RESULTADO DE LA VISTA OFICIOARCHIVADO = ARCHIVADO
-                    }
-                    if (data.Estado === "TURNADO" || data.Estado === "OBSERVACIONES" || data.Estado === "DEVUELTO") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}">ACTUALIZAR</button>`;
-                    }
-
-                    return botones;
-                }
-            }
+            { data: "UsuarioRegistro" }
         ],
         paging: true,
         searching: true,
@@ -318,7 +313,7 @@ function llenarTablaOficios(data, tableId) {
         pageLength: 10,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[0, "DESC"]],
+        order: [[3, "DESC"]],
     });
 }
 // Función para generar y descargar el archivo Excel
@@ -378,7 +373,7 @@ function setValueIfExists(id, value) {
 function llenarformEditarOficios(oficioID) {
     const idNumerico = Number(oficioID);
     const oficio = dataOficios.find(oficio => oficio.ID === idNumerico);
-    console.log('oficio: ', oficio);
+    // console.log('oficio: ', oficio);
     if (!oficio) {
         console.error("No se encontró el oficio con ID:", oficioID);
         return;
@@ -487,7 +482,7 @@ function logicaEstatusTarjetaInformativa() {
         const estatus = this.value;
 
         // Mostrar/ocultar campo SAP
-        grupoRespuestaConocimiento.hidden = estatus !== 'FIRMA-DG';
+        grupoRespuestaConocimiento.hidden = estatus !== 'PROCESO-FIRMA-TITULAR';
 
         // Mostrar/ocultar botón de WhatsApp
         botonWhatsApp.hidden = !['DEVUELTO', 'OBSERVACIONES'].includes(estatus);
@@ -544,5 +539,75 @@ function validarArchivoPDF(formularioId, archivoInputId) {
     //console.log('✅ Validación de archivo PDF exitosa');
     return true;
 }
+// Función para crear un oficio
+function crearOficioArchivo(data) {
+    const fetchOptions = {
+        method: 'POST',
+        body: data // ✅ Si es FormData, no uses JSON.stringify
+    };
+
+    // Solo añadir headers si es JSON
+    if (!(data instanceof FormData)) {
+        fetchOptions.headers = { 'Content-Type': 'application/json' };
+        fetchOptions.body = JSON.stringify(data);
+    }
+
+    fetch(URL_BASE + 'crearOficioArchivo', fetchOptions)
+        .then(async response => {
+            const text = await response.text();
+            try {
+                const json = JSON.parse(text);
+                alert(json.message || "Registro de oficio.");
+                return json;
+            } catch (err) {
+                console.warn("⚠ Respuesta no JSON:", text);
+                alert("⚠ Respuesta inesperada del servidor:\n" + text);
+                return { success: false, message: text };
+            }
+        })
+        .catch(error => {
+            alert("❌ Error de red:\n" + error.message);
+            return { success: false, message: error.message };
+        });
+}
+// Mostrar comentario en modal
+function mostrarComentario(comentario) {
+    const comentarioDecoded = decodeURIComponent(comentario);
+    let htmlContenido = '';
+
+    try {
+        const comentarios = JSON.parse(comentarioDecoded);
+
+        if (Array.isArray(comentarios)) {
+            htmlContenido = comentarios.map(entry => {
+                return `
+                    <div class="comentario-card mb-3 p-3 border rounded shadow-sm">
+                        ${entry.ID_CONTRATO ? `<div><strong># Contrato:</strong> ${entry.ID_CONTRATO}</div>` : ''}
+                        <div><strong>Fecha:</strong> ${entry.Fecha || 'N/A'}</div>
+                        <div><strong>Estatus:</strong> ${entry.Estatus || 'N/A'}</div>
+                        ${entry.Modificado_Por ? `<div><strong>Modificado Por:</strong> ${entry.Modificado_Por}</div>` : ''}
+                        ${entry.Usuario ? `<div><strong>Usuario:</strong> ${entry.Usuario}</div>` : ''}
+                        <div><strong>Comentario:</strong><br><div class="comentario-texto">${entry.Comentario || 'Sin comentario'}</div></div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            htmlContenido = `
+                <div class="comentario-card p-3 border rounded shadow-sm">
+                    <div><strong>Comentario:</strong><br><div class="comentario-texto">${comentarios.Comentario || comentarioDecoded}</div></div>
+                </div>
+            `;
+        }
+    } catch (e) {
+        console.error('El comentario no es un JSON válido:', e);
+        htmlContenido = `<div class="alert alert-warning">El formato del comentario no es válido.</div>`;
+    }
+
+    $('#comentarioModal .modal-body').html(htmlContenido);
+    $('#comentarioModal').modal('show');
+}
+
 // Agrega esta línea al final de tu archivo Oficios.js
 window.eliminarOficio = eliminarOficio;
+window.mostrarComentario = mostrarComentario;
+

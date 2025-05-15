@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <li id="KPI" style="display: none;"><a class="dropdown-item"
                   href="CorrespondenciaPanelControl.html">Correspondencia Panel</a></li>
               <li id="KPI" style="display: none;"><a class="dropdown-item"
-                  href="ContestacionPanelControl.html">Contestaciones Panel</a></li>
+                  href="ContestacionPanelControl.html">Respuestas Panel</a></li>
             </ul>
           </li>
 
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <li id="Oficios" style="display: none;"><a class="dropdown-item"
                   href="CorrespondenciaPanelControl.html">Correspondencia</a></li>
               <li id="Oficios" style="display: none;"><a class="dropdown-item"
-                  href="ContestacionPanelControl.html">Contestaciones</a></li>
+                  href="ContestacionPanelControl.html">Respuestas</a></li>
               <li id="Oficios" style="display: none;"><a class="dropdown-item"
                   href="CorrespondenciaPanelAnalista.html">Panel Analista</a></li>
             </ul>

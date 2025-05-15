@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contestacion Panel Control</title>
+    <title>Respuesta Panel Control</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
@@ -39,7 +39,7 @@
     </nav>
 
     <main>
-        <h1 class="mb-4">Listado de Contestaciones</h1>
+        <h1 class="mb-4">Listado de Respuestas</h1>
         <div class="table-responsive">
             <div class="col-12 d-flex justify-content-between">
                 <button id="crearContestacion" class="btn btn-primary toggleButton">Nuevo Registro</button>
@@ -48,8 +48,11 @@
             <table id="tableContestaciones" class="table table-bordered table-hover display nowrap" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Acciones</th>
+                        <th>Acciones</th>                        
+                        <th>Comentario</th>
+                        <th>ArchivoAdjunto</th>
                         <th>ID_RegistroOficios</th>
+                        <th>FechaRegistro</th>
                         <th>TipoOficio</th>
                         <th>NumeroOficio</th>
                         <th>FechaRetroactivo</th>
@@ -65,10 +68,7 @@
                         <th>Monto</th>
                         <th>FechaRecepcionDependencia</th>
                         <th>FechaEntregaAnalistaOperador</th>
-                        <th>Comentario</th>
-                        <th>ArchivoAdjunto</th>
                         <th>UsuarioRegistro</th>
-                        <th>FechaRegistro</th>
                         <th>FechaActualizacion</th>
                     </tr>
                 </thead>
@@ -79,6 +79,21 @@
         </div>
     </main>
 
+    <!-- Modal para mostrar el comentario completo -->
+    <div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="comentarioModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="comentarioModalLabel">Comentario Completo</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- El comentario completo se insertará aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <footer>
         <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
     </footer>

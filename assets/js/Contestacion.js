@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             // console.log('data: ', data);
             crearContestacion(data);
-            // setTimeout(() => {
-            //     window.location.href = "ContestacionPanelControl.html";
-            // }, 3000);
+            setTimeout(() => {
+                window.location.href = "ContestacionPanelControl.html";
+            }, 3000);
         });
     }
 });
@@ -125,8 +125,36 @@ function llenarTablaContestaciones(data, tableId) {
                     }
                     return botones;
                 }
+            },            
+            { 
+                data: "Comentario",
+                render: function (data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            },
+            {
+                data: "ArchivoAdjunto",
+                render: function (data, type, row) {
+                    if (data && data !== "N/A" && data !== "Array") {
+                        // Ruta base donde se almacenan los archivos (ajusta según tu estructura)
+                        const basePath = 'assets/uploads/oficios/';
+
+                        // Crear botón de descarga
+                        return `<a href="${basePath}${data}" 
+                      class="btn btn-primary toggleButton" 
+                      target="_blank"
+                      title="Abrir PDF">
+                    <i class="fas fa-eye"></i> Ver PDF
+                   </a>`;
+                    } else {
+                        return "Sin archivo";
+                    }
+                }
             },
             { data: "ID_RegistroOficios" },
+            { data: "FechaRegistro" },
             { data: "TipoOficio" },
             { data: "NumeroOficio" },
             { data: "FechaRetroactivo" },
@@ -147,28 +175,7 @@ function llenarTablaContestaciones(data, tableId) {
             },
             { data: "FechaRecepcionDependencia" },
             { data: "FechaEntregaAnalistaOperador" },
-            { data: "Comentario" },
-            {
-                data: "ArchivoAdjunto",
-                render: function (data, type, row) {
-                    if (data && data !== "N/A" && data !== "Array") {
-                        // Ruta base donde se almacenan los archivos (ajusta según tu estructura)
-                        const basePath = 'assets/uploads/oficios/';
-
-                        // Crear botón de descarga
-                        return `<a href="${basePath}${data}" 
-                      class="btn btn-primary toggleButton" 
-                      target="_blank"
-                      title="Abrir PDF">
-                    <i class="fas fa-eye"></i> Ver PDF
-                   </a>`;
-                    } else {
-                        return "Sin archivo";
-                    }
-                }
-            },
             { data: "UsuarioRegistro" },
-            { data: "FechaRegistro" },
             { data: "FechaActualizacion" },
 
         ],
@@ -200,7 +207,7 @@ function llenarTablaContestaciones(data, tableId) {
         pageLength: 10,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[0, "DESC"]],
+        order: [[5, "DESC"]],
     });
 }
 // Función para crear una contestacion
@@ -362,5 +369,43 @@ window.eliminarContestacion = function (ID_RegistroOficios) {
             });
     }
 }
+// Mostrar comentario en modal
+function mostrarComentario(comentario) {
+    const comentarioDecoded = decodeURIComponent(comentario);
+    let htmlContenido = '';
+
+    try {
+        const comentarios = JSON.parse(comentarioDecoded);
+
+        if (Array.isArray(comentarios)) {
+            htmlContenido = comentarios.map(entry => {
+                return `
+                    <div class="comentario-card mb-3 p-3 border rounded shadow-sm">
+                        ${entry.ID_OFICIO ? `<div><strong># Oficio:</strong> ${entry.ID_OFICIO}</div>` : ''}
+                        <div><strong>Fecha:</strong> ${entry.Fecha || 'N/A'}</div>
+                        <div><strong>Estatus:</strong> ${entry.Estatus || 'N/A'}</div>
+                        ${entry.Modificado_Por ? `<div><strong>Modificado Por:</strong> ${entry.Modificado_Por}</div>` : ''}
+                        ${entry.Usuario ? `<div><strong>Usuario:</strong> ${entry.Usuario}</div>` : ''}
+                        <div><strong>Comentario:</strong><br><div class="comentario-texto">${entry.Comentario || 'Sin comentario'}</div></div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            htmlContenido = `
+                <div class="comentario-card p-3 border rounded shadow-sm">
+                    <div><strong>Comentario:</strong><br><div class="comentario-texto">${comentarios.Comentario || comentarioDecoded}</div></div>
+                </div>
+            `;
+        }
+    } catch (e) {
+        console.error('El comentario no es un JSON válido:', e);
+        htmlContenido = `<div class="alert alert-warning">El formato del comentario no es válido.</div>`;
+    }
+
+    $('#comentarioModal .modal-body').html(htmlContenido);
+    $('#comentarioModal').modal('show');
+}
+
 // Agrega esta línea al final de tu archivo Oficios.js
 window.eliminarContestacion = eliminarContestacion;
+window.mostrarComentario = mostrarComentario;

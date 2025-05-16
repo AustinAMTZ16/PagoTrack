@@ -11,29 +11,43 @@ class TramitesModel
     // Crear un nuevo trámite
     public function create($data)
     {
-        date_default_timezone_set('America/Mexico_City'); // Establecer zona horaria de México
-        $fechaActual = date('Y-m-d H:i:s'); // Obtener fecha y hora actual en formato MySQL
+        // Establecer la zona horaria globalmente (idealmente se debe hacer una vez en bootstrap)
+        date_default_timezone_set('America/Mexico_City');
+        $fechaActual = date('Y-m-d H:i:s');
 
         try {
-            //EN CASO DE QUE EL ESTATUS SEA CREADO SERIA LA LOGICA ACTUAL EN CASO DE SER TURNADO SOLO DEBE AGREGAR LA FECHA ACTUAL AL CAMPO FechaTurnado
+            // Validar que TipoTramite esté en la lista permitida
+            $tiposPermitidos = ['OC', 'OP', 'SRF', 'CRF', 'JA', 'IPS', 'OCO', 'OPO', 'Obra'];
+            if (!in_array($data['TipoTramite'], $tiposPermitidos)) {
+                throw new Exception("TipoTramite inválido.");
+            }
+
+            // Validar que Fondo sea JSON válido
+            json_decode($data['Fondo']);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception("Formato de Fondo inválido.");
+            }
+
+            // Determinar el query según estatus
             if ($data['Estatus'] === 'Turnado') {
                 $query = "INSERT INTO ConsentradoGeneralTramites 
-                (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, FechaTurnado, OfPeticion, NoTramite, DoctacionAnexo) 
-                VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :FechaTurnado, :OfPeticion, :NoTramite, :DoctacionAnexo)";
+                (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, FechaTurnado, OfPeticion, NoTramite, DoctacionAnexo, FK_SRF, FechaLimitePago, Analista) 
+                VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :FechaTurnado, :OfPeticion, :NoTramite, :DoctacionAnexo, :FK_SRF, :FechaLimitePago, :Analista)";
             } else {
-                // 🔹 Paso 1: Insertar el registro SIN comentarios
                 $query = "INSERT INTO ConsentradoGeneralTramites 
-                      (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, OfPeticion, NoTramite, DoctacionAnexo) 
-                      VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :OfPeticion, :NoTramite, :DoctacionAnexo)";
+                (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, OfPeticion, NoTramite, DoctacionAnexo, FK_SRF, FechaLimitePago, Analista) 
+                VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :OfPeticion, :NoTramite, :DoctacionAnexo, :FK_SRF, :FechaLimitePago, :Analista)";
             }
+
             $stmt = $this->conn->prepare($query);
 
+            // Binding general
             $stmt->bindParam(':Mes', $data['Mes']);
             $stmt->bindParam(':TipoTramite', $data['TipoTramite']);
             $stmt->bindParam(':Dependencia', $data['Dependencia']);
             $stmt->bindParam(':Proveedor', $data['Proveedor']);
             $stmt->bindParam(':Concepto', $data['Concepto']);
-            $stmt->bindParam(':Importe', $data['Importe']);
+            $stmt->bindValue(':Importe', floatval($data['Importe']));
             $stmt->bindParam(':Estatus', $data['Estatus']);
             $stmt->bindParam(':Fondo', $data['Fondo']);
             $stmt->bindParam(':FechaLimite', $data['FechaLimite']);
@@ -41,6 +55,11 @@ class TramitesModel
             $stmt->bindParam(':OfPeticion', $data['OfPeticion']);
             $stmt->bindParam(':NoTramite', $data['NoTramite']);
             $stmt->bindParam(':DoctacionAnexo', $data['DoctacionAnexo']);
+            $stmt->bindValue(':FK_SRF', !empty($data['FK_SRF']) ? $data['FK_SRF'] : null, PDO::PARAM_INT);
+            $stmt->bindValue(':FechaLimitePago', !empty($data['FechaLimitePago']) ? $data['FechaLimitePago'] : null, PDO::PARAM_STR);
+            $stmt->bindParam(':Analista', $data['Analista']); // Nuevo campo para guardar el nombre del analista
+
+            // Solo si el estatus es Turnado
             if ($data['Estatus'] === 'Turnado') {
                 $stmt->bindParam(':FechaTurnado', $fechaActual);
             }
@@ -49,10 +68,9 @@ class TramitesModel
                 throw new Exception("Error al registrar el trámite.");
             }
 
-            // 🔹 Paso 2: Obtener el ID generado
             $idContrato = $this->conn->lastInsertId();
 
-            // 🔹 Paso 3: Construir el comentario inicial en JSON
+            // Construir historial de comentarios
             $comentariosArray = [];
             if (!empty($data['Comentarios'])) {
                 $comentarioInicial = [
@@ -65,10 +83,9 @@ class TramitesModel
                 $comentariosArray[] = $comentarioInicial;
             }
 
-            // Convertir a JSON el array de comentarios
             $comentariosJSON = json_encode($comentariosArray, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-            // 🔹 Paso 4: Actualizar el registro con los comentarios
+            // Actualizar comentarios
             $queryUpdate = "UPDATE ConsentradoGeneralTramites SET Comentarios = :Comentarios WHERE ID_CONTRATO = :ID_CONTRATO";
             $stmtUpdate = $this->conn->prepare($queryUpdate);
             $stmtUpdate->bindParam(':Comentarios', $comentariosJSON);
@@ -78,9 +95,11 @@ class TramitesModel
                 throw new Exception("Error al actualizar los comentarios del trámite.");
             }
 
-            return $idContrato; // Retornar el ID del contrato creado
+            return $idContrato;
         } catch (PDOException $e) {
             throw new Exception("Error al registrar el trámite: " . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception("Validación o lógica fallida: " . $e->getMessage());
         }
     }
     // Obtener todos los trámites
@@ -420,6 +439,6 @@ class TramitesModel
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':InicioSesionID', $data['InicioSesionID'], PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);   
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

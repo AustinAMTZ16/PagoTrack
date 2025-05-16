@@ -207,7 +207,7 @@ function llenarTablaContestaciones(data, tableId) {
         pageLength: 10,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[5, "DESC"]],
+        order: [[4, "DESC"]],
     });
 }
 // Función para crear una contestacion

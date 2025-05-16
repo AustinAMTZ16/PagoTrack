@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.forEach((value, key) => {
                 data[key] = value;
             });
+            // console.log('Datos enviados:', data);
             createTramite(data);
         });
     }

@@ -356,15 +356,47 @@ function actualizarTablaTramites(data, tableId) {
     $(`#${tableId}`).DataTable({
         data: data,
         columns: [
+            {
+                data: null,
+                render: function (data) {
+                    let botones = "";
+                    if (data.Estatus === "Creado") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="turnarTramite(${data.ID_CONTRATO})">Turnar</button> `;
+                    }
+                    if (data.Estatus === "VoBO") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
+                    }
+                    if (data.Estatus === "RegistradoSAP") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="createRemesa(${data.ID_CONTRATO})">Asignar Remesa</button> `;
+                    }
+                    const usuario = JSON.parse(localStorage.getItem("usuario"));
+                    if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "Operador") || usuario.RolUser === "KPI") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="modificarTramite(${data.ID_CONTRATO})">Modificar</button>`;
+                    }
+                    if (usuario && usuario.RolUser === "Admin") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
+                    }
+                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
+                    botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'">Detalle</button>`;
+
+                    return botones;
+                }
+            },
+            {
+                data: "Comentarios",
+                render: function (data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            },
             { data: "ID_CONTRATO", visible: true }, // Campo oculto
             { data: "Mes" },
             {
                 data: "FechaRecepcion",
                 render: function (data) {
-                    if (!data) return "";
-                    const [fecha] = data.split(" ");
-                    const [año, mes, dia] = fecha.split("-");
-                    return `${dia}-${mes}-${año}`; // Formato DD-MM-YYYY
+                    // Mostrar la fecha y la hora de la fechaLimite
+                    return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' + new Date(data).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "";
                 }
             },
             {
@@ -399,40 +431,8 @@ function actualizarTablaTramites(data, tableId) {
             { data: "DocSAP" },
             { data: "IntegraSAP" },
             { data: "NoTramite" },
-            {
-                data: null,
-                render: function (data) {
-                    let botones = "";
-                    if (data.Estatus === "Creado") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="turnarTramite(${data.ID_CONTRATO})">Turnar</button> `;
-                    }
-                    if (data.Estatus === "VoBO") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
-                    }
-                    if (data.Estatus === "RegistradoSAP") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="createRemesa(${data.ID_CONTRATO})">Asignar Remesa</button> `;
-                    }
-                    const usuario = JSON.parse(localStorage.getItem("usuario"));
-                    if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "Operador") || usuario.RolUser === "KPI") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="modificarTramite(${data.ID_CONTRATO})">Modificar</button>`;
-                    }
-                    if (usuario && usuario.RolUser === "Admin") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
-                    }
-                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
-                    botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'">Detalle</button>`;
-
-                    return botones;
-                }
-            },
-            {
-                data: "Comentarios",
-                render: function (data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
-                }
-            }
+            { data: "FechaLimitePago"},
+            { data: "FK_SRF"}
 
         ],
         paging: true,
@@ -464,7 +464,7 @@ function actualizarTablaTramites(data, tableId) {
         pageLength: 5, // Número de filas por página
         lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
         responsive: true,
-        order: [[0, "DESC"]],
+        order: [[4, "DESC"]],
     });
 }
 // Función para actualizar la tabla de trámites turnados
@@ -488,6 +488,34 @@ function actualizarTablaTurnados(data, tableId) {
     $(`#${tableId}`).DataTable({
         data: data,
         columns: [
+            {
+                data: null,
+                render: function (data) {
+                    let botones = "";
+                    if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
+                        botones += `<button class="btn btn-primary toggleButton" onclick="editarTramite(
+                            decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Concepto)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Importe)}'),
+                            decodeURIComponent('${encodeURIComponent(data.FechaLimite)}'),
+                            decodeURIComponent('${encodeURIComponent(data.FechaRecepcion)}'),
+                            decodeURIComponent('${encodeURIComponent(data.Dependencia)}'),
+                            decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}')
+                        )">Actualizar Estado</button>`;
+                    }
+                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
+                    return botones;
+                }
+            },
+            {
+                data: "Comentarios",
+                render: function (data) {
+                    // Asegurarse de que los caracteres especiales no rompan el código
+                    var comentarioEscapado = encodeURIComponent(data);
+                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                }
+            },
             { data: "ID_CONTRATO", visible: true }, // Campo oculto
             { data: "Mes" },
             {
@@ -525,35 +553,7 @@ function actualizarTablaTurnados(data, tableId) {
             { data: "Fondo" },
             { data: "RemesaNumero" },
             { data: "DocSAP" },
-            { data: "IntegraSAP" },
-            {
-                data: null,
-                render: function (data) {
-                    let botones = "";
-                    if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="editarTramite(
-                            decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
-                            decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
-                            decodeURIComponent('${encodeURIComponent(data.Concepto)}'),
-                            decodeURIComponent('${encodeURIComponent(data.Importe)}'),
-                            decodeURIComponent('${encodeURIComponent(data.FechaLimite)}'),
-                            decodeURIComponent('${encodeURIComponent(data.FechaRecepcion)}'),
-                            decodeURIComponent('${encodeURIComponent(data.Dependencia)}'),
-                            decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}')
-                        )">Actualizar Estado</button>`;
-                    }
-                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
-                    return botones;
-                }
-            },
-            {
-                data: "Comentarios",
-                render: function (data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
-                }
-            }
+            { data: "IntegraSAP" }
         ],
         paging: true,
         searching: true,
@@ -584,7 +584,7 @@ function actualizarTablaTurnados(data, tableId) {
         pageLength: 10, // Número de filas por página
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[0, "DESC"]],
+        order: [[4, "DESC"]],
     });
 }
 // Filtrar trámites por estado

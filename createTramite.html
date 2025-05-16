@@ -139,6 +139,12 @@
         </div>
 
         <div class="col-md-6">
+          <label for="FK_SRF" class="form-label">Relación SRF <span class="small-text">(ID Registro de Solicitud de
+              Recursos Financieros)</span></label>
+          <input type="text" name="FK_SRF" id="FK_SRF" class="form-control" placeholder="18665" required>
+        </div>
+
+        <div class="col-md-6">
           <label for="AnalistaID" class="form-label">Analista</label>
           <select name="AnalistaID" id="AnalistaID" class="form-select">
             <option value="">Seleccionar Analista</option>
@@ -205,8 +211,14 @@
 
         <div class="col-md-6">
           <label for="FechaLimite" class="form-label">Fecha Límite <span class="small-text">(máximo 5 días hábiles si no
-              tiene fecha de vencimiento)</span></label>
-          <input type="date" name="FechaLimite" id="FechaLimite" class="form-control" required>
+              tiene fecha de vencimiento.)</span></label>
+          <input type="date" name="FechaLimite" id="FechaLimite" class="form-control" required readonly>
+        </div>
+
+        <div class="col-md-6">
+          <label for="FechaLimitePago" class="form-label">Fecha Límite Pago <span class="small-text">(Solo si en el
+              oficio es solicitado.)</span></label>
+          <input type="date" name="FechaLimitePago" id="FechaLimitePago" class="form-control">
         </div>
 
         <div class="col-md-6">
@@ -264,6 +276,51 @@
       limpiarInputs();
     });
 
+    // Al cargar la página o cuando se necesite
+    document.addEventListener('DOMContentLoaded', function () {
+      const campoFecha = document.getElementById('FechaLimite');
+
+      // Calcular fecha límite a 5 días hábiles desde hoy
+      const hoy = new Date();
+      const fechaLimite = sumarDiasHabiles(hoy, 5);
+
+      // Formatear a YYYY-MM-DD para input[type="date"]
+      const yyyy = fechaLimite.getFullYear();
+      const mm = String(fechaLimite.getMonth() + 1).padStart(2, '0');
+      const dd = String(fechaLimite.getDate()).padStart(2, '0');
+      const fechaFormateada = `${yyyy}-${mm}-${dd}`;
+
+      campoFecha.value = fechaFormateada;
+
+
+      
+
+
+
+
+
+
+      const tipoTramite = document.getElementById('TipoTramite');
+      const campoSRF = document.getElementById('FK_SRF');
+      const contenedorSRF = campoSRF.closest('.col-md-6'); // oculta también la etiqueta y padding
+
+      // Ocultar al cargar
+      contenedorSRF.style.display = 'none';
+      campoSRF.removeAttribute('required');
+
+      // Escuchar cambios
+      tipoTramite.addEventListener('change', function () {
+        if (this.value === 'CRF') {
+          contenedorSRF.style.display = 'block';
+          campoSRF.setAttribute('required', 'required');
+        } else {
+          contenedorSRF.style.display = 'none';
+          campoSRF.removeAttribute('required');
+          campoSRF.value = ''; // Limpiar valor por si acaso
+        }
+      });
+    });
+
     function actualizarTabla() {
       let tbody = document.querySelector('#fondosTable tbody');
       tbody.innerHTML = '';
@@ -298,6 +355,23 @@
     function limpiarInputs() {
       document.getElementById('FondoInput').value = '';
       document.getElementById('ImporteInput').value = '';
+    }
+
+    // Función para sumar días hábiles (excluye sábados y domingos)
+    function sumarDiasHabiles(fechaInicial, diasHabiles) {
+      let fecha = new Date(fechaInicial);
+      let diasSumados = 0;
+
+      while (diasSumados < diasHabiles) {
+        fecha.setDate(fecha.getDate() + 1);
+        const dia = fecha.getDay();
+        // 0 = domingo, 6 = sábado → saltar fines de semana
+        if (dia !== 0 && dia !== 6) {
+          diasSumados++;
+        }
+      }
+
+      return fecha;
     }
   </script>
 

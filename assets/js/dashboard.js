@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableTurnadosJS = document.getElementById('tableTurnados');
     // Referencia a la tabla de seguimiento de trámites por analista
     const tramitesTableJS = document.getElementById('tramitesTable');
+    // Tabla de historico de trámites por mes
+    const rendimientoTable = document.getElementById('rendimientoTable');
     // Referencia al botón de generar resumen iA
     const btnResumen = document.getElementById("generarResumen");
     // Referencia al botón de limpiar filtros
@@ -73,6 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Valida si existe la tabla de seguimiento de trámites por analista
     if (tramitesTableJS) {
         getSeguimientoTramites();
+    }
+    // Tabla de historico de trámites por mes
+    if (rendimientoTable) {
+        getHistoricoMes();
     }
     // Verifica si el botón existe antes de agregar el listener
     const downloadButton = document.getElementById("downloadExcelTramites");
@@ -260,6 +266,28 @@ function getSeguimientoTramites() {
             console.error('Error al obtener el seguimiento de trámites:', error.message);
         });
 }
+//funcion para obtener el historico de trámites por mes
+function getHistoricoMes() {
+    fetch(URL_BASE + 'getHistoricoMes', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(async (response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+            }
+            return await response.json();
+        })
+        .then(result => {
+            renderTablegetHistoricoMes(result.data);
+            // console.log('Historico de trámites por mes:', result.data);
+        })
+        .catch(error => {
+            console.error('Error al obtener el seguimiento de trámites:', error.message);
+        });
+}
 //funcion para obtener el conteo de estatus
 function getConteoEstatus() {
     fetch(URL_BASE + 'getConteoEstatus', {
@@ -431,8 +459,8 @@ function actualizarTablaTramites(data, tableId) {
             { data: "DocSAP" },
             { data: "IntegraSAP" },
             { data: "NoTramite" },
-            { data: "FechaLimitePago"},
-            { data: "FK_SRF"}
+            { data: "FechaLimitePago" },
+            { data: "FK_SRF" }
 
         ],
         paging: true,
@@ -887,6 +915,108 @@ function renderTable(data) {
 
 
 }
+// Tabla de historico de trámites por mes
+function renderTablegetHistoricoMes(data) {
+    const tableId = "rendimientoTable"; // ID de la tabla
+    const table = document.getElementById(tableId);
+    const tableHead = table.querySelector("thead tr");
+    const tableBody = table.querySelector("tbody");
+
+    // Limpiar la tabla antes de insertar nuevos datos
+    tableHead.innerHTML = "<th>InicioSesionID</th>";
+    tableBody.innerHTML = "";
+
+    if (data.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='99'>No hay datos disponibles</td></tr>";
+        return;
+    }
+
+    // Obtener los nombres de los tipos de trámites dinámicamente
+    const columns = Object.keys(data[0]).filter(key => key !== "InicioSesionID");
+
+    // Generar encabezados de tabla dinámicos
+    columns.forEach(col => {
+        const th = document.createElement("th");
+        th.textContent = col;
+        tableHead.appendChild(th);
+    });
+
+    // Insertar filas con los datos
+    data.forEach(row => {
+        const tr = document.createElement("tr");
+
+        // Celda del analista
+        const tdAnalista = document.createElement("td");
+        tdAnalista.textContent = row.InicioSesionID;
+        tr.appendChild(tdAnalista);
+
+        // Celdas de conteo de trámites
+        columns.forEach(col => {
+            const td = document.createElement("td");
+
+            if (col === "Total") {
+                // Hacer el Total clickeable
+                const link = document.createElement("a");
+                link.href = `#`;
+                link.textContent = row[col] || 0;
+                link.style.cursor = "pointer";
+                link.style.color = "#007bff";
+                link.style.textDecoration = "underline";
+
+                // Agregar evento click para mostrar detalles
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    showHistoricoMes(row.InicioSesionID);
+                });
+
+                td.appendChild(link);
+            } else {
+                td.textContent = row[col] || 0;
+            }
+
+            tr.appendChild(td);
+        });
+
+        tableBody.appendChild(tr);
+    });
+
+    // Destruir DataTable si ya estaba inicializado
+    if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+        $(`#${tableId}`).DataTable().clear().destroy();
+    }
+
+    // Inicializar DataTable con configuración en español
+    $(`#${tableId}`).DataTable({
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            infoFiltered: "(filtrado de _MAX_ registros totales)",
+            infoPostFix: "",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "No hay datos disponibles en la tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            },
+            aria: {
+                sortAscending: ": Activar para ordenar la columna de manera ascendente",
+                sortDescending: ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        pageLength: 20, // Número de filas por página
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        responsive: true,
+        order: [[11, "DESC"]],
+    });
+
+
+}
 // Mostrar comentario en modal
 function mostrarComentario(comentario) {
     const comentarioDecoded = decodeURIComponent(comentario);
@@ -1070,6 +1200,147 @@ function showTramitesDetails(InicioSesionID) {
 
     // Obtener los trámites del analista
     fetch(URL_BASE + 'getTallesTramites', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(response => {
+            // Verificar si la respuesta tiene la estructura esperada
+            if (!response.data || !Array.isArray(response.data)) {
+                throw new Error('La estructura de datos no es válida');
+            }
+            const tramites = response.data;
+            // Crear modal o ventana con los detalles
+            const modalHtml = `
+            <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">                        
+                        <div class="modal-body">
+                            <div class="table-responsive">
+                                <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>ID Tramite</th>
+                                            <th>Tipo</th>
+                                            <th>Dependencia</th>
+                                            <th>Proveedor</th>
+                                            <th>Concepto</th>
+                                            <th>Importe</th>
+                                            <th>Estatus</th>
+                                            <th>Fecha Recepción</th>
+                                            <th>Fecha Limite</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${tramites.map(tramite => {
+                const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
+                return `
+                                                <tr>
+                                                    <td>${tramite.ID_CONTRATO || 'N/A'}</td>
+                                                    <td>${tramite.TipoTramite || 'N/A'}</td>
+                                                    <td>${tramite.Dependencia || 'N/A'}</td>
+                                                    <td>${tramite.Proveedor || 'N/A'}</td>
+                                                    <td>${tramite.Concepto || 'N/A'}</td>
+                                                    <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
+                                                    <td>
+                                                        <span class="badge ${tramite.Estatus === 'Observaciones' ? 'bg-warning' : 'bg-primary'}">
+                                                            ${tramite.Estatus || 'N/A'}
+                                                        </span>
+                                                    </td>
+                                                    <td>${formatDate(tramite.FechaRecepcion)}</td>
+                                                    <td>${formatDate(tramite.FechaLimite)}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
+                                                    </td>
+                                                </tr>
+                                            `;
+            }).join('')}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        `;
+
+            // Agregar el modal al body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // Mostrar el modal
+            $('#tramitesModal').modal('show');
+
+            // Inicializar DataTable en la tabla de detalles
+            $('#detalleTramitesTable').DataTable({
+                language: {
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    infoPostFix: "",
+                    loadingRecords: "Cargando...",
+                    zeroRecords: "No se encontraron resultados",
+                    emptyTable: "No hay datos disponibles en la tabla",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Último"
+                    },
+                    aria: {
+                        sortAscending: ": Activar para ordenar la columna de manera ascendente",
+                        sortDescending: ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
+                responsive: true,
+                dom: '<"top"Bf>rt<"bottom"lip><"clear">',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Exportar a Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir',
+                        className: 'btn btn-info'
+                    }
+                ]
+            });
+
+            // Eliminar el modal cuando se cierre
+            $('#tramitesModal').on('hidden.bs.modal', function () {
+                $(this).remove();
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener los trámites:', error);
+            alert('Error al cargar los detalles de los trámites: ' + error.message);
+        });
+}
+// Tabla de historico de trámites por mes
+function showHistoricoMes(InicioSesionID) {
+    const data = {
+        InicioSesionID: InicioSesionID
+    };
+
+    // Obtener los trámites del analista
+    fetch(URL_BASE + 'getDetalleHistoricoMes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

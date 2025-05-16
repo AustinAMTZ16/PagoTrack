@@ -272,6 +272,23 @@ function handlePostRequest($action, $data)
                 echo json_encode(array('message' => 'No se encontraron talles de trámites.'), JSON_UNESCAPED_UNICODE);
             }
             break;
+        case 'getDetalleHistoricoMes':
+            if (!empty($data)) {
+                global $controllerTramite;
+                $respuesta = $controllerTramite->getDetalleHistoricoMes((array) $data);
+            } else {
+                echo "Datos no proporcionados";
+                exit;
+            }
+            if ($respuesta) {
+                http_response_code(200);
+                echo json_encode(array('message' => 'Listado de detalle de historico de trámites por mes.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+            } else {
+                http_response_code(404);
+                echo json_encode(array('message' => 'No se encontraron detalle de historico de trámites por mes.'), JSON_UNESCAPED_UNICODE);
+            }
+            exit;
+            break;
         case 'crearOficioArchivo':
             header('Content-Type: application/json; charset=utf-8');
 
@@ -356,6 +373,19 @@ function handleGetRequest($action, $data)
             } else {
                 http_response_code(404);
                 echo json_encode(array('message' => 'No se encontraron seguimiento de trámites.'), JSON_UNESCAPED_UNICODE);
+            }
+            exit;
+            break;
+        case 'getHistoricoMes':
+            // Declarar como global
+            global $controllerTramite;
+            $respuesta = $controllerTramite->getHistoricoMes();
+            if ($respuesta) {
+                http_response_code(200);
+                echo json_encode(array('message' => 'Listado de historico de trámites por mes.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+            } else {
+                http_response_code(404);
+                echo json_encode(array('message' => 'No se encontraron historico de trámites por mes.'), JSON_UNESCAPED_UNICODE);
             }
             exit;
             break;

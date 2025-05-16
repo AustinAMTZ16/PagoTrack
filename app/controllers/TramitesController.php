@@ -38,6 +38,12 @@ class TramitesController {
         return $result;
     }
 
+    // Tabla de historico de trámites por mes
+    public function getHistoricoMes() {
+        $result = $this->model->getHistoricoMes();
+        return $result;
+    }
+
     // Obtener el conteo de estatus
     public function getConteoEstatus() {
         $result = $this->model->getConteoEstatus();
@@ -59,6 +65,12 @@ class TramitesController {
     // Obtener lista de talles de trámites de getSeguimientoTramites por InicioSesionID
     public function getTallesTramites($data) {
         $result = $this->model->getTallesTramites($data);
+        return $result;
+    }
+
+    // Obtener lista de talles de trámites de getSeguimientoTramites por InicioSesionID
+    public function getDetalleHistoricoMes($data) {
+        $result = $this->model->getDetalleHistoricoMes($data);
         return $result;
     }
 }

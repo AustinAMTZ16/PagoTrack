@@ -242,6 +242,57 @@ class TramitesModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // Tabla de historico de trámites por mes
+    public function getHistoricoMes()
+    {
+        // Array de traducción de meses en inglés a español
+        $meses = [
+            'January' => 'Enero',
+            'February' => 'Febrero',
+            'March' => 'Marzo',
+            'April' => 'Abril',
+            'May' => 'Mayo',
+            'June' => 'Junio',
+            'July' => 'Julio',
+            'August' => 'Agosto',
+            'September' => 'Septiembre',
+            'October' => 'Octubre',
+            'November' => 'Noviembre',
+            'December' => 'Diciembre'
+        ];
+
+        // Obtener el mes actual en inglés
+        $mesIngles = date('F');
+
+        // Traducir al español
+        $mesActual = $meses[$mesIngles];
+
+        // Consulta
+        $query = "SELECT 
+                ISN.InicioSesionID,
+                ISN.NombreUser AS Analista,
+                ISN.ApellidoUser AS Apellido,
+                SUM(CASE WHEN CGT.TipoTramite = 'OC' THEN 1 ELSE 0 END) AS OC,
+                SUM(CASE WHEN CGT.TipoTramite = 'OP' THEN 1 ELSE 0 END) AS OP,
+                SUM(CASE WHEN CGT.TipoTramite = 'SRF' THEN 1 ELSE 0 END) AS SRF,
+                SUM(CASE WHEN CGT.TipoTramite = 'CRF' THEN 1 ELSE 0 END) AS CRF,
+                SUM(CASE WHEN CGT.TipoTramite = 'JA' THEN 1 ELSE 0 END) AS JA,
+                SUM(CASE WHEN CGT.TipoTramite = 'IPS' THEN 1 ELSE 0 END) AS IPS,
+                SUM(CASE WHEN CGT.TipoTramite = 'Obra' THEN 1 ELSE 0 END) AS Obra,
+                SUM(CASE WHEN CGT.TipoTramite = 'OCO' THEN 1 ELSE 0 END) AS OCO,
+                SUM(CASE WHEN CGT.TipoTramite = 'OPO' THEN 1 ELSE 0 END) AS OPO,
+                COUNT(*) AS Total
+            FROM ConsentradoGeneralTramites CGT
+            INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
+            WHERE CGT.Mes = :mesActual
+            GROUP BY ISN.InicioSesionID, ISN.NombreUser, ISN.ApellidoUser
+            ORDER BY Total DESC;";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':mesActual', $mesActual);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     // Conteo por estatus
     public function getConteoEstatus()
     {
@@ -434,6 +485,37 @@ class TramitesModel
                     INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
                     WHERE CGT.Estatus IN ('Turnado', 'Observaciones')
                     AND ISN.InicioSesionID = :InicioSesionID
+                    ORDER BY CGT.FechaRecepcion DESC;
+        ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':InicioSesionID', $data['InicioSesionID'], PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    // Obtener lista de talles de trámites de historico de trámites
+    public function getDetalleHistoricoMes($data)
+    {
+        $query = "
+        			SELECT 
+                        CGT.ID_CONTRATO,
+                        CGT.NoTramite,
+                        CGT.TipoTramite,
+                        CGT.Dependencia,
+                        CGT.Proveedor,
+                        CGT.Concepto,
+                        CGT.Importe,
+                        CGT.Estatus,
+                        CGT.FechaRecepcion,
+                        CGT.FechaLimite,
+                        CGT.FechaTurnado,
+                        CGT.Comentarios,
+                        CGT.DocSAP,
+                        CGT.IntegraSAP,
+                        CGT.OfPeticion,
+                        CGT.Comentarios
+                    FROM ConsentradoGeneralTramites CGT
+                    INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
+                    WHERE ISN.InicioSesionID = :InicioSesionID
                     ORDER BY CGT.FechaRecepcion DESC;
         ";
         $stmt = $this->conn->prepare($query);

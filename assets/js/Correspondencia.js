@@ -50,6 +50,103 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 3000); // 5 segundos
         });
     }
+
+    // Referencia al botón de limpiar filtros
+    const btnLimpiar = document.getElementById("btn-limpiar");
+    // Referencia al botón de filtrar trámites
+    const btnFiltrar = document.getElementById("btn-filtrar");
+    // Limpiar filtros
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', function () {
+            document.querySelectorAll('.filtro-select, .filtro-input, .filtro-date').forEach(element => {
+                if (element.tagName === 'SELECT') {
+                    element.value = 'Todos';
+                } else {
+                    element.value = '';
+                }
+            });
+            console.clear();
+            const filtrosIniciales = {
+                ID: '',
+                Folio: '',
+                FechaRecepcion: '',
+                Solicitante: '',
+                Dependencia: '',
+                Departamento: '',
+                NumeroOficio: '',
+                tipoOficio: '',
+                Asunto: '',
+                Concepto: '',
+                Monto: '',
+                FechaVencimiento: '',
+                Turnado: '',
+                RespuestaConocimiento: '',
+                FechaRetroactiva: '',
+                Estado: '',
+                FechaCreacion: '',
+                UsuarioRegistro: '',
+                Comentarios: '',
+                ArchivoScaneado: '',
+                FechaEntregaAcuse: '',
+                FechaLimitePago: ''
+            };
+            filtrarTramites(filtrosIniciales);
+        });
+    }
+    // Filtrar trámites
+    if (btnFiltrar) {
+        btnFiltrar.addEventListener('click', function () {
+            // Definir todos los filtros con su tipo
+            const filterConfig = [
+                { id: 'ID', type: 'text' },
+                { id: 'Folio', type: 'text' },
+                { id: 'FechaRecepcion', type: 'date' },
+                { id: 'Solicitante', type: 'text' },
+                { id: 'Dependencia', type: 'text' },
+                { id: 'Departamento', type: 'text' },
+                { id: 'NumeroOficio', type: 'text' },
+                { id: 'tipoOficio', type: 'select' },
+                { id: 'Asunto', type: 'text' },
+                { id: 'Concepto', type: 'text' },
+                { id: 'Monto', type: 'number' },
+                { id: 'FechaVencimiento', type: 'date' },
+                { id: 'Turnado', type: 'text' },
+                { id: 'RespuestaConocimiento', type: 'text' },
+                { id: 'FechaRetroactiva', type: 'date' },
+                { id: 'Estado', type: 'select' },
+                { id: 'FechaCreacion', type: 'datetime-local' },
+                { id: 'UsuarioRegistro', type: 'text' },
+                { id: 'Comentarios', type: 'text' },
+                { id: 'ArchivoScaneado', type: 'text' },
+                { id: 'FechaEntregaAcuse', type: 'date' },
+                { id: 'FechaLimitePago', type: 'datetime-local' }
+            ];
+
+
+            // Objeto para almacenar los filtros aplicados
+            const appliedFilters = {};
+
+            filterConfig.forEach(config => {
+                const element = document.getElementById(config.id);
+                let value = element.value.trim();
+
+                // Manejar diferentes tipos de inputs
+                if (element.tagName === 'SELECT') {
+                    if (value !== 'Todos') {
+                        appliedFilters[config.id.replace('Select', '')] = value;
+                    }
+                } else {
+                    if (value !== '' && !(config.type === 'number' && isNaN(value))) {
+                        if (config.type === 'number') value = Number(value);
+                        appliedFilters[config.id.replace('Select', '')] = value;
+                    }
+                }
+            });
+
+            //console.log('Filtros aplicados:', appliedFilters);
+            filtrarTramites(appliedFilters);
+        });
+    }
 });
 
 // Funcion para cargar la app
@@ -211,26 +308,31 @@ function llenarTablaOficios(data, tableId) {
                     let botones = "";
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Actualizar</button>`;
+                        // BTN ACTUALIZAR
+                        botones += `<button class="btn-icon primary" title="Actualizar" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}"><i class="fas fa-edit"></i></button>`;
                     }
                     if (usuario && usuario.RolUser === "Admin") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarOficio(${data.ID})">Eliminar</button>`;
+                        // BTN ELIMINAR
+                        botones += `<button class="btn-icon primary" title="Eliminar" onclick="eliminarOficio(${data.ID})"><i class="fas fa-trash"></i></button>`;
                     }
                     if (data.Estado === "CREADO") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}">Turnar</button>`;
+                        // BTN TURNAR
+                        botones += `<button class="btn-icon primary" title="Turnar" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}"><i class="fa-solid fa-person-walking-arrow-loop-left"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOTURNADO = OBSERVACIONES, DEVUELTO O PROCESO-FIRMA-TITULAR
                     }
                     if (data.Estado === "PROCESO-FIRMA-TITULAR") {
-                        // botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">ACUSE</button>`;
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}">Escaneado</button>`;
+                        // BTN ESCANEAR
+                        botones += `<button class="btn-icon primary" title="Escanear" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}"><i class="fas fa-file-import"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOSCANEOFIRMAS = ESCANEO-FIRMAS
                     }
                     if (data.Estado === "ACUSE-EXPEDIENTE") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}">Archivado</button>`;
+                        // BTN ARCHIVAR
+                        botones += `<button class="btn-icon primary" title="Archivar" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}"><i class="fa-solid fa-box-archive"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOARCHIVADO = ARCHIVADO
                     }
                     if (data.Estado === "TURNADO" || data.Estado === "OBSERVACIONES" || data.Estado === "DEVUELTO") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}">Firma Titular</button>`;
+                        // BTN FIRMA TITULAR
+                        botones += `<button class="btn-icon primary" title="Firma Titular" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}"><i class="fas fa-file-signature"></i></button>`;
                     }
 
                     return botones;
@@ -241,7 +343,8 @@ function llenarTablaOficios(data, tableId) {
                 render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                    // BTN para mostrar el comentario
+                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
                 }
             },
             {
@@ -252,10 +355,10 @@ function llenarTablaOficios(data, tableId) {
 
                         // Botón para abrir en nueva pestaña (sin atributo download)
                         return `<a href="${basePath}${data}" 
-                                    class="btn btn-primary toggleButton" 
+                                    class="btn-icon primary" 
                                     target="_blank"
                                     title="Abrir PDF">
-                                    <i class="fas fa-eye"></i> Ver PDF
+                                    <i class="fas fa-eye"></i>
                                 </a>`;
                     }
                     return "Sin archivo";
@@ -279,11 +382,11 @@ function llenarTablaOficios(data, tableId) {
                 }
             },
             { data: "FechaVencimiento" },
-            { data: "Turnado" },
+            { data: "TurnadoNombreCompleto" },
             { data: "RespuestaConocimiento" },
             { data: "FechaRetroactiva" },
             { data: "Estado" },
-            { data: "UsuarioRegistro" }
+            { data: "UsuarioRegistroNombreCompleto" }
         ],
         paging: true,
         searching: true,
@@ -605,6 +708,60 @@ function mostrarComentario(comentario) {
 
     $('#comentarioModal .modal-body').html(htmlContenido);
     $('#comentarioModal').modal('show');
+}
+// Filtrar trámites por estado
+function filtrarTramites(filtros) {
+    let base = dataOficios;
+    console.log('Datos en Memoria:', base);
+
+    const mapaCampos = {
+        Solicitante: 'Solicitante',
+        Asunto: 'Asunto',
+        Concepto: 'Concepto',
+        Comentarios: 'Comentarios'
+    };
+
+    const camposExactos = [
+        'ID', 'Folio', 'FechaRecepcion', 'Dependencia', 'Departamento', 'NumeroOficio',
+        'tipoOficio', 'Monto', 'FechaVencimiento', 'Turnado', 'RespuestaConocimiento',
+        'FechaRetroactiva', 'Estado', 'FechaCreacion', 'UsuarioRegistro', 'ArchivoScaneado',
+        'FechaEntregaAcuse', 'FechaLimitePago'
+    ];
+
+    const filtrados = base.filter(tramite => {
+        for (let campo in filtros) {
+            const valorFiltro = filtros[campo];
+            if (valorFiltro === '' || valorFiltro === 'Todos') continue;
+
+            const campoReal = mapaCampos[campo] || campo;
+            const valorTramite = tramite[campoReal];
+
+            // Comparación numérica
+            if (campo === 'Monto') {
+                if (parseFloat(valorTramite) !== parseFloat(valorFiltro)) return false;
+
+            // Comparación por fecha (solo fecha sin hora)
+            } else if (['FechaRecepcion', 'FechaVencimiento', 'FechaRetroactiva', 'FechaEntregaAcuse', 'FechaLimitePago'].includes(campo)) {
+                const fechaBase = valorTramite ? valorTramite.split(' ')[0] : '';
+                if (fechaBase !== valorFiltro) return false;
+
+            // Comparación exacta o parcial
+            } else if (typeof valorTramite === 'string') {
+                if (camposExactos.includes(campo)) {
+                    if (valorTramite !== valorFiltro) return false;
+                } else {
+                    if (!valorTramite.toLowerCase().includes(valorFiltro.toLowerCase())) return false;
+                }
+
+            } else {
+                if (valorTramite != valorFiltro) return false;
+            }
+        }
+        return true;
+    });
+
+    console.log('Filtrados:', filtrados);
+    llenarTablaOficios(filtrados, 'tableOficios');
 }
 
 // Agrega esta línea al final de tu archivo Oficios.js

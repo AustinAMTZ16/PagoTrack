@@ -329,7 +329,7 @@
         let row = `<tr>
                             <td>${fondo}</td>
                             <td>${importesFF[fondo]}</td>
-                            <td><button type="button" onclick="eliminarFondo('${fondo}')">Eliminar</button></td>
+                            <td><button type="button" class="btn btn-primary toggleButton" onclick="eliminarFondo('${fondo}')">Eliminar</button></td>
                         </tr>`;
         tbody.innerHTML += row;
       }

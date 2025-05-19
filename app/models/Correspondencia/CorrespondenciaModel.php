@@ -14,7 +14,14 @@ class CorrespondenciaModel
     {
         try {
             // Consulta de totales
-            $query = "SELECT * FROM Correspondencia ORDER BY FechaCreacion DESC;";
+            $query = "SELECT
+                            c.*,         
+                            CONCAT(isT.NombreUser, ' ', isT.ApellidoUser) AS TurnadoNombreCompleto,
+                            CONCAT(isU.NombreUser, ' ', isU.ApellidoUser) AS UsuarioRegistroNombreCompleto
+                        FROM Correspondencia c
+                        INNER JOIN InicioSesion isT ON c.Turnado = isT.InicioSesionID
+                        INNER JOIN InicioSesion isU ON c.UsuarioRegistro = isU.InicioSesionID
+                        ORDER BY c.FechaCreacion DESC;";
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

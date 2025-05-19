@@ -35,7 +35,6 @@
     <nav class="navbar navbar-expand-lg">
     </nav>
 
-
     <main>
         <button id="generarResumen" class="btn btn-info" hidden>Generar Resumen Corporativo</button>
         <div id="resumenGPT" class="mt-3 p-3 border rounded bg-light" hidden></div>
@@ -45,7 +44,7 @@
             <!-- Tarjetas de Totales -->
             <div class="row text-center mt-4">
                 <div class="col-md-4">
-                    <div class="card text-white bg-primary">
+                    <div class="card text-white bg-warning">
                         <div class="card-body">
                             <h5 class="card-title">Total Hoy</h5>
                             <p class="card-text" id="total_hoy">0</p>
@@ -69,7 +68,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Tablas de Datos -->
             <div class="table-responsive">
                 <h4>Trámites con Fecha Límite Hoy</h4>
@@ -90,7 +88,6 @@
                     <tbody></tbody>
                 </table>
             </div>
-
             <div class="table-responsive">
                 <h4>Trámites Vencidos</h4>
                 <table class="table table-bordered" id="tabla_vencidos">
@@ -110,7 +107,6 @@
                     <tbody></tbody>
                 </table>
             </div>
-
             <div class="table-responsive">
                 <h4>Trámites Futuros</h4>
                 <table class="table table-bordered" id="tabla_futuros">
@@ -130,133 +126,19 @@
                     <tbody></tbody>
                 </table>
             </div>
-
-            <!-- Tarjetas de Conteo por Estatus -->
-            <div class="row text-center mt-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body">
-                            <h5 class="card-title">Creado</h5>
-                            <p class="card-text" id="estatus_creado">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body">
-                            <h5 class="card-title">Turnado</h5>
-                            <p class="card-text" id="estatus_turnado">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-danger">
-                        <div class="card-body">
-                            <h5 class="card-title">Devuelto</h5>
-                            <p class="card-text" id="estatus_devuelto">0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row text-center mt-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-danger">
-                        <div class="card-body">
-                            <h5 class="card-title">Rechazado</h5>
-                            <p class="card-text" id="estatus_rechazado">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <h5 class="card-title">Juntas Auxiliares</h5>
-                            <p class="card-text" id="estatus_juntasAuxiliares">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <h5 class="card-title">Inspectorías</h5>
-                            <p class="card-text" id="estatus_inspectorias">0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row text-center mt-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body">
-                            <h5 class="card-title">Registrado SAP</h5>
-                            <p class="card-text" id="estatus_registradoSAP">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body">
-                            <h5 class="card-title">Remesa</h5>
-                            <p class="card-text" id="estatus_remesa">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body">
-                            <h5 class="card-title">Revisión Remesa</h5>
-                            <p class="card-text" id="estatus_revisionRemesa">0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row text-center mt-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <h5 class="card-title">Remesa Aprobada</h5>
-                            <p class="card-text" id="estatus_remesaAprobada">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <h5 class="card-title">Ordenes de Pago</h5>
-                            <p class="card-text" id="estatus_ordenesPago">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-danger">
-                        <div class="card-body">
-                            <h5 class="card-title">Devuelto Ordenes Pago</h5>
-                            <p class="card-text" id="estatus_devueltoOrdenesPago">0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row text-center mt-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-danger">
-                        <div class="card-body">
-                            <h5 class="card-title">Cancelado</h5>
-                            <p class="card-text" id="estatus_cancelado">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body">
-                            <h5 class="card-title">Registros en Procesamiento</h5>
-                            <p class="card-text" id="estatus_procesando">0</p>
-                        </div>
-                    </div>
-                </div>
+            <!-- Tabla de Conteo por Estatus -->
+            <div class="table-responsive">
+                <table id="tablaEstatus" class="table table-bordered table-striped mt-4">
+                    <thead>
+                        <tr>
+                            <th>Estatus</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaEstatus">
+                        <!-- Se llena desde JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>

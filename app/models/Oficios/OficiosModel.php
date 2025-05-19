@@ -36,7 +36,14 @@ class OficiosModel
     {
         try {
             // Consulta de totales
-            $query = "SELECT * FROM RegistroOficios ORDER BY FechaRegistro DESC;";
+            $query = "SELECT
+                            ro.*,         
+                            CONCAT(isT.NombreUser, ' ', isT.ApellidoUser) AS TurnadoNombreCompleto,
+                            CONCAT(isU.NombreUser, ' ', isU.ApellidoUser) AS UsuarioRegistroNombreCompleto
+                        FROM RegistroOficios ro
+                        INNER JOIN InicioSesion isT ON ro.Solicita = isT.InicioSesionID
+                        INNER JOIN InicioSesion isU ON ro.UsuarioRegistro = isU.InicioSesionID
+                        ORDER BY ro.FechaRegistro DESC;";
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

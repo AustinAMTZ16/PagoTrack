@@ -46,22 +46,10 @@ function obtenerKPI() {
                     data.conteo_estatus.forEach(item => {
                         conteo_estatus[item.Estatus] = item.total_registros;
                     });
+                    
+                    actualizarTablaEstatus(conteo_estatus, 'tablaEstatus');
 
-                    // Asignar los valores a los elementos HTML
-                    document.getElementById('estatus_creado').textContent = conteo_estatus.Creado || 0;
-                    document.getElementById('estatus_turnado').textContent = conteo_estatus.Turnado || 0;
-                    document.getElementById('estatus_devuelto').textContent = conteo_estatus.Devuelto || 0;
-                    document.getElementById('estatus_rechazado').textContent = conteo_estatus.Rechazado || 0;
-                    document.getElementById('estatus_juntasAuxiliares').textContent = conteo_estatus.JuntasAuxiliares || 0;
-                    document.getElementById('estatus_inspectorias').textContent = conteo_estatus.Inspectoria || 0;
-                    document.getElementById('estatus_registradoSAP').textContent = conteo_estatus.RegistradoSAP || 0;
-                    document.getElementById('estatus_remesa').textContent = conteo_estatus.Remesa || 0;
-                    document.getElementById('estatus_revisionRemesa').textContent = conteo_estatus.RevisionRemesa || 0;
-                    document.getElementById('estatus_remesaAprobada').textContent = conteo_estatus.RemesaAprobada || 0;
-                    document.getElementById('estatus_ordenesPago').textContent = conteo_estatus.OrdenesPago || 0;
-                    document.getElementById('estatus_devueltoOrdenesPago').textContent = conteo_estatus.DevueltoOrdenesPago || 0;
-                    document.getElementById('estatus_cancelado').textContent = conteo_estatus.Cancelado || 0;
-                    document.getElementById('estatus_procesando').textContent = conteo_estatus.Procesando || 0;
+                    
                 } else {
                     console.error("conteo_estatus no es un array:", data.conteo_estatus);
                 }
@@ -149,7 +137,7 @@ function rellenarTabla(tableId, tramites) {
                 data: "Comentarios",
                 render: function (data) {
                     var comentarioEscapado = encodeURIComponent(data || "Sin comentario");
-                    return `<button class="btn btn-info" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
                 }
             }
         ],
@@ -247,3 +235,79 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+// Funcion para renderizar la tabla de estatus
+function actualizarTablaEstatus(conteo_estatus, tableId) {
+    if (typeof conteo_estatus !== 'object' || conteo_estatus === null) {
+        console.error("Error: conteo_estatus no es un objeto válido.", conteo_estatus);
+        alert("Error: Datos inválidos.");
+        return;
+    }
+
+    // Verificar si la tabla existe
+    if ($(`#${tableId}`).length === 0) {
+        console.error(`Error: No se encontró la tabla con ID ${tableId}`);
+        return;
+    }
+
+    // Destruir tabla si ya estaba inicializada
+    if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+        $(`#${tableId}`).DataTable().clear().destroy();
+        $(`#${tableId} thead`).empty();
+        $(`#${tableId} tbody`).empty();
+    }
+
+    // Restaurar encabezado
+    let theadHTML = `
+        <tr>
+            <th>Estatus</th>
+            <th>Total</th>
+        </tr>`;
+    $(`#${tableId} thead`).html(theadHTML);
+
+    // Convertir objeto en arreglo para DataTable
+    const orden = [
+        'Creado', 'Turnado', 'Devuelto', 'Rechazado',
+        'JuntasAuxiliares', 'Inspectoria', 'RegistradoSAP',
+        'Remesa', 'RevisionRemesa', 'RemesaAprobada',
+        'OrdenesPago', 'DevueltoOrdenesPago', 'Cancelado', 'Procesando'
+    ];
+
+    const datosTabla = orden.map(est => ({
+        Estatus: est.replace(/([A-Z])/g, ' $1').trim(), // separa camelCase con espacios
+        Total: conteo_estatus[est] || 0
+    }));
+
+    // Inicializar DataTable
+    $(`#${tableId}`).DataTable({
+        data: datosTabla,
+        columns: [
+            { data: "Estatus" },
+            { data: "Total" }
+        ],
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            infoFiltered: "(filtrado de _MAX_ registros totales)",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "No hay datos disponibles en la tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        responsive: true,
+        order: [[1, "desc"]]
+    });
+}

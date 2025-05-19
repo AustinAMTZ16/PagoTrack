@@ -389,43 +389,47 @@ function actualizarTablaTramites(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Creado") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="turnarTramite(${data.ID_CONTRATO})">Turnar</button> `;
+                        // BTN ACCION TURNAR
+                        botones += `<button class="btn-icon primary" title="Turnar" onclick="turnarTramite(${data.ID_CONTRATO})"><i class="fa-solid fa-person-walking-arrow-loop-left"></i></button> `;
                     }
                     if (data.Estatus === "VoBO") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="aprobarTramite(${data.ID_CONTRATO})">VoBO</button> `;
+                        // BTN ACCION VoBo
+                        botones += `<button class="btn-icon primary" title="VoBo" onclick="aprobarTramite(${data.ID_CONTRATO})"><i class="fas fa-thumbs-up"></i></button> `;
                     }
                     if (data.Estatus === "RegistradoSAP") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="createRemesa(${data.ID_CONTRATO})">Asignar Remesa</button> `;
+                        // BTN ACCION ASIGNAR REMESA
+                        botones += `<button class="btn-icon primary" title="Asignar Remesa" onclick="createRemesa(${data.ID_CONTRATO})"><i class="fas fa-money-check-alt"></i></button> `;
                     }
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "Operador") || usuario.RolUser === "KPI") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="modificarTramite(${data.ID_CONTRATO})">Modificar</button>`;
+                        // BTN ACCION MODIFICAR
+                        botones += `<button class="btn-icon primary" title="Modificar" onclick="modificarTramite(${data.ID_CONTRATO})"><i class="fas fa-edit"></i></button>`;
                     }
                     if (usuario && usuario.RolUser === "Admin") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarTramite(${data.ID_CONTRATO})">Eliminar</button>`;
+                        // BTN ACCION ELIMINAR
+                        botones += `<button class="btn-icon primary" title="Eliminar" onclick="eliminarTramite(${data.ID_CONTRATO})"><i class="fas fa-trash"></i></button>`;
                     }
-                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
-                    botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'">Detalle</button>`;
+                    // BTN ACCION QR
+                    botones += `<button class="btn-icon primary" title="Ver QR" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')"><i class="fas fa-qrcode"></i></button>`;
+                    // BTN ACCION DETALLE
+                    botones += `<button class="btn-icon primary" title="Ver Detalles" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'"><i class="fas fa-eye"></i></button>`;
 
                     return botones;
-                }
+                },
             },
             {
                 data: "Comentarios",
                 render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                    // Botón para mostrar el comentario
+                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
                 }
             },
             { data: "ID_CONTRATO", visible: true }, // Campo oculto
             { data: "Mes" },
             {
-                data: "FechaRecepcion",
-                render: function (data) {
-                    // Mostrar la fecha y la hora de la fechaLimite
-                    return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' + new Date(data).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "";
-                }
+                data: "FechaRecepcion"
             },
             {
                 data: "FechaLimite",
@@ -521,7 +525,8 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="editarTramite(
+                        // BTN ACCION ACTUALIZAR
+                        botones += `<button class="btn-icon primary" title="Ver Actulizar" onclick="editarTramite(
                             decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
                             decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
                             decodeURIComponent('${encodeURIComponent(data.Concepto)}'),
@@ -530,9 +535,9 @@ function actualizarTablaTurnados(data, tableId) {
                             decodeURIComponent('${encodeURIComponent(data.FechaRecepcion)}'),
                             decodeURIComponent('${encodeURIComponent(data.Dependencia)}'),
                             decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}')
-                        )">Actualizar Estado</button>`;
+                        )"><i class="fa-solid fa-pen-to-square"></i></button>`;
                     }
-                    botones += `<button class="btn btn-primary toggleButton" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')">QR</button>`;
+                    botones += `<button class="btn-icon primary" title="Ver QR" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')"><i class="fas fa-qrcode"></i></button>`;
                     return botones;
                 }
             },
@@ -541,17 +546,14 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                    // Botón para mostrar el comentario
+                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
                 }
             },
             { data: "ID_CONTRATO", visible: true }, // Campo oculto
             { data: "Mes" },
             {
-                data: "FechaRecepcion",
-                render: function (data) {
-                    // Mostrar la fecha y la hora de la fechaLimite
-                    return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' + new Date(data).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "";
-                }
+                data: "FechaRecepcion"
             },
             {
                 data: "FechaLimite",

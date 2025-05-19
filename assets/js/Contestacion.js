@@ -30,6 +30,102 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 3000);
         });
     }
+
+    // Referencia al botón de limpiar filtros
+    const btnLimpiar = document.getElementById("btn-limpiar");
+    // Referencia al botón de filtrar trámites
+    const btnFiltrar = document.getElementById("btn-filtrar");
+    // Limpiar filtros
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', function () {
+            document.querySelectorAll('.filtro-select, .filtro-input, .filtro-date').forEach(element => {
+                if (element.tagName === 'SELECT') {
+                    element.value = 'Todos';
+                } else {
+                    element.value = '';
+                }
+            });
+            console.clear();
+            const filtrosIniciales = {
+                ID_RegistroOficios: '',
+                TipoOficio: '',
+                NumeroOficio: '',
+                FechaRetroactivo: '',
+                DirigidoA: '',
+                Asunto: '',
+                Institucion: '',
+                Solicita: '',
+                FolioInterno: '',
+                Estado: '',
+                FechaEntregaDGAnalista: '',
+                Concepto: '',
+                RespuestaA: '',
+                Monto: '',
+                FechaRecepcionDependencia: '',
+                FechaEntregaAnalistaOperador: '',
+                Comentario: '',
+                ArchivoAdjunto: '',
+                UsuarioRegistro: '',
+                FechaRegistro: '',
+                FechaActualizacion: '',
+                FechaLimitePago: ''
+            };
+            filtrarTramites(filtrosIniciales);
+        });
+    }
+    // Filtrar trámites
+    if (btnFiltrar) {
+        btnFiltrar.addEventListener('click', function () {
+            // Definir todos los filtros con su tipo
+            const filterConfig = [
+                { id: 'ID_RegistroOficios', type: 'text' },
+                { id: 'TipoOficio', type: 'text' },
+                { id: 'NumeroOficio', type: 'text' },
+                { id: 'FechaRetroactivo', type: 'date' },
+                { id: 'DirigidoA', type: 'text' },
+                { id: 'Asunto', type: 'text' },
+                { id: 'Institucion', type: 'text' },
+                { id: 'Solicita', type: 'text' },
+                { id: 'FolioInterno', type: 'text' },
+                { id: 'Estado', type: 'text' },
+                { id: 'FechaEntregaDGAnalista', type: 'date' },
+                { id: 'Concepto', type: 'text' },
+                { id: 'RespuestaA', type: 'text' },
+                { id: 'Monto', type: 'number' },
+                { id: 'FechaRecepcionDependencia', type: 'date' },
+                { id: 'FechaEntregaAnalistaOperador', type: 'date' },
+                { id: 'Comentario', type: 'text' },
+                { id: 'ArchivoAdjunto', type: 'text' },
+                { id: 'UsuarioRegistro', type: 'text' },
+                { id: 'FechaRegistro', type: 'datetime-local' },
+                { id: 'FechaActualizacion', type: 'datetime-local' },
+                { id: 'FechaLimitePago', type: 'datetime-local' }
+            ];
+
+            // Objeto para almacenar los filtros aplicados
+            const appliedFilters = {};
+
+            filterConfig.forEach(config => {
+                const element = document.getElementById(config.id);
+                let value = element.value.trim();
+
+                // Manejar diferentes tipos de inputs
+                if (element.tagName === 'SELECT') {
+                    if (value !== 'Todos') {
+                        appliedFilters[config.id.replace('Select', '')] = value;
+                    }
+                } else {
+                    if (value !== '' && !(config.type === 'number' && isNaN(value))) {
+                        if (config.type === 'number') value = Number(value);
+                        appliedFilters[config.id.replace('Select', '')] = value;
+                    }
+                }
+            });
+
+            //console.log('Filtros aplicados:', appliedFilters);
+            filtrarTramites(appliedFilters);
+        });
+    }
 });
 
 // Funcion para cargar la app
@@ -119,19 +215,22 @@ function llenarTablaContestaciones(data, tableId) {
                     let botones = "";
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
                     if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='ContestacionEditar.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}">Modificar</button>`;
-                        botones += `<button class="btn btn-primary toggleButton" onclick="window.location.href='ContestacionVer.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}">Detalles</button>`;
-                        botones += `<button class="btn btn-primary toggleButton" onclick="eliminarContestacion(${data.ID_RegistroOficios})">Eliminar</button>`;
+                        // BTN de editar
+                        botones += `<button class="btn-icon primary" title="Editar" onclick="window.location.href='ContestacionEditar.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}"><i class="fas fa-edit"></i></button>`;
+                        // BTN de ver
+                        botones += `<button class="btn-icon primary" title="Ver Detalles" onclick="window.location.href='ContestacionVer.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}"><i class="fas fa-eye"></i></button>`;
+                        // BTN de eliminar
+                        botones += `<button class="btn-icon primary" title="Eliminar" onclick="eliminarContestacion(${data.ID_RegistroOficios})"><i class="fas fa-trash"></i></button>`;
                     }
                     return botones;
                 }
-            },            
-            { 
+            },
+            {
                 data: "Comentario",
                 render: function (data) {
                     // Asegurarse de que los caracteres especiales no rompan el código
                     var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>`;
+                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
                 }
             },
             {
@@ -143,11 +242,11 @@ function llenarTablaContestaciones(data, tableId) {
 
                         // Crear botón de descarga
                         return `<a href="${basePath}${data}" 
-                      class="btn btn-primary toggleButton" 
-                      target="_blank"
-                      title="Abrir PDF">
-                    <i class="fas fa-eye"></i> Ver PDF
-                   </a>`;
+                                    class="btn-icon primary" 
+                                    target="_blank"
+                                    title="Abrir PDF">
+                                    <i class="fas fa-eye"></i>
+                                </a>`;
                     } else {
                         return "Sin archivo";
                     }
@@ -161,7 +260,7 @@ function llenarTablaContestaciones(data, tableId) {
             { data: "DirigidoA" },
             { data: "Asunto" },
             { data: "Institucion" },
-            { data: "Solicita" },
+            { data: "TurnadoNombreCompleto" },
             { data: "FolioInterno" },
             { data: "Estado" },
             { data: "FechaEntregaDGAnalista" },
@@ -175,7 +274,7 @@ function llenarTablaContestaciones(data, tableId) {
             },
             { data: "FechaRecepcionDependencia" },
             { data: "FechaEntregaAnalistaOperador" },
-            { data: "UsuarioRegistro" },
+            { data: "UsuarioRegistroNombreCompleto" },
             { data: "FechaActualizacion" },
 
         ],
@@ -405,7 +504,74 @@ function mostrarComentario(comentario) {
     $('#comentarioModal .modal-body').html(htmlContenido);
     $('#comentarioModal').modal('show');
 }
+// Filtrar trámites por estado
+function filtrarTramites(filtros) {
+    let base = dataContestaciones;
+    console.log('Datos en Memoria:', base);
 
+    const mapaCampos = {
+        DirigidoA : 'DirigidoA',
+        Asunto : 'Asunto',
+        Concepto : 'Concepto',
+        Comentario : 'Comentario'
+    };
+
+    const camposExactos = [
+        'ID_RegistroOficios',
+        'TipoOficio',
+        'NumeroOficio',
+        'FechaRetroactivo',
+        'Institucion',
+        'Solicita',
+        'FolioInterno',
+        'Estado',
+        'FechaEntregaDGAnalista',
+        'RespuestaA',
+        'Monto',
+        'FechaRecepcionDependencia',
+        'FechaEntregaAnalistaOperador',
+        'ArchivoAdjunto',
+        'UsuarioRegistro',
+        'FechaRegistro',
+        'FechaActualizacion',
+        'FechaLimitePago'
+    ];
+
+    const filtrados = base.filter(tramite => {
+        for (let campo in filtros) {
+            const valorFiltro = filtros[campo];
+            if (valorFiltro === '' || valorFiltro === 'Todos') continue;
+
+            const campoReal = mapaCampos[campo] || campo;
+            const valorTramite = tramite[campoReal];
+
+            // Comparación numérica
+            if (campo === 'Monto') {
+                if (parseFloat(valorTramite) !== parseFloat(valorFiltro)) return false;
+
+            // Comparación por fecha (solo fecha sin hora)
+            } else if (['FechaRecepcion', 'FechaVencimiento', 'FechaRetroactiva', 'FechaEntregaAcuse', 'FechaLimitePago'].includes(campo)) {
+                const fechaBase = valorTramite ? valorTramite.split(' ')[0] : '';
+                if (fechaBase !== valorFiltro) return false;
+
+            // Comparación exacta o parcial
+            } else if (typeof valorTramite === 'string') {
+                if (camposExactos.includes(campo)) {
+                    if (valorTramite !== valorFiltro) return false;
+                } else {
+                    if (!valorTramite.toLowerCase().includes(valorFiltro.toLowerCase())) return false;
+                }
+
+            } else {
+                if (valorTramite != valorFiltro) return false;
+            }
+        }
+        return true;
+    });
+
+    console.log('Filtrados:', filtrados);
+    llenarTablaContestaciones(filtrados, 'tableContestaciones');
+}
 // Agrega esta línea al final de tu archivo Oficios.js
 window.eliminarContestacion = eliminarContestacion;
 window.mostrarComentario = mostrarComentario;

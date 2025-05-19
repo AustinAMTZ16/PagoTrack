@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (tableListaRemesas) {
         // Obtener el listado de remesas y llenar la tabla
         obtenerListaRemesas().then(listadoRemesas => {
-            llenarTablaRemesas(listadoRemesas);
+            actualizarTablaRemesas(listadoRemesas, 'tableListaRemesas');
+
+            // llenarTablaRemesas(listadoRemesas);
         }).catch(error => {
             console.error("Error al obtener el listado de remesas:", error.message);
         });
@@ -131,38 +133,6 @@ async function cambiarEstatusRemesa(consecutivo, estatus) {
     } catch (error) {
         console.error('Error al actualizar los trámites:', error.message);
     }
-}
-// Funcion para llenar la tabla con los datos de la remesa
-function llenarTablaRemesas(listadoRemesas) {
-    // console.log('listadoRemesas:', listadoRemesas);
-    // Limpiar el contenido de la tabla
-    tableListaRemesas.innerHTML = '';
-
-    // Crear un nuevo encabezado
-    const headerRow = document.createElement('tr');
-    headerRow.innerHTML = ` 
-        <th>#</th>
-        <th>Remesa</th>
-        <th>No. Tramites</th>
-        <th>Acciones</th>
-    `;
-    tableListaRemesas.appendChild(headerRow);
-
-    // Llenar la tabla con los datos de la remesa
-    listadoRemesas.forEach((remesa, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${remesa.Grupo}</td>
-            <td>${remesa.TotalRegistros}</td>
-            <td>            
-                <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
-                <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
-                <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
-            </td>
-        `;
-        tableListaRemesas.appendChild(row);
-    });
 }
 // Funcion para mostrar las remesas
 function mostrarRemesas(remesas) {
@@ -428,5 +398,104 @@ async function updateTramiteCompleto(data) {
     .catch(error => {
         alert('Error al actualizar el trámite. Asegurese de que el numero de remesa sea unico.', error.message);
         throw error; // Importante para que el error se propague y pueda ser capturado
+    });
+}
+// Funcion para llenar la tabla con los datos de la remesa
+function actualizarTablaRemesas(data, tableId) {
+    if (!Array.isArray(data)) {
+        console.error("Error: La respuesta no es un array válido.", data);
+        alert("Error: Datos inválidos.");
+        return;
+    }
+
+    // Destruir tabla si ya está inicializada
+    if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+        $(`#${tableId}`).DataTable().clear().destroy();
+    }
+
+    // Inicializar DataTable
+    $(`#${tableId}`).DataTable({
+        data: data,
+        columns: [
+            {
+                data: null,
+                render: function (data, type, row, meta) {
+                    return meta.row + 1; // Índice numérico
+                }
+            },
+            { data: "Grupo" },
+            { data: "TotalRegistros" },
+            {
+                data: null,
+                render: function (data) {
+                    return `
+                        <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${data.Grupo}')">Configurar</button>
+                        <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${data.Grupo}')">Imprimir</button>
+                        <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${data.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
+                    `;
+                }
+            }
+        ],
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            infoFiltered: "(filtrado de _MAX_ registros totales)",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "No hay datos disponibles en la tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            },
+            aria: {
+                sortAscending: ": Activar para ordenar la columna de manera ascendente",
+                sortDescending: ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
+        responsive: true,
+        order: [[0, "asc"]]
+    });
+}
+// Eliminar codigo en desuso
+function llenarTablaRemesas(listadoRemesas) {
+    // console.log('listadoRemesas:', listadoRemesas);
+    // Limpiar el contenido de la tabla
+    tableListaRemesas.innerHTML = '';
+
+    // Crear un nuevo encabezado
+    const headerRow = document.createElement('tr');
+    headerRow.innerHTML = ` 
+        <th>#</th>
+        <th>Remesa</th>
+        <th>No. Tramites</th>
+        <th>Acciones</th>
+    `;
+    tableListaRemesas.appendChild(headerRow);
+
+    // Llenar la tabla con los datos de la remesa
+    listadoRemesas.forEach((remesa, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${remesa.Grupo}</td>
+            <td>${remesa.TotalRegistros}</td>
+            <td>            
+                <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
+                <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
+                <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
+            </td>
+        `;
+        tableListaRemesas.appendChild(row);
     });
 }

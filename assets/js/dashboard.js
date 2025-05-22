@@ -211,6 +211,17 @@ document.addEventListener('DOMContentLoaded', () => {
             filtrarTramites(appliedFilters);
         });
     }
+
+    // Mostrar/ocultar filtros
+    const btnExportar = document.getElementById('btn-mostrar-ocultar');
+    const filtros = document.querySelector('.row.g-3');
+    btnExportar.addEventListener('click', () => {
+        if (filtros.hasAttribute('hidden')) {
+            filtros.removeAttribute('hidden');
+        } else {
+            filtros.setAttribute('hidden', true);
+        }
+    });
 });
 // Función para obtener la lista de trámites
 function getTramites() {

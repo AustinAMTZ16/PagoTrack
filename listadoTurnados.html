@@ -77,7 +77,7 @@
         <div>
             <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Trámites</h2>
 
-            <div class="row g-3">
+            <div class="row g-3" hidden>
                 <!-- Columna Id -->
                 <div class="col-md-6">
                     <label for="ID_CONTRATO">Identificador Unico</label>
@@ -298,8 +298,10 @@
             <div class="col-12 d-flex justify-content-between">
                 <button class="btn btn-primary toggleButton" id="btn-filtrar"><i class="fas fa-search"></i> Aplicar
                     Filtros</button>
-                <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i> Limpiar
-                    Filtros</button>
+                <button class="btn btn-primary toggleButton" id="btn-mostrar-ocultar"><i class="fa-solid fa-eye"
+                        title="Mostrar/Ocultar"></i>
+                    <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i> Limpiar
+                        Filtros</button>
             </div>
         </div>
 

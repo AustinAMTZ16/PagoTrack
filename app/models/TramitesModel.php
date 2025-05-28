@@ -31,12 +31,12 @@ class TramitesModel
             // Determinar el query según estatus
             if ($data['Estatus'] === 'Turnado') {
                 $query = "INSERT INTO ConsentradoGeneralTramites 
-                (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, FechaTurnado, OfPeticion, NoTramite, DoctacionAnexo, FK_SRF, FechaLimitePago, Analista) 
-                VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :FechaTurnado, :OfPeticion, :NoTramite, :DoctacionAnexo, :FK_SRF, :FechaLimitePago, :Analista)";
+                (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, FechaTurnado, FechaRecepcion ,OfPeticion, NoTramite, DoctacionAnexo, FK_SRF, FechaLimitePago, Analista) 
+                VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :FechaTurnado, :FechaRecepcion ,:OfPeticion, :NoTramite, :DoctacionAnexo, :FK_SRF, :FechaLimitePago, :Analista)";
             } else {
                 $query = "INSERT INTO ConsentradoGeneralTramites 
-                (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, OfPeticion, NoTramite, DoctacionAnexo, FK_SRF, FechaLimitePago, Analista) 
-                VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :OfPeticion, :NoTramite, :DoctacionAnexo, :FK_SRF, :FechaLimitePago, :Analista)";
+                (Mes, TipoTramite, Dependencia, Proveedor, Concepto, Importe, Estatus, Fondo, FechaLimite, AnalistaID, FechaRecepcion, OfPeticion, NoTramite, DoctacionAnexo, FK_SRF, FechaLimitePago, Analista) 
+                VALUES (:Mes, :TipoTramite, :Dependencia, :Proveedor, :Concepto, :Importe, :Estatus, :Fondo, :FechaLimite, :AnalistaID, :FechaRecepcion,:OfPeticion, :NoTramite, :DoctacionAnexo, :FK_SRF, :FechaLimitePago, :Analista)";
             }
 
             $stmt = $this->conn->prepare($query);
@@ -52,6 +52,7 @@ class TramitesModel
             $stmt->bindParam(':Fondo', $data['Fondo']);
             $stmt->bindParam(':FechaLimite', $data['FechaLimite']);
             $stmt->bindParam(':AnalistaID', $data['AnalistaID']);
+            $stmt->bindParam(':FechaRecepcion', $fechaActual);
             $stmt->bindParam(':OfPeticion', $data['OfPeticion']);
             $stmt->bindParam(':NoTramite', $data['NoTramite']);
             $stmt->bindParam(':DoctacionAnexo', $data['DoctacionAnexo']);

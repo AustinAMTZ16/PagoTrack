@@ -73,7 +73,6 @@
             </div>
         </div>
 
-
         <div>
             <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Trámites</h2>
 
@@ -305,26 +304,62 @@
             </div>
         </div>
 
+        <style>
+             /* Permitir que el texto se ajuste en las celdas */
+            table.dataTable th,
+            table.dataTable td {
+                white-space: normal !important;
+                word-wrap: break-word;
+                word-break: break-word;
+                vertical-align: top;
+            }
+
+            /* Permitir redimensionamiento manual del encabezado */
+            table.dataTable th {
+                resize: horizontal;
+                /* overflow: auto; */
+                min-width: 100px;
+                max-width: 600px;
+            }
+
+            /* Forzar que las celdas se ajusten al contenedor si hay scroll */
+            .dataTables_wrapper,
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+
+
+            .fila-observaciones {
+                background-color: #fff3cd !important;
+                border-left: 5px solid #ffc107;
+            }
+
+            .fila-devuelto {
+                background-color: #f1a850 !important;
+                border-left: 5px solid #FF8C00;
+            }
+        </style>
+
 
 
         <div class="table-responsive">
             <h2 style="text-align: center;">Listado de Trámites</h2>
-            <table id="tableTurnados" class="table table-bordered table-hover display nowrap" style="width:100%">
+            <table id="tableTurnados" class="table table-bordered table-hover display nowrap"
+                style="width:100%; table-layout: auto;">
                 <thead>
                     <tr>
                         <th>Acciones</th>
-                        <th>Comentarios</th>
                         <th>#</th>
-                        <th>Mes</th>
                         <th>Fecha de Recepcion</th>
                         <th>Fecha Limite</th>
                         <th>TipoTramite</th>
+                        <th>Estatus</th>
                         <th>Institución</th>
                         <th>Proveedor</th>
                         <th>Concepto</th>
                         <th>Importe</th>
                         <th>AnalistaTurnado</th>
-                        <th>Estatus</th>
                         <th>Fondo</th>
                         <th>Remesa</th>
                         <th>DocSAP</th>

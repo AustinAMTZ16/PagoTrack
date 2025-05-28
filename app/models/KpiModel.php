@@ -1,15 +1,18 @@
 <?php
 include_once 'app/config/Database.php';
 
-class KpiModel {
+class KpiModel
+{
     private $conn;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->conn = (new Database())->conn;
     }
 
     // Función para obtener los KPI's
-    public function obtenerKPI() {
+    public function obtenerKPI()
+    {
         try {
             // Consulta de totales
             $stmt = $this->conn->prepare("SELECT 
@@ -23,7 +26,8 @@ class KpiModel {
             $totales = $stmt->fetch(PDO::FETCH_ASSOC) ?: ["total_hoy" => 0, "total_vencidos" => 0, "total_futuros" => 0];
 
             // Función para obtener registros
-            function obtenerRegistros($pdo, $condicion) {
+            function obtenerRegistros($pdo, $condicion)
+            {
                 $sql = "SELECT ct.ID_CONTRATO,ct.Estatus,ct.FechaRecepcion,ct.FechaLimite,is2.NombreUser,is2.ApellidoUser,ct.Comentarios,ct.TipoTramite,ct.Dependencia,ct.Proveedor,ct.Importe,ct.Concepto
                         FROM ConsentradoGeneralTramites ct
                         INNER JOIN InicioSesion is2 
@@ -36,7 +40,25 @@ class KpiModel {
             }
 
             // Obtener el conteo de registros por estatus
-            $stmt = $this->conn->prepare("SELECT Estatus, COUNT(*) AS total_registros FROM ConsentradoGeneralTramites GROUP BY Estatus");
+            $stmt = $this->conn->prepare("
+                 SELECT Estatus, COUNT(*) AS total_registros 
+                FROM ConsentradoGeneralTramites 
+                WHERE Mes = CASE MONTH(CURDATE())
+                    WHEN 1 THEN 'Enero'
+                    WHEN 2 THEN 'Febrero'
+                    WHEN 3 THEN 'Marzo'
+                    WHEN 4 THEN 'Abril'
+                    WHEN 5 THEN 'Mayo'
+                    WHEN 6 THEN 'Junio'
+                    WHEN 7 THEN 'Julio'
+                    WHEN 8 THEN 'Agosto'
+                    WHEN 9 THEN 'Septiembre'
+                    WHEN 10 THEN 'Octubre'
+                    WHEN 11 THEN 'Noviembre'
+                    WHEN 12 THEN 'Diciembre'
+                END
+                GROUP BY Estatus
+            ");
             $stmt->execute();
             $conteo_estatus = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -56,7 +78,6 @@ class KpiModel {
                 "tramites_futuros" => $tramites_futuros,
                 "conteo_estatus" => $conteo_estatus
             ]);
-
         } catch (PDOException $e) {
             // Respuesta de error en caso de fallo
             http_response_code(500);
@@ -64,4 +85,3 @@ class KpiModel {
         }
     }
 }
-?>

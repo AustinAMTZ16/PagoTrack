@@ -511,23 +511,59 @@ function actualizarTablaTramites(data, tableId) {
     });
 }
 // Función para actualizar la tabla de trámites turnados
+const ordenEstatus = [
+    'Observaciones',
+    'Devuelto',
+    'Turnado',
+    'Rechazado',
+    'RegistradoSAP',
+    'Procesando',
+    'JuntasAuxiliares',
+    'Inspectoria',
+    'Remesa',
+    'RevisionRemesa',
+    'RemesaAprobada',
+    'DevueltoOrdenesPago',
+    'Pagado',
+    'Terminado',
+    'Cancelado',
+    'Cheque',
+    'ComprobacionRecursoFinancieros',
+    'OrdenesPago',
+    'CRF'
+];
 function actualizarTablaTurnados(data, tableId) {
     if (!Array.isArray(data)) {
         console.error("Error: La respuesta no es un array válido.", data);
         alert("Error: Datos inválidos.");
         return;
     }
-    // Verificar si DataTable ya está inicializado y destruirlo para actualizar
+
     if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
         $(`#${tableId}`).DataTable().clear().destroy();
     }
-    // Formatear el importe a moneda
+
     const formatoMoneda = new Intl.NumberFormat("es-MX", {
         style: "currency",
         currency: "MXN",
         minimumFractionDigits: 2,
     });
-    // Inicializar DataTable con datos dinámicos
+
+    // Ordenar manualmente antes de pasar a la tabla
+    data.sort((a, b) => {
+        const estatusA = ordenEstatus.indexOf(a.Estatus) !== -1 ? ordenEstatus.indexOf(a.Estatus) : 99;
+        const estatusB = ordenEstatus.indexOf(b.Estatus) !== -1 ? ordenEstatus.indexOf(b.Estatus) : 99;
+
+        if (estatusA !== estatusB) {
+            return estatusA - estatusB;
+        }
+
+        // Segundo criterio: FechaRecepcion DESC
+        const fechaA = new Date(a.FechaRecepcion);
+        const fechaB = new Date(b.FechaRecepcion);
+        return fechaB - fechaA;
+    });
+
     $(`#${tableId}`).DataTable({
         data: data,
         columns: [
@@ -535,9 +571,8 @@ function actualizarTablaTurnados(data, tableId) {
                 data: null,
                 render: function (data) {
                     let botones = "";
-                    if (data.Estatus === "Devuelto" || data.Estatus === "Turnado" || data.Estatus === "Observaciones") {
-                        // BTN ACCION ACTUALIZAR
-                        botones += `<button class="btn-icon primary" title="Ver Actulizar" onclick="editarTramite(
+                    if (["Devuelto", "Turnado", "Observaciones"].includes(data.Estatus)) {
+                        botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(
                             decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
                             decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
                             decodeURIComponent('${encodeURIComponent(data.Concepto)}'),
@@ -548,32 +583,25 @@ function actualizarTablaTurnados(data, tableId) {
                             decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}')
                         )"><i class="fa-solid fa-pen-to-square"></i></button>`;
                     }
-                    botones += `<button class="btn-icon primary" title="Ver QR" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')"><i class="fas fa-qrcode"></i></button>`;
+
+                    botones += `<button class="btn-icon primary" title="QR" onclick="generarQR(${data.ID_CONTRATO}, '${data.NombreUser}', '${data.NoTramite}')"><i class="fas fa-qrcode"></i></button>`;
+
+                    const comentarioEscapado = encodeURIComponent(data.Comentarios || "");
+                    botones += `<button class="btn-icon primary" title="Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
+
                     return botones;
                 }
             },
-            {
-                data: "Comentarios",
-                render: function (data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    // Botón para mostrar el comentario
-                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
-                }
-            },
-            { data: "ID_CONTRATO", visible: true }, // Campo oculto
-            { data: "Mes" },
-            {
-                data: "FechaRecepcion"
-            },
+            { data: "ID_CONTRATO" },
+            { data: "FechaRecepcion" },
             {
                 data: "FechaLimite",
                 render: function (data) {
-                    //mostrar solo la fecha de la fechaLimite 
-                    return data ? new Date(data).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) : "";
+                    return data ? new Date(data).toLocaleDateString('es-ES') : "";
                 }
             },
             { data: "TipoTramite" },
+            { data: "Estatus" },
             { data: "Dependencia" },
             { data: "Proveedor" },
             { data: "Concepto" },
@@ -586,29 +614,28 @@ function actualizarTablaTurnados(data, tableId) {
             {
                 data: null,
                 render: function (data) {
-                    nombreAnalista = `${data.NombreUser} ${data.ApellidoUser}`;
-                    return nombreAnalista;
+                    return `${data.NombreUser} ${data.ApellidoUser}`;
                 }
             },
-            { data: "Estatus" },
             { data: "Fondo" },
             { data: "RemesaNumero" },
             { data: "DocSAP" },
             { data: "IntegraSAP" }
         ],
+        pageLength: 10, // Número de filas por página        
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         paging: true,
         searching: true,
-        ordering: true,
+        ordering: false, // ya están ordenados antes
         info: true,
+        scrollX: true,
+        autoWidth: false,
         language: {
-            processing: "Procesando...",
             search: "Buscar:",
             lengthMenu: "Mostrar _MENU_ registros",
             info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
             infoEmpty: "Mostrando 0 a 0 de 0 registros",
             infoFiltered: "(filtrado de _MAX_ registros totales)",
-            infoPostFix: "",
-            loadingRecords: "Cargando...",
             zeroRecords: "No se encontraron resultados",
             emptyTable: "No hay datos disponibles en la tabla",
             paginate: {
@@ -616,16 +643,19 @@ function actualizarTablaTurnados(data, tableId) {
                 previous: "Anterior",
                 next: "Siguiente",
                 last: "Último"
-            },
-            aria: {
-                sortAscending: ": Activar para ordenar la columna de manera ascendente",
-                sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        pageLength: 10, // Número de filas por página
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-        responsive: true,
-        order: [[4, "DESC"]],
+        createdRow: function (row, data) {
+            const estatus = data.Estatus;
+            if (estatus === "Observaciones") {
+                $('td', row).addClass('fila-observaciones');
+            } else if (estatus === "Devuelto") {
+                $('td', row).addClass('fila-devuelto');
+            }
+        },
+        initComplete: function () {
+            $('#tableTurnados thead th').css('resize', 'horizontal');
+        }
     });
 }
 // Filtrar trámites por estado

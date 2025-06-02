@@ -87,20 +87,15 @@
                     <label for="estadoSelect">Estado</label>
                     <select name="estadoSelect" id="estadoSelect" class="form-select">
                         <option value="Todos">Todos</option>
-                        <option value="Creado">Creado</option>
-                        <option value="Turnado">Turnado</option>
-                        <option value="Observaciones">Observaciones</option>
-                        <option value="Devuelto">Devuelto</option>
-                        <option value="JuntasAuxiliares">Juntas Auxiliares</option>
-                        <option value="Inspectoria">Inspectorías</option>
-                        <option value="RegistradoSAP">Registrado SAP</option>
-                        <option value="Remesa">Remesa</option>
-                        <option value="DevueltoOrdenesPago">Devuelto Ordenes de Pago</option>
-                        <option value="Pagado">Pagado</option>
-                        <option value="Cheque">Cheque</option>
-                        <option value="Terminado">Terminado</option>
-                        <option value="Rechazado">Rechazado</option>
-                        <option value="Cancelado">Cancelado</option>
+                            <option value="Creado">Creado</option>
+                            <option value="Turnado">Turnado</option>
+
+                            <option value="Observaciones">Observaciones</option>
+                            <option value="Devuelto">Devuelto</option>
+                            <option value="Rechazado">Rechazado</option>
+                            <option value="Cancelado">Cancelado</option>
+
+                            <option value="RegistradoSAP">Registrado SAP</option>
                     </select>
                 </div>
                 <!-- Columna Mes -->
@@ -138,7 +133,7 @@
                     </select>
                 </div>
                 <!-- Columna Analista -->
-                <div class="col-md-6">
+                <div class="col-md-6" hidden>
                     <label for="analistaSelect">Analista</label>
                     <select name="analistaSelect" id="analistaSelect" class="form-select">
                         <option value="Todos">Todos</option>

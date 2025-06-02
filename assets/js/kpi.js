@@ -268,8 +268,8 @@ function actualizarTablaEstatus(conteo_estatus, tableId) {
     const orden = [
         'Creado', 'Turnado', 'Devuelto', 'Rechazado',
         'JuntasAuxiliares', 'Inspectoria', 'RegistradoSAP',
-        'Remesa', 'RevisionRemesa', 'RemesaAprobada',
-        'OrdenesPago', 'DevueltoOrdenesPago', 'Cancelado', 'Procesando'
+        'Remesa', 'RemesaAprobada',
+        'OrdenesPago', 'DevueltoOrdenesPago', 'Cancelado', 'Procesando', 'Observaciones','CRF'
     ];
 
     const datosTabla = orden.map(est => ({
@@ -305,7 +305,7 @@ function actualizarTablaEstatus(conteo_estatus, tableId) {
                 last: "Último"
             }
         },
-        pageLength: 10,
+        pageLength: 20,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
         order: [[1, "desc"]]

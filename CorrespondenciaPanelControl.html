@@ -43,10 +43,9 @@
 
     <main>
         <h1 class="mb-4">Listado de Correspondencia - Solicitud</h1>
-        
         <div>
             <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Correspondencia</h2>
-            <div class="row g-3">
+            <div class="row g-3" hidden>
                 <!--ID Registro-->
                 <div class="col-md-6">
                     <label for="ID">ID Registro</label>
@@ -70,8 +69,8 @@
                 <!--Dependencia-->
                 <div class="col-md-6">
                     <label for="Dependencia">Dependencia</label>
-                    <select name="Dependencia" id="Dependencia" placeholder="Institución"  class="form-select">
-                        <option value="Todos" disabled selected>Seleccione una Institución</option>
+                    <select name="Dependencia" id="Dependencia" placeholder="Institución" class="form-select">
+                        <option value="Todos">Todos</option>
                         <!-- Dependencias -->
                         <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
                         <option value="Presidencia Municipal">Presidencia Municipal</option>
@@ -128,8 +127,8 @@
                 <!--Departamento-->
                 <div class="col-md-6">
                     <label for="Departamento">Departamento</label>
-                    <select class="form-select" id="Departamento" name="Departamento" >
-                        <option value="Todos">Seleccione el Departamento</option>
+                    <select class="form-select" id="Departamento" name="Departamento">
+                        <option value="Todos">Todos</option>
                         <option value="Direccion_Egresos_Control_Presupuestal">Dirección de Egresos y Control
                             Presupuestal</option>
                         <option value="Departamento_Presupuesto">Departamento de Presupuesto</option>
@@ -146,8 +145,8 @@
                 <!--tipoOficio-->
                 <div class="col-md-6">
                     <label for="tipoOficio">Tipo de Oficio</label>
-                    <select class="form-select" id="tipoOficio" name="tipoOficio" >
-                        <option value="Todos">Seleccione el Tipo de Oficio</option>
+                    <select class="form-select" id="tipoOficio" name="tipoOficio">
+                        <option value="Todos">Todos</option>
                         <option value="Regularizacion">Regularización</option>
                         <option value="Suficiencia_Presupuestal">Suficiencia Presupuestal</option>
                         <option value="Suficiencia_Compromiso_Gasto">Suficiencia Compromiso Gasto</option>
@@ -195,8 +194,8 @@
                 <!--Turnado-->
                 <div class="col-md-6">
                     <label for="Turnado">Turnado (Usuario)</label>
-                    <select name="Turnado" id="Turnado" placeholder="Analista Turnado" class="form-select" >
-                        <option value="Todos" disabled selected>Seleccione el Analista</option>
+                    <select name="Turnado" id="Turnado" placeholder="Analista Turnado" class="form-select">
+                        <option value="Todos">Todos</option>
                         <option value="36">Leobardo Armenta Suárez</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
                         <option value="35">Eugenia Bermejo García</option>
@@ -248,7 +247,7 @@
                 <div class="col-md-6">
                     <label for="Estado">Estado</label>
                     <select class="form-select" id="Estado" name="Estado">
-                        <option value="Todos">Seleccione un estado</option>
+                        <option value="Todos">Todos</option>
                         <option value="CREADO">CREADO</option>
                         <option value="TURNADO">TURNADO</option>
                         <option value="OBSERVACIONES">OBSERVACIONES</option>
@@ -267,8 +266,8 @@
                 <!--UsuarioRegistro-->
                 <div class="col-md-6">
                     <label for="UsuarioRegistro">Usuario Registro (ID)</label>
-                    <select name="UsuarioRegistro" id="UsuarioRegistro" placeholder="Usuario" class="form-select" >
-                        <option value="Todos" disabled selected>Seleccione el Usuario</option>
+                    <select name="UsuarioRegistro" id="UsuarioRegistro" placeholder="Usuario" class="form-select">
+                        <option value="Todos">Todos</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
                         <option value="35">Eugenia Bermejo García</option>
                     </select>
@@ -294,27 +293,26 @@
                     <input type="date" id="FechaLimitePago" name="FechaLimitePago" class="form-control">
                 </div>
             </div>
-
-
             <div class="col-12 d-flex justify-content-between">
                 <button class="btn btn-primary toggleButton" id="btn-filtrar"><i class="fas fa-search"></i> Aplicar
                     Filtros</button>
+                <button class="btn btn-primary toggleButton" id="btn-mostrar-ocultar"><i class="fa-solid fa-eye"
+                        title="Mostrar/Ocultar"></i></button>
                 <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i> Limpiar
                     Filtros</button>
             </div>
         </div>
-
+        <br>
         <div class="table-responsive">
             <div class="col-12 d-flex justify-content-between">
                 <button id="crearOficio" class="btn btn-primary toggleButton">Nuevo Registro</button>
                 <button id="descargarExcelOficios" class="btn btn-primary toggleButton">Descargar Excel</button>
             </div>
-            <table id="tableOficios" class="table table-bordered table-hover display nowrap" style="width:100%">
+            <table id="tableOficios" class="table table-bordered table-hover display nowrap"
+                style="width:100%; table-layout: auto;">
                 <thead>
                     <tr>
                         <th>Acciones</th>
-                        <th>Comentarios</th>
-                        <th>ArchivoScaneado</th>
                         <th>ID</th>
                         <th>Folio</th>
                         <th>FechaCreacion</th>

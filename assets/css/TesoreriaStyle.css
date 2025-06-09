@@ -130,10 +130,12 @@ tr:nth-child(even) {
 }
 
 .btn-icon {
-  width: 45px; /* más compacto */
+  width: 45px;
+  /* más compacto */
   height: 40px;
   padding: 6px;
-  font-size: 16px; /* ajustable según tamaño de ícono */
+  font-size: 16px;
+  /* ajustable según tamaño de ícono */
   text-align: center;
   display: inline-flex;
   justify-content: center;
@@ -141,12 +143,15 @@ tr:nth-child(even) {
   border-radius: 6px;
   white-space: nowrap;
   border: none;
-  margin-right: 6px; /* agrega espacio entre botones */
+  margin-right: 6px;
+  /* agrega espacio entre botones */
 }
 
 .btn-icon i {
-  font-size: 18px; /* tamaño del ícono */
-  pointer-events: none; /* evitar que bloquee el clic */
+  font-size: 18px;
+  /* tamaño del ícono */
+  pointer-events: none;
+  /* evitar que bloquee el clic */
 }
 
 .btn-icon.primary {
@@ -173,11 +178,13 @@ tr:nth-child(even) {
   border-radius: 6px;
   white-space: nowrap;
 }
+
 .btn-primary {
   background-color: var(--color-header-footer);
   border-color: var(--color-header-footer);
   font-size: var(--font-base);
 }
+
 .default-btn {
   background-color: var(--color-header-footer);
   color: white;
@@ -188,6 +195,7 @@ tr:nth-child(even) {
   font-size: var(--font-base);
   transition: background-color 0.3s ease;
 }
+
 .default-btn:hover {
   background-color: var(--hover-color-2);
 }
@@ -315,4 +323,40 @@ select[readonly] {
   /* Reduce el tamaño del texto */
   color: #666;
   /* Cambia el color si lo deseas, un gris suave es ideal */
+}
+
+
+/* Permitir que el texto se ajuste en las celdas */
+table.dataTable th,
+table.dataTable td {
+  white-space: normal !important;
+  word-wrap: break-word;
+  word-break: break-word;
+  vertical-align: top;
+}
+
+/* Permitir redimensionamiento manual del encabezado */
+table.dataTable th {
+  resize: horizontal;
+  /* overflow: auto; */
+  min-width: 100px;
+  max-width: 600px;
+}
+
+/* Forzar que las celdas se ajusten al contenedor si hay scroll */
+.dataTables_wrapper,
+.table-responsive {
+  overflow-x: auto;
+}
+
+
+
+.fila-observaciones {
+  background-color: #fff3cd !important;
+  border-left: 5px solid #ffc107;
+}
+
+.fila-devuelto {
+  background-color: #f1a850 !important;
+  border-left: 5px solid #FF8C00;
 }

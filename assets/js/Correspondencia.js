@@ -147,6 +147,17 @@ document.addEventListener('DOMContentLoaded', () => {
             filtrarTramites(appliedFilters);
         });
     }
+
+    // Mostrar/ocultar filtros
+    const btnExportar = document.getElementById('btn-mostrar-ocultar');
+    const filtros = document.querySelector('.row.g-3');
+    btnExportar.addEventListener('click', () => {
+        if (filtros.hasAttribute('hidden')) {
+            filtros.removeAttribute('hidden');
+        } else {
+            filtros.setAttribute('hidden', true);
+        }
+    });
 });
 
 // Funcion para cargar la app
@@ -334,34 +345,16 @@ function llenarTablaOficios(data, tableId) {
                         // BTN FIRMA TITULAR
                         botones += `<button class="btn-icon primary" title="Firma Titular" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}"><i class="fas fa-file-signature"></i></button>`;
                     }
-
-                    return botones;
-                }
-            },
-            {
-                data: "Comentarios",
-                render: function (data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    // BTN para mostrar el comentario
-                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
-                }
-            },
-            {
-                data: "ArchivoScaneado",
-                render: function (data, type, row) {
-                    if (data && data !== "N/A" && data !== "Array") {
+                    // BTN COMENTARIOS
+                    const comentarioEscapado = encodeURIComponent(data.Comentarios || "");
+                    botones += `<button class="btn-icon primary" title="Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
+                    // BTN VER ARCHIVO ESCANEADO
+                    const archivo = data.ArchivoScaneado || "N/A";
+                    if (archivo !== "N/A" && archivo !== "Array") {
                         const basePath = 'assets/uploads/Correspondencia/';
-
-                        // Botón para abrir en nueva pestaña (sin atributo download)
-                        return `<a href="${basePath}${data}" 
-                                    class="btn-icon primary" 
-                                    target="_blank"
-                                    title="Abrir PDF">
-                                    <i class="fas fa-eye"></i>
-                                </a>`;
+                        botones += `<button class="btn-icon primary" title="Ver archivo" onclick="window.open('${basePath}${archivo}', '_blank')"><i class="fas fa-file-pdf"></i></button>`;
                     }
-                    return "Sin archivo";
+                    return botones;
                 }
             },
             { data: "ID" },
@@ -740,12 +733,12 @@ function filtrarTramites(filtros) {
             if (campo === 'Monto') {
                 if (parseFloat(valorTramite) !== parseFloat(valorFiltro)) return false;
 
-            // Comparación por fecha (solo fecha sin hora)
+                // Comparación por fecha (solo fecha sin hora)
             } else if (['FechaRecepcion', 'FechaVencimiento', 'FechaRetroactiva', 'FechaEntregaAcuse', 'FechaLimitePago'].includes(campo)) {
                 const fechaBase = valorTramite ? valorTramite.split(' ')[0] : '';
                 if (fechaBase !== valorFiltro) return false;
 
-            // Comparación exacta o parcial
+                // Comparación exacta o parcial
             } else if (typeof valorTramite === 'string') {
                 if (camposExactos.includes(campo)) {
                     if (valorTramite !== valorFiltro) return false;

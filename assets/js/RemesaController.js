@@ -8,11 +8,11 @@ let ltRemesas = [];
 // Obtener el nombre + apellido del usuario de LocalStorage
 const usuario = JSON.parse(localStorage.getItem('usuario'));
 const NombreUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;
+const DeoartametoUserLocalStorage = usuario.DepartamentoUser;
 
 
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function () {
-
     // Obtener el parámetro "consecutivo" de la URL
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('FKNumeroRemesa').value = FKNumeroRemesa;
         document.getElementById('FechaPago').value = FechaPago;
         document.getElementById('Estatus').value = Estatus;
-        document.getElementById('Comentarios').value = Comentarios && Comentarios.trim() !== '' ? Comentarios : 'Sin comentarios';
+        document.getElementById('Comentarios').value = Comentarios && Comentarios.trim() !== '' ? Comentarios : 'Nota: ';
     }
 
     // Validar formConfigurarRemesa 
@@ -73,8 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
-
     //validar si existe el formulario de asignar remesa
     const formAsignarRemesa = document.getElementById('formAsignarRemesa');
     if (formAsignarRemesa) {
@@ -86,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formAsignarRemesa.addEventListener('submit', function (event) {
             event.preventDefault();
             const data = {
-                ID_CONTRATO  : document.getElementById('ID_TRAMITE').value,
+                ID_CONTRATO: document.getElementById('ID_TRAMITE').value,
                 Estatus: document.getElementById('Estatus').value,
                 RemesaNumero: document.getElementById('NumeroRemesa').value,
                 MotivoModificacion: document.getElementById('Comentarios').value,
@@ -94,6 +92,25 @@ document.addEventListener("DOMContentLoaded", function () {
             };
             updateTramiteCompleto(data);
         });
+    }
+
+    const urlParamsRemesa = new URLSearchParams(window.location.search);
+    const remesaRaw = urlParamsRemesa.get("remesa");
+    if (remesaRaw) {
+        // 🧠 Cortar remesa por el segundo guion
+        const partes = remesaRaw.split("-");
+        const remesaBuscada = partes.length >= 2 ? `${partes[0]}-${partes[1]}` : remesaRaw;
+
+        // Esperar a que DataTable esté cargada (esperamos 100ms)
+        setTimeout(() => {
+            // Buscar input de búsqueda global de DataTable
+            const inputBusqueda = document.querySelector('input[type="search"]');
+            if (inputBusqueda) {
+                inputBusqueda.value = remesaBuscada;
+                const evento = new Event('input', { bubbles: true });
+                inputBusqueda.dispatchEvent(evento);
+            }
+        }, 100);
     }
 });
 
@@ -108,9 +125,9 @@ async function cambiarEstatusRemesa(consecutivo, estatus) {
     // Obtener solo los ID_CONTRATO en formato string separados por coma
     const idsContrato = ltRemesas.map(remesa => remesa.ID_CONTRATO).join(',');
 
-    const data = { 
-        FKNumeroRemesa: consecutivo, 
-        estatus: estatus,
+    const data = {
+        FKNumeroRemesa: consecutivo,
+        Estatus: estatus,
         ID_CONTRATO: idsContrato, // ✅ Aquí ya estás pasando todos los IDs
         Analista: NombreUser
     };
@@ -130,6 +147,7 @@ async function cambiarEstatusRemesa(consecutivo, estatus) {
 
         const result = await response.json();
         alert('Trámites actualizados correctamente' + result.message);
+        location.reload();
     } catch (error) {
         console.error('Error al actualizar los trámites:', error.message);
     }
@@ -250,7 +268,7 @@ function formatoMoneda(valor) {
 }
 // Funcion para armar la remesa 
 async function armarRemesa(consecutivo) {
-    const data = { 
+    const data = {
         consecutivo: consecutivo,
         Analista: NombreUser
     };
@@ -343,6 +361,7 @@ async function configurarRemesa(grupo) {
             window.location.href = 'configurarRemesa.html?ID_REMESA=' + result.data[0].ID_REMESA + '&DepartamentoTurnado=' + result.data[0].DepartamentoTurnado + '&FechaRemesa=' + result.data[0].FechaRemesa + '&FKNumeroRemesa=' + result.data[0].FKNumeroRemesa + '&FechaPago=' + result.data[0].FechaPago + '&Estatus=' + result.data[0].Estatus + '&Comentarios=' + result.data[0].Comentarios;
         } else {
             alert('Remesa creada correctamente');
+            location.reload();
         }
 
     } catch (error) {
@@ -366,7 +385,7 @@ async function updateRemesa(data) {
         }
 
         const result = await response.json();
-        alert('Remesa actualizada correctamente'+result.message);
+        alert('Remesa actualizada correctamente' + result.message);
         window.location.href = 'seguimientoRemesas.html';
     } catch (error) {
         console.error('Error al actualizar la remesa:', error.message);
@@ -374,31 +393,29 @@ async function updateRemesa(data) {
 }
 // Función Actualizar Tramite Completo
 async function updateTramiteCompleto(data) {
-    //console.log('updateTramiteCompletodata:', data);
-    return fetch(URL_BASE + 'updateTramiteCompleto', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
+    try {
+        // Paso 1: Actualiza el trámite
+        const response = await fetch(URL_BASE + 'updateTramiteCompleto', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
         if (!response.ok) {
             throw new Error(`Error en la solicitud: ${response.status}`);
         }
-        return response.json();
-    })
-    .then(result => {
-        try {
-            alert(result.message);
+        const result = await response.json();
+        if (result.message === 'Tramite modificados.') {
+            alert('✅ Trámite actualizado correctamente: ' + result.message);
+            // Paso 4: Redirige al dashboard
             window.location.href = 'dashboard.html';
-            // console.log('result:', result);
-        } catch (error) {
-            console.error("Error al actualizar el trámite:", error);
         }
-    })
-    .catch(error => {
-        alert('Error al actualizar el trámite. Asegurese de que el numero de remesa sea unico.', error.message);
-        throw error; // Importante para que el error se propague y pueda ser capturado
-    });
+    } catch (error) {
+        console.error("Error en el proceso:", error);
+        alert('❌ Error durante la operación.\n' + error.message);
+    }
 }
 // Funcion para llenar la tabla con los datos de la remesa
 function actualizarTablaRemesas(data, tableId) {
@@ -426,15 +443,48 @@ function actualizarTablaRemesas(data, tableId) {
             { data: "Grupo" },
             { data: "TotalRegistros" },
             {
+                data: "Estatus",
+                render: function (data, type, row) {
+                    return (data && data.trim()) ? data : "No creada";
+                }
+            },
+            {
                 data: null,
-                render: function (data) {
-                    return `
-                        <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${data.Grupo}')">Configurar</button>
-                        <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${data.Grupo}')">Imprimir</button>
-                        <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${data.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
-                    `;
+                render: function (data, type, row) {
+                    const grupo = data.Grupo;
+                    const estatus = (data.Estatus && data.Estatus.trim()) ? data.Estatus : "No creada";
+
+                    let buttons = `
+                                        <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${grupo}')">Configurar</button>
+                                    `;
+
+                    if (estatus !== "No creada") {
+                        buttons += `
+                                        <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${grupo}')">Imprimir</button>
+                                    `;
+                    }
+
+                    if (estatus === "Pendiente" &&
+                        DeoartametoUserLocalStorage === 'Presupuesto' || DeoartametoUserLocalStorage === 'Admin') {
+                        buttons += `
+                                        <button class="btn btn-success toggleButton" onclick="cambiarEstatusRemesa('${grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
+                                    `;
+                    }
+
+                    if (
+                        estatus === "RemesaAprobada" &&
+                        (DeoartametoUserLocalStorage === 'OrdenesPago' || DeoartametoUserLocalStorage === 'Admin')
+                    ) {
+                        buttons += `
+                                        <button class="btn btn-warning toggleButton" onclick="cambiarEstatusRemesa('${grupo}', 'OrdenesPago')">Órdenes Pago</button>
+                                    `;
+                    }
+
+
+                    return buttons;
                 }
             }
+
         ],
         paging: true,
         searching: true,
@@ -464,33 +514,82 @@ function actualizarTablaRemesas(data, tableId) {
         pageLength: 10,
         lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
         responsive: true,
-        order: [[0, "asc"]]
+        order: [[0, "asc"]],
+
+        initComplete: function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const remesaRaw = urlParams.get("remesa");
+
+            if (remesaRaw) {
+                const partes = remesaRaw.split("-");
+                const remesaBuscada = partes.length >= 2 ? `${partes[0]}-${partes[1]}` : remesaRaw;
+
+                // Aplica el filtro al campo de búsqueda
+                this.api().search(remesaBuscada).draw();
+            }
+        }
+
     });
 }
-// Eliminar codigo en desuso
 function llenarTablaRemesas(listadoRemesas) {
-    // console.log('listadoRemesas:', listadoRemesas);
-    // Limpiar el contenido de la tabla
     tableListaRemesas.innerHTML = '';
 
-    // Crear un nuevo encabezado
+    // Encabezado
     const headerRow = document.createElement('tr');
     headerRow.innerHTML = ` 
         <th>#</th>
         <th>Remesa</th>
-        <th>No. Tramites</th>
+        <th>No. Trámites</th>
         <th>Acciones</th>
     `;
     tableListaRemesas.appendChild(headerRow);
 
-    // Llenar la tabla con los datos de la remesa
+    // Función para extraer fecha si tiene formato válido
+    function extraerFecha(remesa) {
+        let match8 = remesa.Grupo.match(/^(\d{8})-\d+$/); // 05062025-100
+        if (match8) return match8[1];
+
+        let match6 = remesa.Grupo.match(/^(\d{6})-\d+$/); // 050625-100
+        if (match6) {
+            let raw = match6[1]; // 050625
+            let dia = raw.slice(0, 2);
+            let mes = raw.slice(2, 4);
+            let anioCorto = raw.slice(4, 6);
+            let anio = parseInt(anioCorto) >= 50 ? `19${anioCorto}` : `20${anioCorto}`;
+            return `${dia}${mes}${anio}`; // Devuelve 05062025
+        }
+
+        return null;
+    }
+
+    // Ordenar remesas
+    listadoRemesas.sort((a, b) => {
+        const fechaA = extraerFecha(a);
+        const fechaB = extraerFecha(b);
+
+        // Si ambas tienen fecha válida
+        if (fechaA && fechaB) {
+            return parseInt(fechaB) - parseInt(fechaA); // más reciente primero
+        }
+
+        // Si solo A tiene formato válido
+        if (fechaA) return -1;
+
+        // Si solo B tiene formato válido
+        if (fechaB) return 1;
+
+        // Ninguno tiene formato válido, mantener orden original
+        return 0;
+    });
+
+    // Llenar tabla
     listadoRemesas.forEach((remesa, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${remesa.Grupo}</td>
             <td>${remesa.TotalRegistros}</td>
-            <td>            
+            <td>
                 <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
                 <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
                 <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
@@ -498,4 +597,37 @@ function llenarTablaRemesas(listadoRemesas) {
         `;
         tableListaRemesas.appendChild(row);
     });
+}
+async function crearRemesa(RemesaNumero, Analista) {
+    // Paso 2: Extrae ID de remesa (ej. "04062025-1-1" => "04062025-1")
+    const remesaID = RemesaNumero.split('-').slice(0, 2).join('-');
+    // Paso 3: Estructura completa
+    const data = {
+        FKNumeroRemesa: remesaID,
+        Analista: Analista
+    };
+    const remesaResponse = await fetch(URL_BASE + 'createRemesa', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    if (!remesaResponse.ok) {
+        throw new Error(`Error en la solicitud: ${remesaResponse.status}`);
+    }
+    const result = await remesaResponse.json();
+    console.log('Resultado de la actualización del trámite:', result);
+    if (result.message === 'Remesa registrada.') {
+        alert('✅ Trámite actualizado correctamente: ' + result.message);
+        // Paso 4: Redirige al dashboard
+        window.location.href = 'dashboard.html';
+    }
+
+    if (!remesaResponse.ok) {
+        throw new Error(`Error al crear la remesa: ${remesaResponse.status}`);
+    }
+
+
+
 }

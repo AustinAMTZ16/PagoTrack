@@ -14,7 +14,8 @@ class RemesaModel
     {
         $query = "SELECT 
                         t.Grupo,
-                        t.TotalRegistros
+                        t.TotalRegistros,
+                        r.Estatus
                     FROM (
                         SELECT 
                             SUBSTRING_INDEX(RemesaNumero, '-', 2) AS Grupo,
@@ -23,8 +24,8 @@ class RemesaModel
                         WHERE RemesaNumero IS NOT NULL
                         GROUP BY Grupo
                     ) AS t
-                    ORDER BY 
-                        STR_TO_DATE(SUBSTRING_INDEX(t.Grupo, '-', 1), '%d%m%y') DESC; ";
+                    LEFT JOIN Remesas r ON r.FKNumeroRemesa = t.Grupo
+                    ORDER BY STR_TO_DATE(SUBSTRING_INDEX(t.Grupo, '-', 1), '%d%m%y') DESC;";
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -255,7 +256,7 @@ class RemesaModel
                     "ID_CONTRATO" => $tramite['ID_CONTRATO'],
                     "Modificado_Por" => $data['Analista'],
                     "Fecha" => $fechaActual,
-                    "Estatus" => 'RemesaAprobada',
+                    "Estatus" => $data['Estatus'],
                     "Comentario" => 'La remesa fue aprobada'
                 ];
 
@@ -263,13 +264,14 @@ class RemesaModel
                 $comentariosActualizados = json_encode($comentariosAnteriores, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
                 $updateQuery = "UPDATE ConsentradoGeneralTramites 
-                            SET Estatus = 'RemesaAprobada', 
+                            SET Estatus = :Estatus, 
                                 FechaRemesaAprobada = :FechaRemesaAprobada, 
                                 Comentarios = :Comentarios 
                             WHERE ID_CONTRATO = :ID_CONTRATO";
                 $stmtUpdate = $this->conn->prepare($updateQuery);
                 $stmtUpdate->bindParam(':FechaRemesaAprobada', $fechaActual);
                 $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
+                $stmtUpdate->bindParam(':Estatus', $data['Estatus']);
                 $stmtUpdate->bindParam(':ID_CONTRATO', $tramite['ID_CONTRATO'], PDO::PARAM_INT);
 
                 if (!$stmtUpdate->execute()) {
@@ -282,7 +284,7 @@ class RemesaModel
             $estatusRemesa = 'Aprobado';
             $queryUpdateRemesa = "UPDATE Remesas SET Estatus = :Estatus WHERE FKNumeroRemesa = :FKNumeroRemesa";
             $stmtUpdateRemesa = $this->conn->prepare($queryUpdateRemesa);
-            $stmtUpdateRemesa->bindParam(':Estatus', $estatusRemesa);
+            $stmtUpdateRemesa->bindParam(':Estatus', $data['Estatus']);
             $stmtUpdateRemesa->bindParam(':FKNumeroRemesa', $data['FKNumeroRemesa']);
             $stmtUpdateRemesa->execute();
 

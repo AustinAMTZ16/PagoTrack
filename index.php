@@ -1,31 +1,32 @@
 <?php
+// Configurar CORS
+header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, DELETE"); // Permitir métodos HTTP
+header("Access-Control-Allow-Headers: Content-Type"); // Permitir ciertos encabezados
+// Manejar solicitud OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204); // No Content
+    exit();
+}
 // Declarar como variables globales
 // Incluir el controlador
-include_once 'app/controllers/TramitesController.php';
+include_once 'app/controllers/OrdenesPago/OrdenesPagoController.php';
 include_once 'app/controllers/RemesaController.php';
 include_once 'app/controllers/LoginController.php';
 include_once 'app/controllers/KpiController.php';
 include_once 'app/controllers/SuficienciaController.php';
 include_once 'app/controllers/Correspondencia/CorrespondenciaController.php';
 include_once 'app/controllers/Oficios/OficiosController.php';
-
 // Instanciamos el controlador
-$controllerTramite = new TramitesController();
+$controllerTramite = new OrdenesPagoController();
 $controllerRemesa = new RemesaController();
 $controllerLogin = new LoginController();
 $controllerKpi = new KpiController();
 $controllerSuficiencia = new SuficienciaController();
 $controllerCorrespondencia = new CorrespondenciaController();
 $controllerOficios = new OficiosController();
-
 //Obtener el método de la solicitud HTTP
 $requestMethod = $_SERVER['REQUEST_METHOD'];
-
-// Configurar CORS
-header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, DELETE"); // Permitir métodos HTTP
-header("Access-Control-Allow-Headers: Content-Type"); // Permitir ciertos encabezados
-
 // TRY: CONTROLA LOS METODOS [GET-POST-PATCH-DALETE] Y EXCEPTION A ERROR 500
 try {
     if (isset($_GET['action'])) {
@@ -99,7 +100,7 @@ function handlePostRequest($action, $data)
 
             if ($respuesta) {
                 http_response_code(200);
-                echo json_encode(array('data' => $respuesta), JSON_UNESCAPED_UNICODE);
+                echo json_encode(array('message' => 'Remesa registrada.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
             } else {
                 http_response_code(404);
                 echo json_encode(array('message' => 'Remesa no registrada.'), JSON_UNESCAPED_UNICODE);
@@ -319,7 +320,6 @@ function handlePostRequest($action, $data)
             break;
     }
 }
-
 // Función para manejar las solicitudes GET
 function handleGetRequest($action, $data)
 {

@@ -87,15 +87,18 @@
                     <label for="estadoSelect">Estado</label>
                     <select name="estadoSelect" id="estadoSelect" class="form-select">
                         <option value="Todos">Todos</option>
-                            <option value="Creado">Creado</option>
+                       <option value="Creado">Creado</option>
                             <option value="Turnado">Turnado</option>
 
                             <option value="Observaciones">Observaciones</option>
                             <option value="Devuelto">Devuelto</option>
                             <option value="Rechazado">Rechazado</option>
-                            <option value="Cancelado">Cancelado</option>
 
                             <option value="RegistradoSAP">Registrado SAP</option>
+
+                            <option value="JuntasAuxiliares">Juntas Auxiliares</option>
+                            <option value="Inspectoria">Inspectorías</option>                            
+                            <option value="CRF">Comprobación Recurso Financieros</option>
                     </select>
                 </div>
                 <!-- Columna Mes -->
@@ -293,50 +296,11 @@
                 <button class="btn btn-primary toggleButton" id="btn-filtrar"><i class="fas fa-search"></i> Aplicar
                     Filtros</button>
                 <button class="btn btn-primary toggleButton" id="btn-mostrar-ocultar"><i class="fa-solid fa-eye"
-                        title="Mostrar/Ocultar"></i>
-                    <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i> Limpiar
-                        Filtros</button>
+                        title="Mostrar/Ocultar"></i></button>
+                <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i> Limpiar
+                    Filtros</button>
             </div>
         </div>
-
-        <style>
-             /* Permitir que el texto se ajuste en las celdas */
-            table.dataTable th,
-            table.dataTable td {
-                white-space: normal !important;
-                word-wrap: break-word;
-                word-break: break-word;
-                vertical-align: top;
-            }
-
-            /* Permitir redimensionamiento manual del encabezado */
-            table.dataTable th {
-                resize: horizontal;
-                /* overflow: auto; */
-                min-width: 100px;
-                max-width: 600px;
-            }
-
-            /* Forzar que las celdas se ajusten al contenedor si hay scroll */
-            .dataTables_wrapper,
-            .table-responsive {
-                overflow-x: auto;
-            }
-
-
-
-            .fila-observaciones {
-                background-color: #fff3cd !important;
-                border-left: 5px solid #ffc107;
-            }
-
-            .fila-devuelto {
-                background-color: #f1a850 !important;
-                border-left: 5px solid #FF8C00;
-            }
-        </style>
-
-
 
         <div class="table-responsive">
             <h2 style="text-align: center;">Listado de Trámites</h2>
@@ -346,8 +310,9 @@
                     <tr>
                         <th>Acciones</th>
                         <th>#</th>
+                        <th>Fecha de Creación</th>
                         <th>Fecha de Recepcion</th>
-                        <th>Fecha Limite</th>
+                        <th>Fecha Limite Solvencia</th>
                         <th>TipoTramite</th>
                         <th>Estatus</th>
                         <th>Institución</th>
@@ -355,8 +320,6 @@
                         <th>Concepto</th>
                         <th>Importe</th>
                         <th>AnalistaTurnado</th>
-                        <th>Fondo</th>
-                        <th>Remesa</th>
                         <th>DocSAP</th>
                         <th>IntegraSAP</th>
                     </tr>

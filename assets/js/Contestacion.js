@@ -126,6 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
             filtrarTramites(appliedFilters);
         });
     }
+
+    // Mostrar/ocultar filtros
+    const btnExportar = document.getElementById('btn-mostrar-ocultar');
+    const filtros = document.querySelector('.row.g-3');
+    btnExportar.addEventListener('click', () => {
+        if (filtros.hasAttribute('hidden')) {
+            filtros.removeAttribute('hidden');
+        } else {
+            filtros.setAttribute('hidden', true);
+        }
+    });
 });
 
 // Funcion para cargar la app
@@ -222,34 +233,16 @@ function llenarTablaContestaciones(data, tableId) {
                         // BTN de eliminar
                         botones += `<button class="btn-icon primary" title="Eliminar" onclick="eliminarContestacion(${data.ID_RegistroOficios})"><i class="fas fa-trash"></i></button>`;
                     }
-                    return botones;
-                }
-            },
-            {
-                data: "Comentario",
-                render: function (data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
-                }
-            },
-            {
-                data: "ArchivoAdjunto",
-                render: function (data, type, row) {
-                    if (data && data !== "N/A" && data !== "Array") {
-                        // Ruta base donde se almacenan los archivos (ajusta según tu estructura)
+                    // BTN COMENTARIOS
+                    const comentarioEscapado = encodeURIComponent(data.Comentario || "");
+                    botones += `<button class="btn-icon primary" title="Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
+                    // BTN VER ARCHIVO ESCANEADO
+                    const archivo = data.ArchivoAdjunto || "N/A";
+                    if (archivo !== "N/A" && archivo !== "Array") {
                         const basePath = 'assets/uploads/oficios/';
-
-                        // Crear botón de descarga
-                        return `<a href="${basePath}${data}" 
-                                    class="btn-icon primary" 
-                                    target="_blank"
-                                    title="Abrir PDF">
-                                    <i class="fas fa-eye"></i>
-                                </a>`;
-                    } else {
-                        return "Sin archivo";
+                        botones += `<button class="btn-icon primary" title="Ver archivo" onclick="window.open('${basePath}${archivo}', '_blank')"><i class="fas fa-file-pdf"></i></button>`;
                     }
+                    return botones;
                 }
             },
             { data: "ID_RegistroOficios" },
@@ -306,7 +299,7 @@ function llenarTablaContestaciones(data, tableId) {
         pageLength: 10,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[4, "DESC"]],
+        order: [[2, "DESC"]],
     });
 }
 // Función para crear una contestacion

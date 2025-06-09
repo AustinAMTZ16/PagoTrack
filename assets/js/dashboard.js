@@ -19,11 +19,30 @@ const URL_BASE = `${URL_B}index.php?action=`;
 // Variable global para almacenar la lista trámites
 let tramitesArray = [];
 let nombreAnalista = "";
-
 let tramitesHoy = [];
 let tramitesVencidos = [];
 let tramitesFuturos = [];
-
+const ordenEstatus = [
+    'Observaciones',
+    'Devuelto',
+    'Turnado',
+    'Rechazado',
+    'RegistradoSAP',
+    'Procesando',
+    'JuntasAuxiliares',
+    'Inspectoria',
+    'Remesa',
+    'RevisionRemesa',
+    'RemesaAprobada',
+    'DevueltoOrdenesPago',
+    'Pagado',
+    'Terminado',
+    'Cancelado',
+    'Cheque',
+    'ComprobacionRecursoFinancieros',
+    'OrdenesPago',
+    'CRF'
+];
 
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
@@ -391,6 +410,20 @@ function actualizarTablaTramites(data, tableId) {
         currency: "MXN",
         minimumFractionDigits: 2,
     });
+    // Ordenar manualmente antes de pasar a la tabla
+    data.sort((a, b) => {
+        const estatusA = ordenEstatus.indexOf(a.Estatus) !== -1 ? ordenEstatus.indexOf(a.Estatus) : 99;
+        const estatusB = ordenEstatus.indexOf(b.Estatus) !== -1 ? ordenEstatus.indexOf(b.Estatus) : 99;
+
+        if (estatusA !== estatusB) {
+            return estatusA - estatusB;
+        }
+
+        // Segundo criterio: FechaRecepcion DESC
+        const fechaA = new Date(a.FechaCreacion);
+        const fechaB = new Date(b.FechaCreacion);
+        return fechaB - fechaA;
+    });
     // Inicializar DataTable con datos dinámicos
     $(`#${tableId}`).DataTable({
         data: data,
@@ -407,12 +440,12 @@ function actualizarTablaTramites(data, tableId) {
                         // BTN ACCION VoBo
                         botones += `<button class="btn-icon primary" title="VoBo" onclick="aprobarTramite(${data.ID_CONTRATO})"><i class="fas fa-thumbs-up"></i></button> `;
                     }
-                    if (data.Estatus === "RegistradoSAP") {
+                    if (data.Estatus === "RegistradoSAP" || data.Estatus === "Inspectoria" || data.Estatus === "JuntasAuxiliares") {
                         // BTN ACCION ASIGNAR REMESA
                         botones += `<button class="btn-icon primary" title="Asignar Remesa" onclick="createRemesa(${data.ID_CONTRATO})"><i class="fas fa-money-check-alt"></i></button> `;
                     }
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
-                    if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "Operador") || usuario.RolUser === "KPI") {
+                    if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "OP_KPI") || usuario.RolUser === "Operador" || usuario.RolUser === "OP_Tramite") {
                         // BTN ACCION MODIFICAR
                         botones += `<button class="btn-icon primary" title="Modificar" onclick="modificarTramite(${data.ID_CONTRATO})"><i class="fas fa-edit"></i></button>`;
                     }
@@ -424,21 +457,16 @@ function actualizarTablaTramites(data, tableId) {
                     botones += `<button class="btn-icon primary" title="Ver QR" onclick="generarQR(${data.ID_CONTRATO}, '${nombreAnalista}', '${data.NoTramite}')"><i class="fas fa-qrcode"></i></button>`;
                     // BTN ACCION DETALLE
                     botones += `<button class="btn-icon primary" title="Ver Detalles" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'"><i class="fas fa-eye"></i></button>`;
+                    const comentarioEscapado = encodeURIComponent(data.Comentarios || "");
+                    botones += `<button class="btn-icon primary" title="Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
 
                     return botones;
                 },
             },
+            { data: "ID_CONTRATO", visible: true },
             {
-                data: "Comentarios",
-                render: function (data) {
-                    // Asegurarse de que los caracteres especiales no rompan el código
-                    var comentarioEscapado = encodeURIComponent(data);
-                    // Botón para mostrar el comentario
-                    return `<button class="btn-icon primary" title="Ver Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
-                }
+                data: "FechaCreacion",
             },
-            { data: "ID_CONTRATO", visible: true }, // Campo oculto
-            { data: "Mes" },
             {
                 data: "FechaRecepcion"
             },
@@ -451,7 +479,9 @@ function actualizarTablaTramites(data, tableId) {
                     return `${dia}-${mes}-${año}`; // Formato DD-MM-YYYY
                 }
             },
+            { data: "FechaLimitePago" },
             { data: "TipoTramite" },
+            { data: "Estatus" },
             { data: "Dependencia" },
             { data: "Proveedor" },
             { data: "Concepto" },
@@ -468,16 +498,22 @@ function actualizarTablaTramites(data, tableId) {
                     return nombreAnalista;
                 }
             },
-            { data: "Estatus" },
-            { data: "Fondo" },
-            { data: "RemesaNumero" },
+            {
+                data: "RemesaNumero",
+                render: function (data, type, row) {
+                    if (!data) return "";
+                    return `<a href="seguimientoRemesas.html?remesa=${encodeURIComponent(data)}" class="text-primary fw-bold">${data}</a>`;
+                }
+            },
             { data: "DocSAP" },
             { data: "IntegraSAP" },
-            { data: "NoTramite" },
-            { data: "FechaLimitePago" },
-            { data: "FK_SRF" }
-
+            { data: "FK_SRF" },
+            { data: "NoTramite" }
         ],
+        pageLength: 5, // Número de filas por página
+        lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
+        responsive: true,
+        order: [[2, "DESC"]],
         paging: true,
         searching: true,
         ordering: true,
@@ -504,34 +540,17 @@ function actualizarTablaTramites(data, tableId) {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        pageLength: 5, // Número de filas por página
-        lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
-        responsive: true,
-        order: [[4, "DESC"]],
+        createdRow: function (row, data) {
+            const estatus = data.Estatus;
+            if (estatus === "Observaciones") {
+                $('td', row).addClass('fila-observaciones');
+            } else if (estatus === "Devuelto") {
+                $('td', row).addClass('fila-devuelto');
+            }
+        }
     });
 }
 // Función para actualizar la tabla de trámites turnados
-const ordenEstatus = [
-    'Observaciones',
-    'Devuelto',
-    'Turnado',
-    'Rechazado',
-    'RegistradoSAP',
-    'Procesando',
-    'JuntasAuxiliares',
-    'Inspectoria',
-    'Remesa',
-    'RevisionRemesa',
-    'RemesaAprobada',
-    'DevueltoOrdenesPago',
-    'Pagado',
-    'Terminado',
-    'Cancelado',
-    'Cheque',
-    'ComprobacionRecursoFinancieros',
-    'OrdenesPago',
-    'CRF'
-];
 function actualizarTablaTurnados(data, tableId) {
     if (!Array.isArray(data)) {
         console.error("Error: La respuesta no es un array válido.", data);
@@ -593,6 +612,7 @@ function actualizarTablaTurnados(data, tableId) {
                 }
             },
             { data: "ID_CONTRATO" },
+            { data: "FechaCreacion" },
             { data: "FechaRecepcion" },
             {
                 data: "FechaLimite",
@@ -617,8 +637,6 @@ function actualizarTablaTurnados(data, tableId) {
                     return `${data.NombreUser} ${data.ApellidoUser}`;
                 }
             },
-            { data: "Fondo" },
-            { data: "RemesaNumero" },
             { data: "DocSAP" },
             { data: "IntegraSAP" }
         ],

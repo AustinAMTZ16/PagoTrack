@@ -44,8 +44,8 @@
         <h1 class="mb-4">Listado de Respuestas</h1>
 
         <div>
-            <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Correspondencia</h2>
-            <div class="row g-3">
+            <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Respuestas</h2>
+            <div class="row g-3" hidden>
                 <!--ID_RegistroOficios-->
                 <div class="col-md-6">
                     <label for="ID_RegistroOficios">ID_RegistroOficios</label>
@@ -55,7 +55,7 @@
                 <div class="col-md-6">
                     <label for="TipoOficio">Tipo de Oficio</label>
                     <select class="form-select" id="TipoOficio" name="TipoOficio">
-                        <option value="Todos">Seleccione el Tipo de Oficio</option>
+                        <option value="Todos">Todos</option>
                         <option value="Regularizacion">Regularización</option>
                         <option value="Suficiencia_Presupuestal">Suficiencia Presupuestal</option>
                         <option value="Suficiencia_Compromiso_Gasto">Suficiencia Compromiso Gasto</option>
@@ -105,7 +105,7 @@
                 <div class="col-md-6">
                     <label for="Institucion">Institución</label>
                     <select class="form-select" id="Institucion" name="Institucion">
-                        <option value="Todos" disabled selected>Seleccione una Institución</option>
+                        <option value="Todos">Todos</option>
                         <!-- Dependencias -->
                         <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
                         <option value="Presidencia Municipal">Presidencia Municipal</option>
@@ -159,7 +159,7 @@
                 <div class="col-md-6">
                     <label for="Solicita">Solicita</label>
                     <select class="form-select" id="Solicita" name="Solicita">
-                        <option value="Todos" disabled selected>Seleccione el Analista</option>
+                        <option value="Todos">Todos</option>
                         <option value="36">Leobardo Armenta Suárez</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
                         <option value="35">Eugenia Bermejo García</option>
@@ -206,7 +206,7 @@
                 <div class="col-md-6">
                     <label for="Estado">Estado</label>
                     <select class="form-select" id="Estado" name="Estado">
-                        <option value="Todos" disabled selected>Seleccione el Estado</option>
+                        <option value="Todos">Todos</option>
                         <option value="Registrado">Registrado</option>
                         <option value="Turnado">Turnado</option>
                         <option value="Acuse de recibo">Acuse de recibo</option>
@@ -261,7 +261,7 @@
                 <div class="col-md-6">
                     <label for="UsuarioRegistro">Usuario Registro</label>
                     <select class="form-select" id="UsuarioRegistro" name="UsuarioRegistro">
-                        <option value="Todos" disabled selected>Seleccione el Usuario</option>
+                        <option value="Todos">Todos</option>
                         <option value="39">Gloria Dolores Rodríguez Medina</option>
                         <option value="35">Eugenia Bermejo García</option>
                     </select>
@@ -286,6 +286,8 @@
             <div class="col-12 d-flex justify-content-between">
                 <button class="btn btn-primary toggleButton" id="btn-filtrar"><i class="fas fa-search"></i> Aplicar
                     Filtros</button>
+                <button class="btn btn-primary toggleButton" id="btn-mostrar-ocultar"><i class="fa-solid fa-eye"
+                        title="Mostrar/Ocultar"></i></button>
                 <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i> Limpiar
                     Filtros</button>
             </div>
@@ -296,12 +298,11 @@
                 <button id="crearContestacion" class="btn btn-primary toggleButton">Nuevo Registro</button>
                 <button id="descargarExcelOficios" class="btn btn-primary toggleButton">Descargar Excel</button>
             </div>
-            <table id="tableContestaciones" class="table table-bordered table-hover display nowrap" style="width:100%">
+            <table id="tableContestaciones" class="table table-bordered table-hover display nowrap"
+                style="width:100%; table-layout: auto;">
                 <thead>
                     <tr>
                         <th>Acciones</th>
-                        <th>Comentario</th>
-                        <th>ArchivoAdjunto</th>
                         <th>ID_RegistroOficios</th>
                         <th>FechaRegistro</th>
                         <th>TipoOficio</th>

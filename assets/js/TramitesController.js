@@ -113,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 data[key] = value;
             });
             // Llamar la función con el objeto 'data'
+            console.log('Datos enviados para actualizar el trámite completo:', data);
             updateTramiteCompleto(data);
         });
     }
@@ -189,6 +190,7 @@ function updateTramite(data) {
         })
         .then(result => {
             alert(result.message);
+            console.log('Trámite actualizado:', result);
             window.location.href = 'listadoTurnados.html';
         })
         .catch(error => {
@@ -212,7 +214,7 @@ async function updateTramiteCompleto(data) {
         .then(result => {
             try {
                 alert(result.message);
-                window.location.href = 'dashboard.html';
+                // window.location.href = 'dashboard.html';
             } catch (error) {
                 console.error("Error al actualizar el trámite:", error);
             }
@@ -242,6 +244,7 @@ async function obtenerTramite(ID_CONTRATO) {
                 //console.log('Tramite obtenido:', tramite);
 
                 if (tramite) {
+                    console.log('Trámite encontrado:', tramite);
                     document.getElementById("ID_CONTRATO").value = tramite.ID_CONTRATO || "";
                     document.getElementById("Mes").value = tramite.Mes || "";
                     document.getElementById("FechaRecepcion").value = tramite.FechaRecepcion ? tramite.FechaRecepcion.split(" ")[0] : new Date().toISOString().split("T")[0];
@@ -251,19 +254,60 @@ async function obtenerTramite(ID_CONTRATO) {
                     document.getElementById("Concepto").value = tramite.Concepto || "";
                     document.getElementById("Importe").value = tramite.Importe || "";
                     document.getElementById("Estatus").value = tramite.Estatus || "";
-                    document.getElementById("Comentarios").value = tramite.Comentarios || "";
+                    document.getElementById("FK_SRF").value = tramite.FK_SRF || "";
+                    renderComentariosEnTextarea(tramite.Comentarios);
                     document.getElementById("Fondo").value = tramite.Fondo || "";
-                    document.getElementById("FechaLimite").value = tramite.FechaLimite ? tramite.FechaLimite.split(" ")[0] : "";
-                    document.getElementById("FechaTurnado").value = tramite.FechaTurnado ? tramite.FechaTurnado.split(" ")[0] : new Date().toISOString().split("T")[0];
-                    document.getElementById("FechaTurnadoEntrega").value = tramite.FechaTurnadoEntrega ? tramite.FechaTurnadoEntrega.split(" ")[0] : new Date().toISOString().split("T")[0];
-                    document.getElementById("FechaDevuelto").value = tramite.FechaDevuelto ? tramite.FechaDevuelto.split(" ")[0] : new Date().toISOString().split("T")[0];
+                    if (tramite.Fondo) {
+                        try {
+                            importesFF = JSON.parse(tramite.Fondo);
+                            actualizarTabla();       // renderiza la tabla de fondos
+                            actualizarCampoOculto(); // actualiza input oculto y total
+                        } catch (e) {
+                            console.error("Error al cargar los fondos:", e);
+                            importesFF = {};
+                        }
+                    }
+                    const FechaLimitePago = document.getElementById("FechaLimitePago");
+                    if (FechaLimitePago) {
+                        FechaLimitePago.value = tramite.FechaLimitePago ? tramite.FechaLimitePago.split(" ")[0] : "";
+                    }
+                    const FechaTurnado = document.getElementById("FechaTurnado");
+                    if (FechaTurnado) {
+                        FechaTurnado.value = tramite.FechaTurnado ? tramite.FechaTurnado.split(" ")[0] : "";
+                    }
+                    const FechaTurnadoEntrega = document.getElementById("FechaTurnadoEntrega");
+                    if (FechaTurnadoEntrega) {
+                        FechaTurnadoEntrega.value = tramite.FechaTurnadoEntrega ? tramite.FechaTurnadoEntrega.split(" ")[0] : "";
+                    }
+                    const FechaDevuelto = document.getElementById("FechaDevuelto");
+                    if (FechaDevuelto) {
+                        FechaDevuelto.value = tramite.FechaDevuelto ? tramite.FechaDevuelto.split(" ")[0] : "";
+                    }
                     document.getElementById("AnalistaID").value = tramite.AnalistaID || "";
-                    document.getElementById("RemesaNumero").value = tramite.RemesaNumero || "";
-                    document.getElementById("DocSAP").value = tramite.DocSAP || "";
-                    document.getElementById("IntegraSAP").value = tramite.IntegraSAP || "";
-                    document.getElementById("OfPeticion").value = tramite.OfPeticion || "";
-                    document.getElementById("NoTramite").value = tramite.NoTramite || "";
-                    document.getElementById("DoctacionAnexo").value = tramite.DoctacionAnexo || "";
+                    const RemesaNumero = document.getElementById("RemesaNumero");
+                    if (RemesaNumero) {
+                        RemesaNumero.value = tramite.RemesaNumero  || "";
+                    }
+                    const DocSAP = document.getElementById("DocSAP");
+                    if (DocSAP) {
+                        DocSAP.value = tramite.DocSAP  || "";
+                    }
+                    const IntegraSAP = document.getElementById("IntegraSAP");
+                    if (IntegraSAP) {
+                        IntegraSAP.value = tramite.IntegraSAP  || "";
+                    }
+                    const OfPeticion = document.getElementById("OfPeticion");
+                    if (OfPeticion) {
+                        OfPeticion.value = tramite.OfPeticion  || "";
+                    }
+                    const NoTramite = document.getElementById("NoTramite");
+                    if (NoTramite) {
+                        NoTramite.value = tramite.NoTramite  || "";
+                    }
+                    const DoctacionAnexo = document.getElementById("DoctacionAnexo");
+                    if (DoctacionAnexo) {
+                        DoctacionAnexo.value = tramite.DoctacionAnexo  || "";
+                    }
                 } else {
                     console.error("Trámite no encontrado");
                 }
@@ -276,3 +320,28 @@ async function obtenerTramite(ID_CONTRATO) {
             throw error;
         });
 }
+// Función para renderizar los comentarios en el textarea
+function renderComentariosEnTextarea(comentariosJSON) {
+    const textarea = document.getElementById("ComentariosFeed");
+
+    try {
+        const comentarios = JSON.parse(comentariosJSON);
+        if (!Array.isArray(comentarios)) throw new Error();
+
+        let textoFinal = "";
+        comentarios.reverse().forEach((comentario, index) => {
+            textoFinal += `📝 Comentario ${comentarios.length - index}:\n`;
+            textoFinal += `📅 Fecha: ${comentario.Fecha || "Sin fecha"}\n`;
+            textoFinal += `👤 Por: ${comentario.Modificado_Por || "Desconocido"}\n`;
+            textoFinal += `📌 Estatus: ${comentario.Estatus || "N/A"}\n`;
+            textoFinal += `🗒️ Detalle: ${comentario.Comentario || "Sin comentario"}\n`;
+            textoFinal += `-----------------------------\n`;
+        });
+
+        textarea.value = textoFinal;
+    } catch (e) {
+        textarea.value = "⚠️ No se pudieron cargar los comentarios correctamente.";
+    }
+}
+
+

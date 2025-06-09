@@ -41,6 +41,8 @@
     <h2 class="mb-4">Crear Trámite</h2>
     <form id="formcreateTramite" method="post">
       <div class="row g-3">
+        <!-- 🗂 DATOS DEL TRÁMITE -->
+        <h4 class="mt-4 text-primary fw-bold">🗂 Datos del Trámite</h4>
 
         <div class="col-md-6">
           <label for="Dependencia" class="form-label">Institución</label>
@@ -94,14 +96,22 @@
         <div class="col-12">
           <label for="Concepto" class="form-label">Concepto</label>
           <textarea name="Concepto" id="Concepto" class="form-control" rows="3" required
-            placeholder="Ejemplo: Describa el tipo de pago (servicio, producto o egreso)."></textarea>
+            placeholder="Ejemplo: describe el tipo de pago (servicio, producto o egreso)."></textarea>
         </div>
 
         <div class="col-md-6">
-          <label for="Importe" class="form-label">Importe <span class="small-text">(suma de los fondos
-              automáticamente)</span></label>
-          <input type="text" name="Importe" id="Importe" class="form-control" placeholder="Ejemplo: 999999999.99"
-            required readonly>
+          <label for="TipoTramite" class="form-label">Tipo de Trámite</label>
+          <select name="TipoTramite" id="TipoTramite" class="form-select" required>
+            <option value="" disabled selected>Tipo de Trámite</option>
+            <option value="OC">OC Ordenes Compromiso</option>
+            <option value="OP">OP Órdenes de Pago</option>
+            <option value="SRF">SRF Solicitud de Recurso Financieros</option>
+            <option value="CRF">CRF Comprobación de Recurso Financieros</option>
+            <option value="JA">Juntas Auxiliares</option>
+            <option value="IPS">Inspectorías</option>
+            <option value="OCO">Ordenes Compromiso Obras</option>
+            <option value="OPO">Ordenes Pago Obras</option>
+          </select>
         </div>
 
         <div class="col-md-6">
@@ -124,29 +134,17 @@
         </div>
 
         <div class="col-md-6">
-          <label for="TipoTramite" class="form-label">Tipo de Trámite</label>
-          <select name="TipoTramite" id="TipoTramite" class="form-select" required>
-            <option value="" disabled selected>Tipo de Trámite</option>
-            <option value="OC">OC Ordenes Compromiso</option>
-            <option value="OP">OP Órdenes de Pago</option>
-            <option value="SRF">SRF Solicitud de Recurso Financieros</option>
-            <option value="CRF">CRF Comprobación de Recurso Financieros</option>
-            <option value="JA">Juntas Auxiliares</option>
-            <option value="IPS">Inspectorías</option>
-            <option value="OCO">Ordenes Compromiso Obras</option>
-            <option value="OPO">Ordenes Pago Obras</option>
+          <label for="Estatus" class="form-label">Estatus</label>
+          <select name="Estatus" id="Estatus" class="form-select" required>
+            <option value="" disabled selected>Estatus</option>
+            <option value="Creado">Creado</option>
+            <option value="Turnado">Turnado</option>
           </select>
         </div>
 
         <div class="col-md-6">
-          <label for="FK_SRF" class="form-label">Relación SRF <span class="small-text">(ID Registro de Solicitud de
-              Recursos Financieros)</span></label>
-          <input type="text" name="FK_SRF" id="FK_SRF" class="form-control" placeholder="18665" required>
-        </div>
-
-        <div class="col-md-6">
           <label for="AnalistaID" class="form-label">Analista</label>
-          <select name="AnalistaID" id="AnalistaID" class="form-select">
+          <select name="AnalistaID" id="AnalistaID" class="form-select" required>
             <option value="">Seleccionar Analista</option>
             <option value="1">Agustín Arenas Martinez</option>
             <option value="4">Juan Carlos García Tagle</option>
@@ -172,28 +170,21 @@
           </select>
         </div>
 
+        <!-- 💰 FONDOS ASOCIADOS -->
+        <h4 class="mt-4 text-primary fw-bold">💰 Fondos Asociados</h4>
+
         <div class="col-md-6">
-          <label for="Estatus" class="form-label">Estatus</label>
-          <select name="Estatus" id="Estatus" class="form-select" required>
-            <option value="" disabled selected>Estatus</option>
-            <option value="Creado">Creado</option>
-            <option value="Turnado">Turnado</option>
-          </select>
+          <input type="text" id="FondoInput" placeholder="Ejemplo: 10050" class="form-control">
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="ImporteInput" placeholder="Ejemplo: 200000" class="form-control">
+        </div>
+
+        <div class="col-12 mt-2">
+          <button type="button" id="addFondoBtn" class="btn btn-success">Agregar Fondo</button>
         </div>
 
         <div class="col-12">
-          <label class="form-label">Agregar Fondo</label>
-          <div class="row g-2">
-            <div class="col-md-6">
-              <input type="text" id="FondoInput" placeholder="Ejemplo: 10050" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <input type="text" id="ImporteInput" placeholder="Ejemplo: 200000" class="form-control">
-            </div>
-          </div>
-          <div class="mt-2">
-            <button type="button" id="addFondoBtn" class="btn btn-primary toggleButton">Agregar Fondo</button>
-          </div>
           <table id="fondosTable" class="table mt-3">
             <thead>
               <tr>
@@ -202,60 +193,82 @@
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Aquí se agregarán los fondos dinámicamente -->
-            </tbody>
+            <tbody></tbody>
           </table>
           <input type="hidden" name="Fondo" id="Fondo">
         </div>
 
+        <div class="col-md-12">
+          <label for="Importe" class="form-label">Importe Total</label>
+          <input type="number" name="Importe" id="Importe" class="form-control" placeholder="999999999.99" readonly
+            required>
+        </div>
+
+        <!-- 🗓 FECHAS CLAVE -->
+        <h4 class="mt-4 text-primary fw-bold">🗓 Fechas Clave</h4>
+
         <div class="col-md-6">
-          <label for="FechaLimite" class="form-label">Fecha Límite <span class="small-text">(máximo 5 días hábiles si no
-              tiene fecha de vencimiento.)</span></label>
-          <input type="date" name="FechaLimite" id="FechaLimite" class="form-control" required readonly>
+          <label for="FechaRecepcion" class="form-label">Fecha Recepción <span class="small-text">(sello de la caratula
+              del
+              oficio)</span></label>
+          <input type="date" name="FechaRecepcion" id="FechaRecepcion" class="form-control" required>
         </div>
 
         <div class="col-md-6">
-          <label for="FechaLimitePago" class="form-label">Fecha Límite Pago <span class="small-text">(Solo si en el
-              oficio es solicitado.)</span></label>
-          <input type="date" name="FechaLimitePago" id="FechaLimitePago" class="form-control">
+          <label for="FechaLimite" class="form-label">Fecha Límite</label>
+          <input type="date" name="FechaLimite" id="FechaLimite" class="form-control" required>
         </div>
 
         <div class="col-md-6">
-          <label for="OfPeticion" class="form-label">OfPeticion</label>
-          <input type="text" name="OfPeticion" id="OfPeticion" class="form-control"
-            placeholder="Ejemplo: SECATI-DEA-EA-TM-SRF-002/2025" required>
+          <label for="FechaLimitePago" class="form-label">Fecha Límite de Pago</label>
+          <input type="date" name="FechaLimitePago" id="FechaLimitePago" class="form-control" required>
+        </div>
+
+        <!-- 📄 REFERENCIA ADMINISTRATIVA -->
+        <h4 class="mt-4 text-primary fw-bold">📄 Referencia Administrativa</h4>
+
+        <div class="col-md-6">
+          <label for="OfPeticion" class="form-label">Oficio de Petición</label>
+          <input type="text" name="OfPeticion" id="OfPeticion" class="form-control" required>
         </div>
 
         <div class="col-md-6">
-          <label for="NoTramite" class="form-label">NoTrámite</label>
-          <input type="text" name="NoTramite" id="NoTramite" class="form-control" placeholder="Ejemplo: 803" required>
+          <label for="NoTramite" class="form-label">Número de Trámite</label>
+          <input type="text" name="NoTramite" id="NoTramite" class="form-control" required>
         </div>
 
         <div class="col-md-6">
-          <label for="DoctacionAnexo" class="form-label">Doctación Anexo</label>
-          <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" class="form-control"
-            placeholder="Ejemplo: Se entregó CD, Ruta del archivo" required>
+          <label for="DoctacionAnexo" class="form-label">Dotación Anexa</label>
+          <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" class="form-control" required>
         </div>
+
+        <div class="col-md-6">
+          <label for="FK_SRF" class="form-label">Relación SRF</label>
+          <input type="text" name="FK_SRF" id="FK_SRF" class="form-control">
+        </div>
+
+        <!-- 💬 COMENTARIOS -->
+        <h4 class="mt-4 text-primary fw-bold">💬 Comentarios Finales</h4>
 
         <div class="col-12">
           <label for="Comentarios" class="form-label">Comentarios</label>
-          <textarea name="Comentarios" id="Comentarios" class="form-control" rows="4"
-            placeholder="Ejemplo: Describa las acciones a realizar, el responsable de la tarea y los plazos establecidos."
-            required></textarea>
+          <textarea name="Comentarios" id="Comentarios" class="form-control" rows="4" required
+            placeholder="Ejemplo: describe las acciones, responsables y plazos."></textarea>
         </div>
 
-        <div class="col-12 d-flex justify-content-between">
-          <button type="submit" class="btn btn-primary toggleButton">Crear Trámite</button>
-          <a href="dashboard.html" class="btn btn-primary toggleButton">Regresar</a>
+        <!-- 🚀 BOTONES -->
+        <div class="col-12 d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-primary">Crear Trámite</button>
+          <a href="dashboard.html" class="btn btn-secondary">Regresar</a>
         </div>
+
       </div>
     </form>
   </main>
 
   <script>
-    let importesFF = {};
-
+    // LOGICA PARA AGREGAR FONDOS
+    let importesFF = {};    
     document.getElementById('addFondoBtn').addEventListener('click', function () {
       let fondo = document.getElementById('FondoInput').value.trim();
       let importe = document.getElementById('ImporteInput').value.trim();
@@ -275,39 +288,16 @@
       actualizarCampoOculto();
       limpiarInputs();
     });
+    // LOGICA PARA AGREGAR FONDOS
 
-    // Al cargar la página o cuando se necesite
+    // LOGICA PARA OCULTAR CAMPO SRF
     document.addEventListener('DOMContentLoaded', function () {
-      const campoFecha = document.getElementById('FechaLimite');
-
-      // Calcular fecha límite a 5 días hábiles desde hoy
-      const hoy = new Date();
-      const fechaLimite = sumarDiasHabiles(hoy, 5);
-
-      // Formatear a YYYY-MM-DD para input[type="date"]
-      const yyyy = fechaLimite.getFullYear();
-      const mm = String(fechaLimite.getMonth() + 1).padStart(2, '0');
-      const dd = String(fechaLimite.getDate()).padStart(2, '0');
-      const fechaFormateada = `${yyyy}-${mm}-${dd}`;
-
-      campoFecha.value = fechaFormateada;
-
-
-      
-
-
-
-
-
-
       const tipoTramite = document.getElementById('TipoTramite');
       const campoSRF = document.getElementById('FK_SRF');
       const contenedorSRF = campoSRF.closest('.col-md-6'); // oculta también la etiqueta y padding
-
       // Ocultar al cargar
       contenedorSRF.style.display = 'none';
       campoSRF.removeAttribute('required');
-
       // Escuchar cambios
       tipoTramite.addEventListener('change', function () {
         if (this.value === 'CRF') {
@@ -319,6 +309,46 @@
           campoSRF.value = ''; // Limpiar valor por si acaso
         }
       });
+      // LOGICA PARA OCULTAR CAMPO SRF
+
+      // LOGICA PARA CALCULAR FECHAS
+      const campoFecha = document.getElementById('FechaLimite');
+      const FechaLimitePago = document.getElementById('FechaLimitePago');
+      const inputFechaRecepcion = document.getElementById('FechaRecepcion');
+
+      // Escucha cuando el usuario elige una fecha
+      inputFechaRecepcion.addEventListener('change', function () {
+        const valorFecha = inputFechaRecepcion.value;
+
+        if (valorFecha) {
+          const fechaBase = new Date(valorFecha);
+          const fechaLimite = sumarDiasHabiles(fechaBase, 5);
+
+          const yyyy = fechaLimite.getFullYear();
+          const mm = String(fechaLimite.getMonth() + 1).padStart(2, '0');
+          const dd = String(fechaLimite.getDate()).padStart(2, '0');
+          const fechaFormateada = `${yyyy}-${mm}-${dd}`;
+
+          campoFecha.value = fechaFormateada;
+          FechaLimitePago.value = fechaFormateada;
+        }
+      });
+
+      // Si ya quieres calcular al cargar la página con la fecha actual
+      window.addEventListener('load', function () {
+        if (!inputFechaRecepcion.value) {
+          const hoy = new Date();
+          const fechaLimite = sumarDiasHabiles(hoy, 5);
+          const yyyy = fechaLimite.getFullYear();
+          const mm = String(fechaLimite.getMonth() + 1).padStart(2, '0');
+          const dd = String(fechaLimite.getDate()).padStart(2, '0');
+          const fechaFormateada = `${yyyy}-${mm}-${dd}`;
+          campoFecha.value = fechaFormateada;
+          FechaLimitePago.value = fechaFormateada;
+        }
+      });
+      // LOGICA PARA CALCULAR FECHAS
+
     });
 
     function actualizarTabla() {
@@ -328,7 +358,7 @@
       for (let fondo in importesFF) {
         let row = `<tr>
                             <td>${fondo}</td>
-                            <td>${importesFF[fondo]}</td>
+                            <td>${parseFloat(importesFF[fondo]).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
                             <td><button type="button" class="btn btn-primary toggleButton" onclick="eliminarFondo('${fondo}')">Eliminar</button></td>
                         </tr>`;
         tbody.innerHTML += row;

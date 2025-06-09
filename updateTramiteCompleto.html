@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Tramite</title>
+    <title>Modificar Tramite</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/SesionUser.js"></script>
@@ -41,195 +41,280 @@
         <div class="container">
             <img src="./assets/images/lg_seccion.jpg" alt="" width="20%" style="display: block; margin: 0 auto;">
             <h1>Sistema de Gestión de Trámites</h1>
-            <h1>Crear Trámite</h1>
+            <h1>Modificar Trámite</h1>
 
             <form id="formUpdateTramiteCompleto" method="post">
-                <label for="ID_CONTRATO">ID del Contrato:</label>
-                <input type="text" name="ID_CONTRATO" id="ID_CONTRATO" placeholder="ID del Contrato" readonly>
+                <div class="row g-3">
+                    <input type="text" name="ID_CONTRATO" id="ID_CONTRATO" readonly>
+                    <!-- 🗂 DATOS DEL TRÁMITE -->
+                    <h4 class="mt-4 text-primary fw-bold">🗂 Datos del Trámite</h4>
 
-                <label for="Dependencia">Institución:</label>
-                <select name="Dependencia" id="Dependencia" required>
-                    <option value="Coordinación de las Regidurias">Coordinación de las Regidurias</option>
-                    <option value="Oficina de Presidencia">Oficina de Presidencia</option>
-                    <option value="Sindicatura Municipal">Sindicatura Municipal</option>
-                    <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
-                    <option value="Tesorería Municipal">Tesorería Municipal</option>
-                    <option value="Contraloría Municipal">Contraloría Municipal</option>
-                    <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
-                    <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y
-                        Participación Ciudadana</option>
-                    <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e Infraestructura
-                    </option>
-                    <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo Urbano
-                    </option>
-                    <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
-                    <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de
-                        Administración y Tecnologías de la Información</option>
-                    <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
-                    <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación General de
-                        Transparencia y Municipio Abierto</option>
-                    <option value="Sistemas Municipal DIF">Sistemas Municipal DIF</option>
-                    <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo Operador
-                        del
-                        Servicio de Limpia del Municipio de Puebla</option>
-                    <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte y
-                        Cultura de
-                        Puebla</option>
-                    <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
-                    <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de Puebla
-                    </option>
-                    <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud del
-                        Municipio
-                        de Puebla</option>
-                    <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
-                    <option value="Coordinación General de Comunicación Social">Coordinación General de Comunicación
-                        Social
-                    </option>
-                    <option value="Secretaria para la Igualdad Sustantiva de Género">Secretaria para la Igualdad
-                        Sustantiva
-                        de Género</option>
-                    <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
-                    <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
-                    <option value="Direccion General De Desarrollo y Formación Profesional">Direccion General De
-                        Desarrollo
-                        y Formación Profesional</option>
-                    <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro Histórico y
-                        Patrimonio Cultural</option>
-                </select>
+                    <div class="col-md-6">
+                        <label for="Dependencia" class="form-label">Institución</label>
+                        <select name="Dependencia" id="Dependencia" class="form-select" required>
+                            <option value="" disabled selected>Institución</option>
+                            <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
+                            <option value="Presidencia Municipal">Presidencia Municipal</option>
+                            <option value="Sindicatura Municipal">Sindicatura Municipal</option>
+                            <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
+                            <option value="Contraloría Municipal">Contraloría Municipal</option>
+                            <option value="Tesorería Municipal">Tesorería Municipal</option>
+                            <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
+                            <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y
+                                Participación
+                                Ciudadana</option>
+                            <option value="Secretaría para la Igualdad Sustantiva de Género">Secretaría para la Igualdad
+                                Sustantiva de Género</option>
+                            <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de
+                                Administración y
+                                Tecnologías de la Información</option>
+                            <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo
+                                Urbano</option>
+                            <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro
+                                Histórico y
+                                Patrimonio Cultural</option>
+                            <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
+                            <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e
+                                Infraestructura</option>
+                            <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
+                            <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
+                            <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
+                            <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación
+                                General de
+                                Transparencia y Municipio Abierto</option>
+                            <option value="Coordinación General de Comunicación Social">Coordinación General de
+                                Comunicación Social
+                            </option>
+                            <option value="Dirección General de Desarrollo y Formación Profesional">Dirección General de
+                                Desarrollo y
+                                Formación Profesional</option>
+                            <option value="Sistema Municipal DIF">Sistema Municipal DIF</option>
+                            <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de
+                                Puebla</option>
+                            <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud
+                                del Municipio de
+                                Puebla</option>
+                            <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte
+                                y Cultura de
+                                Puebla</option>
+                            <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo
+                                Operador del
+                                Servicio de Limpia del Municipio de Puebla</option>
+                            <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
+                            <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
+                        </select>
+                    </div>
 
-                <label for="Proveedor">Proveedor:</label>
-                <input type="text" name="Proveedor" id="Proveedor" placeholder="Proveedor" required>
+                    <div class="col-md-6">
+                        <label for="Proveedor" class="form-label">Proveedor</label>
+                        <input type="text" name="Proveedor" id="Proveedor" class="form-control" placeholder="Proveedor"
+                            required>
+                    </div>
 
-                <label for="Concepto">Concepto:</label>
-                <input type="text" name="Concepto" id="Concepto" placeholder="Concepto" required>
+                    <div class="col-12">
+                        <label for="Concepto" class="form-label">Concepto</label>
+                        <textarea name="Concepto" id="Concepto" class="form-control" rows="3" required
+                            placeholder="Ejemplo: describe el tipo de pago (servicio, producto o egreso)."></textarea>
+                    </div>
 
-                <label for="Importe">Importe:</label>
-                <input type="number" name="Importe" id="Importe" placeholder="Importe" required step="0.01">
+                    <div class="col-md-6">
+                        <label for="TipoTramite" class="form-label">Tipo de Trámite</label>
+                        <select name="TipoTramite" id="TipoTramite" class="form-select" required>
+                            <option value="" disabled selected>Tipo de Trámite</option>
+                            <option value="OC">OC Ordenes Compromiso</option>
+                            <option value="OP">OP Órdenes de Pago</option>
+                            <option value="SRF">SRF Solicitud de Recurso Financieros</option>
+                            <option value="CRF">CRF Comprobación de Recurso Financieros</option>
+                            <option value="JA">Juntas Auxiliares</option>
+                            <option value="IPS">Inspectorías</option>
+                            <option value="OCO">Ordenes Compromiso Obras</option>
+                            <option value="OPO">Ordenes Pago Obras</option>
+                        </select>
+                    </div>
 
-                <label for="Mes">Mes:</label>
-                <select name="Mes" id="Mes" required>
-                    <option value="" disabled selected>Seleccione un mes</option>
-                    <option value="Enero">Enero</option>
-                    <option value="Febrero">Febrero</option>
-                    <option value="Marzo">Marzo</option>
-                    <option value="Abril">Abril</option>
-                    <option value="Mayo">Mayo</option>
-                    <option value="Junio">Junio</option>
-                    <option value="Julio">Julio</option>
-                    <option value="Agosto">Agosto</option>
-                    <option value="Septiembre">Septiembre</option>
-                    <option value="Octubre">Octubre</option>
-                    <option value="Noviembre">Noviembre</option>
-                    <option value="Diciembre">Diciembre</option>
-                </select>
+                    <div class="col-md-6">
+                        <label for="Mes" class="form-label">Mes</label>
+                        <select name="Mes" id="Mes" class="form-select" required>
+                            <option value="" disabled selected>Mes</option>
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                        </select>
+                    </div>
 
-                <label for="FechaRecepcion">Fecha de Recepción:</label>
-                <input type="date" name="FechaRecepcion" id="FechaRecepcion" required>
+                    <div class="col-md-6">
+                        <label for="Estatus" class="form-label">Estatus</label>
+                        <select name="Estatus" id="Estatus" class="form-select" required>
+                            <option value="" disabled selected>Estatus</option>
+                            <option value="Creado">Creado</option>
+                            <option value="Turnado">Turnado</option>
+                            <option value="Procesando">Procesando</option>
+                            <option value="Observaciones">Observaciones</option>
+                            <option value="JuntasAuxiliares">Juntas Auxiliares</option>
+                            <option value="Inspectoria">Inspectoria</option>
+                            <option value="RegistradoSAP">Registrado SAP</option>
+                            <option value="Remesa">Remesa</option>
+                            <option value="RevisionRemesa">Revisión Remesa</option>
+                            <option value="RemesaAprobada">Remesa Aprobada</option>
+                            <option value="DevueltoOrdenesPago">Devuelto Órdenes de Pago</option>
+                            <option value="Pagado">Pagado</option>
+                            <option value="Terminado">Terminado</option>
+                            <option value="Rechazado">Rechazado</option>
+                            <option value="Devuelto">Devuelto</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="OrdenesPago">Órdenes de Pago</option>
+                            <option value="CRF">Comprobación Recurso Financieros</option>
+                        </select>
+                    </div>
 
-                <label for="TipoTramite">Tipo de Trámite:</label>
-                <select name="TipoTramite" id="TipoTramite" required>
-                    <option value="" disabled selected>Tipo de Tramite</option>
-                    <option value="OC">OC Ordenes Compromiso</option>
-                    <option value="OP">OP Órdenes de Pago</option>
-                    <option value="SRF">SRF Solicitud de Recurso Financieros</option>
-                    <option value="CRF">CRF Comprobación de Recurso Financieros</option>
-                    <option value="JA">Juntas Auxiliares</option>
-                    <option value="IPS">Inspectorías</option>
-                    <option value="OCO">Ordenes Compromiso Obras</option>
-                    <option value="OPO">Ordenes Pago Obras</option>
-                </select>
+                    <div class="col-md-6">
+                        <label for="AnalistaID" class="form-label">Analista</label>
+                        <select name="AnalistaID" id="AnalistaID" class="form-select">
+                            <option value="">Seleccionar Analista</option>
+                            <option value="1">Agustín Arenas Martinez</option>
+                            <option value="4">Juan Carlos García Tagle</option>
+                            <option value="22">Gonzalo Ochoa Huerta</option>
+                            <option value="8">Isabel Cristina Pavón Nava</option>
+                            <option value="11">Isabel Cortes Varillas</option>
+                            <option value="20">Maria Isabel Marín León</option>
+                            <option value="21">Ariosto Emilio Lechuga Aparicio</option>
+                            <option value="23">Laura Alatriste Torres</option>
+                            <option value="5">Maria Blanca Soriano Rojas</option>
+                            <option value="17">Maria Del Carmen Damian Aguilar</option>
+                            <option value="10">Maria De Lourdes Molina Quiroz</option>
+                            <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
+                            <option value="16">Maria Valeria Corro Stefanoni</option>
+                            <option value="12">Ariadna Michel Sánchez Rodríguez</option>
+                            <option value="13">Michelle Córdova Torres</option>
+                            <option value="19">Francisco Javier Rivera Castillo</option>
+                            <option value="15">Antonio Castañon Ruiz</option>
+                            <option value="18">Ofelia Olguin Aguilar</option>
+                            <option value="6">Xochil Cuatepitzi Torres</option>
+                            <option value="14">Daniel Rodríguez Cardenas</option>
+                            <option value="9">Roberta Marcela Uvera Saucedo</option>
+                        </select>
+                    </div>
 
-                <label for="AnalistaID">Analista:</label>
-                <select name="AnalistaID" id="AnalistaID">
-                    <option value="4">Juan Carlos García Tagle</option>
-                    <option value="22">Gonzalo Ochoa Huerta</option>
-                    <option value="8">Isabel Cristina Pavón Nava</option>
-                    <option value="11">Isabel Cortes Varillas</option>
-                    <option value="20">Maria Isabel Marín León</option>
-                    <option value="21">Ariosto Emilio Lechuga Aparicio</option>
-                    <option value="23">Laura Alatriste Torres</option>
-                    <option value="5">Maria Blanca Soriano Rojas</option>
-                    <option value="1">Agustín Arenas Martinez</option>
-                    <option value="17">Maria Del Carmen Damian Aguilar</option>
-                    <option value="10">Maria De Lourdes Molina Quiroz</option>
-                    <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
-                    <option value="16">Maria Valeria Corro Stefanoni</option>
-                    <option value="12">Ariadna Michel Sánchez Rodríguez</option>
-                    <option value="13">Michelle Córdova Torres</option>
-                    <option value="19">Francisco Javier Rivera Castillo</option>
-                    <option value="15">Antonio Castañon Ruiz</option>
-                    <option value="18">Ofelia Olguin Aguilar</option>
-                    <option value="6">Xochil Cuatepitzi Torres</option>
-                    <option value="14">Daniel Rodríguez Cardenas</option>
-                    <option value="9">Roberta Marcela Uvera Saucedo</option>
-                </select>
+                    <!-- 💰 FONDOS ASOCIADOS -->
+                    <h4 class="mt-4 text-primary fw-bold">💰 Fondos Asociados</h4>
 
-                <label for="Estatus">Estatus:</label>
-                <select name="Estatus" id="Estatus" required>
-                    <option value="" disabled selected>Seleccione un estatus</option>
-                    <option value="Creado">Creado</option>
-                    <option value="Turnado">Turnado</option>
-                    <option value="Observaciones">Observaciones</option>
-                    <option value="Devuelto">Devuelto</option>
-                    <option value="JuntasAuxiliares">Juntas Auxiliares</option>
-                    <option value="Inspectoria">Inspectorías</option>
-                    <option value="RegistradoSAP">Registrado SAP</option>
-                    <option value="Remesa">Remesa</option>
-                    <option value="RevisionRemesa">Revisión Remesa</option>
-                    <option value="RemesaAprobada">Remesa Aprobada</option>
-                    <option value="OrdenesPago">Ordenes de Pago</option>
-                    <option value="DevueltoOrdenesPago">Devuelto Ordenes de Pago</option>
-                    <option value="Pagado">Pagado Transferencia</option>
-                    <option value="Cheque">Cheque</option>
-                    <option value="Terminado">Terminado</option>
-                    <option value="Rechazado">Rechazado</option>
-                    <option value="Cancelado">Cancelado</option>
-                </select>
+                    <div class="col-md-6">
+                        <input type="text" id="FondoInput" placeholder="Ejemplo: 10050" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="ImporteInput" placeholder="Ejemplo: 200000" class="form-control">
+                    </div>
 
-                <label for="Comentarios">Comentarios:</label>
-                <textarea name="Comentarios" id="Comentarios" placeholder="Comentarios" readonly rows="10"></textarea>
+                    <div class="col-12 mt-2">
+                        <button type="button" id="addFondoBtn" class="btn btn-success">Agregar Fondo</button>
+                    </div>
 
-                <label for="Fondo">Fondo:</label>
-                <input type="text" name="Fondo" id="Fondo" placeholder="Ejemplo: 10050, 100500" required>
+                    <div class="col-12">
+                        <table id="fondosTable" class="table mt-3">
+                            <thead>
+                                <tr>
+                                    <th>Fondo</th>
+                                    <th>Importe</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <input type="hidden" name="Fondo" id="Fondo">
+                    </div>
 
-                <label for="FechaLimite">Fecha Límite:</label>
-                <input type="date" name="FechaLimite" id="FechaLimite" required>
+                    <div class="col-md-6">
+                        <label for="Importe" class="form-label">Importe Total</label>
+                        <input type="text" name="Importe" id="Importe" class="form-control" placeholder="999999999.99"
+                            readonly required>
+                    </div>
 
-                <label for="FechaTurnado">Fecha de Turnado:</label>
-                <input type="date" name="FechaTurnado" id="FechaTurnado" readonly>
+                    <!-- 🗓 FECHAS CLAVE -->
+                    <h4 class="mt-4 text-primary fw-bold" hidden>🗓 Fechas Clave</h4>
 
-                <label for="FechaTurnadoEntrega">Fecha de Turnado de Entrega:</label>
-                <input type="date" name="FechaTurnadoEntrega" id="FechaTurnadoEntrega" readonly>
+                    <div class="col-md-6" hidden>
+                        <label for="FechaRecepcion" class="form-label">Fecha Recepción <span class="small-text">(sello
+                                del
+                                oficio)</span></label>
+                        <input type="date" name="FechaRecepcion" id="FechaRecepcion" class="form-control">
+                    </div>
 
-                <label for="FechaDevuelto">Fecha de Devolución:</label>
-                <input type="date" name="FechaDevuelto" id="FechaDevuelto" readonly>
+                    <div class="col-md-6" hidden>
+                        <label for="FechaLimite" class="form-label">Fecha Límite</label>
+                        <input type="date" name="FechaLimite" id="FechaLimite" class="form-control" readonly required>
+                    </div>
 
-                <label for="DocSAP">Numero de Documento SAP:</label>
-                <input type="text" name="DocSAP" id="DocSAP" placeholder="Ejemplo: 1900001034">
+                    <div class="col-md-6" hidden>
+                        <label for="FechaLimitePago" class="form-label">Fecha Límite de Pago</label>
+                        <input type="date" name="FechaLimitePago" id="FechaLimitePago" class="form-control">
+                    </div>
 
-                <label for="IntegraSAP">Integra SAP:</label>
-                <input type="text" name="IntegraSAP" id="IntegraSAP" placeholder="Debe ser unico. Ejemplo: 180655">
+                    <!-- 📄 REFERENCIA ADMINISTRATIVA -->
+                    <h4 class="mt-4 text-primary fw-bold">📄 Referencia Administrativa</h4>
 
-                <label for="RemesaNumero">Numero de Remesa:</label>
-                <input type="text" name="RemesaNumero" id="RemesaNumero"
-                    placeholder="La remesa debe ser unica. Ejemplo: 060325-1 (ddmmyy-n)">
+                    <div class="col-md-4">
+                        <label for="OfPeticion" class="form-label">Oficio de Petición</label>
+                        <input type="text" name="OfPeticion" id="OfPeticion" class="form-control" required>
+                    </div>
 
-                <label for="OfPeticion">Of Peticion:</label>
-                <input type="text" name="OfPeticion" id="OfPeticion" placeholder="Of Peticion">
+                    <div class="col-md-4">
+                        <label for="DoctacionAnexo" class="form-label">Dotación Anexa</label>
+                        <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" class="form-control" >
+                    </div>
 
-                <label for="NoTramite">NoTramite:</label>
-                <input type="text" name="NoTramite" id="NoTramite" placeholder="NoTramite">
+                    <div class="col-md-4">
+                        <label for="DocSAP" class="form-label">Documento SAP</label>
+                        <input type="text" name="DocSAP" id="DocSAP" class="form-control" >
+                    </div>
 
-                <label for="DoctacionAnexo">Doctacion Anexo:</label>
-                <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" placeholder="Doctacion Anexo">
+                    <div class="col-md-4">
+                        <label for="IntegraSAP" class="form-label">Integra SAP</label>
+                        <input type="text" name="IntegraSAP" id="IntegraSAP" class="form-control" >
+                    </div>
 
-                <label for="MotivoModificacion">Motivo de la modificación:</label>
-                <textarea name="MotivoModificacion" id="MotivoModificacion" placeholder="Motivo de la modificación"
-                    rows="10" required></textarea>
+                    <div class="col-md-4">
+                        <label for="RemesaNumero" class="form-label">Número de Remesa</label>
+                        <input type="text" name="RemesaNumero" id="RemesaNumero" class="form-control" >
+                    </div>
 
-                <button type="submit" class="btn btn-primary toggleButton">Actualizar Trámite</button>
-                <button type="button" onclick="window.location.href = 'dashboard.html';"
-                    class="btn btn-primary toggleButton">Regresar</button>
+                    <div class="col-md-4">
+                        <label for="NoTramite" class="form-label">Numero de trámite asociado al expediente</label>
+                        <input type="text" name="NoTramite" id="NoTramite" class="form-control" >
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="FK_SRF" class="form-label">Referencia a la Solicitud de Recursos Financieros (SRF)</label>
+                        <input type="text" name="FK_SRF" id="FK_SRF" class="form-control" >
+                    </div>
+
+
+                    <!-- 💬 COMENTARIOS -->
+                    <h4 class="mt-4 text-primary fw-bold">💬 Comentarios Finales</h4>
+
+                    <div class="col-12">
+                        <label for="Comentarios" class="form-label">Comentarios</label>
+                        <input type="text" name="MotivoModificacion" id="MotivoModificacion">
+                        <textarea name="ComentariosFeed" id="ComentariosFeed" class="form-control" rows="4"
+                            placeholder="Ejemplo: describe las acciones, responsables y plazos." disabled></textarea>
+                    </div>
+
+                    <!-- 🚀 BOTONES -->
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-primary toggleButton">Actualizar Trámite</button>
+                        <button type="button" onclick="window.location.href = 'dashboard.html';"
+                            class="btn btn-primary toggleButton">Regresar</button>
+                    </div>
+                </div>
             </form>
 
         </div>
@@ -238,6 +323,119 @@
     <footer>
         <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
     </footer>
+    <script>
+        let importesFF = {};
+
+        document.getElementById('addFondoBtn').addEventListener('click', function () {
+            let fondo = document.getElementById('FondoInput').value.trim();
+            let importe = document.getElementById('ImporteInput').value.trim();
+
+            if (fondo === '' || importe === '') {
+                alert("Debes ingresar un fondo y un importe");
+                return;
+            }
+
+            if (importesFF[fondo]) {
+                alert("Este fondo ya ha sido agregado.");
+                return;
+            }
+
+            importesFF[fondo] = importe;
+            actualizarTabla();
+            actualizarCampoOculto();
+            limpiarInputs();
+        });
+
+        // Al cargar la página o cuando se necesite
+        document.addEventListener('DOMContentLoaded', function () {
+            const campoFecha = document.getElementById('FechaLimite');
+
+            // Calcular fecha límite a 5 días hábiles desde hoy
+            const hoy = new Date();
+            const fechaLimite = sumarDiasHabiles(hoy, 5);
+
+            // Formatear a YYYY-MM-DD para input[type="date"]
+            const yyyy = fechaLimite.getFullYear();
+            const mm = String(fechaLimite.getMonth() + 1).padStart(2, '0');
+            const dd = String(fechaLimite.getDate()).padStart(2, '0');
+            const fechaFormateada = `${yyyy}-${mm}-${dd}`;
+
+            campoFecha.value = fechaFormateada;
+
+            const tipoTramite = document.getElementById('TipoTramite');
+            const campoSRF = document.getElementById('FK_SRF');
+            const contenedorSRF = campoSRF.closest('.col-md-6'); // oculta también la etiqueta y padding
+
+            // Ocultar al cargar
+            contenedorSRF.style.display = 'none';
+            campoSRF.removeAttribute('required');
+
+            // Escuchar cambios
+            tipoTramite.addEventListener('change', function () {
+                if (this.value === 'CRF') {
+                    contenedorSRF.style.display = 'block';
+                    campoSRF.setAttribute('required', 'required');
+                } else {
+                    contenedorSRF.style.display = 'none';
+                    campoSRF.removeAttribute('required');
+                    campoSRF.value = ''; // Limpiar valor por si acaso
+                }
+            });
+        });
+
+        function actualizarTabla() {
+            let tbody = document.querySelector('#fondosTable tbody');
+            tbody.innerHTML = '';
+
+            for (let fondo in importesFF) {
+                let row = `<tr>
+                            <td>${fondo}</td>
+                            <td>${parseFloat(importesFF[fondo]).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                            <td><button type="button" class="btn btn-primary toggleButton" onclick="eliminarFondo('${fondo}')">Eliminar</button></td>
+                        </tr>`;
+                tbody.innerHTML += row;
+            }
+        }
+
+        function eliminarFondo(fondo) {
+            delete importesFF[fondo];
+            actualizarTabla();
+            actualizarCampoOculto();
+        }
+
+        function actualizarCampoOculto() {
+            document.getElementById('Fondo').value = JSON.stringify(importesFF);
+            //console.log(document.getElementById('Fondo').value);
+
+            // Convertimos los valores del objeto a números y sumamos
+            let sumaTotal = Object.values(importesFF).reduce((total, valor) => total + parseFloat(valor), 0);
+
+            // Asignamos el resultado al input con formato de 2 decimales
+            document.getElementById('Importe').value = sumaTotal.toFixed(2);
+        }
+
+        function limpiarInputs() {
+            document.getElementById('FondoInput').value = '';
+            document.getElementById('ImporteInput').value = '';
+        }
+
+        // Función para sumar días hábiles (excluye sábados y domingos)
+        function sumarDiasHabiles(fechaInicial, diasHabiles) {
+            let fecha = new Date(fechaInicial);
+            let diasSumados = 0;
+
+            while (diasSumados < diasHabiles) {
+                fecha.setDate(fecha.getDate() + 1);
+                const dia = fecha.getDay();
+                // 0 = domingo, 6 = sábado → saltar fines de semana
+                if (dia !== 0 && dia !== 6) {
+                    diasSumados++;
+                }
+            }
+
+            return fecha;
+        }
+    </script>
 </body>
 
 </html>

@@ -74,6 +74,12 @@
                     <input type="text" id="Dependencia" name="Dependencia" placeholder="Dependencia" readonly
                         class="form-control">
                 </div>
+                
+                <div class="col-md-6">
+                    <label for="NombreUser">Nombre del Usuario</label>
+                    <input type="text" id="NombreUser" name="NombreUser" placeholder="Nombre del Usuario" readonly
+                        class="form-control">
+                </div>
 
                 <div class="col-md-6">
                     <label for="Estatus">Estatus del tramite</label>
@@ -82,28 +88,27 @@
                         <option value="Observaciones">Observaciones</option>
                         <option value="Devuelto">Devuelto</option>
                         <option value="RegistradoSAP">Registrado SAP</option>
+                        <option value="RegistradoSAP">Solicitud de Recurso Financiero</option>
+                        <option value="RegistradoSAP">Comprobacion de Recurso Financiero</option>
+                        <option value="ComprobacionRecurso">Comprobacion de Rercuso</option>
                         <option value="JuntasAuxiliares">Juntas Auxiliares</option>
                         <option value="Inspectoria">Inspectoria</option>
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" id="divSap" hidden>
                     <label for="DocSAP">Numero de Documento SAP</label>
                     <input type="text" id="DocSAP" name="DocSAP" placeholder="Ejemplo: 1900001034" class="form-control">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" id="divIntegra" hidden>
                     <label for="IntegraSAP">Integra SAP</label>
-                    <input type="text" id="IntegraSAP" name="IntegraSAP" placeholder="Debe ser unico. Ejemplo: 180655"
-                        class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label for="NombreUser">Nombre del Usuario</label>
-                    <input type="text" id="NombreUser" name="NombreUser" placeholder="Nombre del Usuario" readonly
+                    <input type="number" id="IntegraSAP" name="IntegraSAP" placeholder="Debe ser unico. Ejemplo: 180655"
                         class="form-control">
                 </div>
 
                 <div class="col-12">
                     <label for="Comentarios" class="form-label">Comentarios</label>
-                    <textarea type="text" class="form-control" id="Comentarios" name="Comentarios" rows="10" placeholder="Ejemplo: Describa las aciones a realizar, el responsable de la actividad y observaciones.                
+                    <textarea type="text" class="form-control" id="Comentarios" name="Comentarios" rows="10"
+                        placeholder="Ejemplo: Describa las aciones a realizar, el responsable de la actividad y observaciones.                
                         ⚠ Antecedentes:
                         * [Fecha]: [Descripción breve de cada evento importante en orden cronológico]
                         * [Fecha]: [Descripción de observaciones o devoluciones]
@@ -133,6 +138,7 @@
             botonWhatsApp.hidden = this.value !== 'Devuelto' && this.value !== 'Observaciones';
         });
         document.getElementById('enviarWhatsApp').addEventListener('click', () => {
+
             const mensaje = `
                             🔹 TARJETA INFORMATIVA 🔹
                 👤 Analista: ${document.getElementById('NombreUser').value}
@@ -156,7 +162,74 @@
                 window.open('https://chat.whatsapp.com/DqWPIzn1J8lIoPGZmMTrQ2', '_blank');
             });
         });
+
+
+        // Funcion para Estatus = "RegistradoSAP" quitar hidden de los campos DocSAP e IntegraSAP
+        document.getElementById('Estatus').addEventListener('change', function () {
+            const docSAPInput = document.getElementById('divSap');
+            const integraSAPInput = document.getElementById('divIntegra');
+
+            if (this.value === 'RegistradoSAP') {
+                docSAPInput.hidden = false;
+                integraSAPInput.hidden = false;
+            } else {
+                docSAPInput.hidden = true;
+                integraSAPInput.hidden = true;
+            }
+        });
+
     </script>
+
+    <script>
+        document.getElementById("DocSAP").addEventListener("input", function () {
+
+            const valor = this.value.trim();
+
+            // Si está vacío, es válido (opcional), pero hay que limpiar errores previos
+            if (!valor) {
+                this.setCustomValidity("");
+                return;
+            }
+            if (!valor) return;
+
+            const documentos = valor.split(",").map(doc => doc.trim());
+            const regexSAP = /^(17|19|51|53)0000\d{4}$/;
+
+            let todosValidos = true;
+            let documentoInvalido = "";
+
+            for (let doc of documentos) {
+                if (!regexSAP.test(doc)) {
+                    todosValidos = false;
+                    documentoInvalido = doc;
+                    break;
+                }
+            }
+
+            if (!todosValidos) {
+                this.setCustomValidity("Documento no válido: " + documentoInvalido + ". Debe comenzar con 17, 19, 51 o 53, tener 4 ceros y terminar en 4 dígitos (ej. 1900001234)");
+            } else {
+                this.setCustomValidity(""); // válido
+            }
+
+
+
+
+            const integraInput = document.getElementById("IntegraSAP");
+
+            integraInput.addEventListener("input", function () {
+                const valor = this.value.trim();
+                const regex = /^\d{6}$/; // exactamente 6 dígitos
+
+                if (!regex.test(valor)) {
+                    this.setCustomValidity("El número Integra SAP debe tener exactamente 6 dígitos (ejemplo: 180138)");
+                } else {
+                    this.setCustomValidity(""); // válido
+                }
+            });
+        });
+    </script>
+
     <footer>
         <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
     </footer>

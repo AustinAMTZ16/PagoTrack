@@ -23,7 +23,12 @@ function gestionarMenu(rolUsuario, departamentoUsuario) {
         'Pagos': '#Pagos',
         'Suficiencias': '#Suficiencias',
         'KPI': '#KPI',
-        'Oficios': '#Oficios'
+        'Oficios': '#Oficios',
+
+
+        'Glosa': '#Glosa',
+        'Presupuesto': '#Presupuesto',
+        'OrdenesPago': '#OrdenesPago',
     };
     // Inicialmente ocultar todos los menús y submenús
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -76,6 +81,37 @@ function gestionarMenu(rolUsuario, departamentoUsuario) {
         }
         if (rolUsuario === 'Oficios' || rolUsuario === 'Admin') {
             document.querySelectorAll(`${selectorBase}#Oficios`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+
+
+
+
+
+
+        if (rolUsuario === 'OP_Tramite' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#OP_Tramite`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'OP_Remesa' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#OP_Remesa`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'OP_KPI' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#OP_KPI`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'OP_Seguimiento' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#OP_Seguimiento`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'OP_OrdenesPago' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#OP_OrdenesPago`).forEach(item => {
                 item.style.display = 'block';
             });
         }

@@ -62,6 +62,23 @@ function inicioSesion(CorreoUserForm, ClaveUserForm){
                 case 'Oficios' :
                     window.location.href = 'CorrespondenciaPanelControl.html';
                     break;
+
+
+                case 'OP_Tramite' :
+                    window.location.href = 'dashboard.html';
+                    break;
+                case 'OP_Remesa' :
+                    window.location.href = 'dashboard.html';
+                    break;
+                case 'OP_KPI' :
+                    window.location.href = 'dashboard.html';
+                    break;
+                case 'OP_Seguimiento' :
+                    window.location.href = 'seguimientoRemesas.html';
+                    break;
+                case 'OP_OrdenesPago' :
+                    window.location.href = 'seguimientoRemesas.html';
+                    break;
             }
         } else {
             console.error('Error en la respuesta:', result.message);

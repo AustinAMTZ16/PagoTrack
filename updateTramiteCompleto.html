@@ -42,7 +42,6 @@
             <img src="./assets/images/lg_seccion.jpg" alt="" width="20%" style="display: block; margin: 0 auto;">
             <h1>Sistema de Gestión de Trámites</h1>
             <h1>Modificar Trámite</h1>
-
             <form id="formUpdateTramiteCompleto" method="post">
                 <div class="row g-3">
                     <input type="text" name="ID_CONTRATO" id="ID_CONTRATO" readonly>
@@ -272,17 +271,17 @@
                         <input type="text" name="DoctacionAnexo" id="DoctacionAnexo" class="form-control" >
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="docsap" hidden>
                         <label for="DocSAP" class="form-label">Documento SAP</label>
                         <input type="text" name="DocSAP" id="DocSAP" class="form-control" >
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="integra" hidden>
                         <label for="IntegraSAP" class="form-label">Integra SAP</label>
                         <input type="text" name="IntegraSAP" id="IntegraSAP" class="form-control" >
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="remesa" hidden>
                         <label for="RemesaNumero" class="form-label">Número de Remesa</label>
                         <input type="text" name="RemesaNumero" id="RemesaNumero" class="form-control" >
                     </div>

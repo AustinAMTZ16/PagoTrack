@@ -320,7 +320,9 @@ class CorrespondenciaModel
                     if ($data[$campo] === '' || $data[$campo] === null) {
                         $data[$campo] = null;
                     } else {
-                        $date = DateTime::createFromFormat('Y-m-d', $data[$campo]);
+                        $date = DateTime::createFromFormat('Y-m-d\TH:i', $data[$campo])
+                            ?: DateTime::createFromFormat('Y-m-d H:i:s', $data[$campo])
+                            ?: DateTime::createFromFormat('Y-m-d', $data[$campo]);
                         $data[$campo] = $date ? $date->format('Y-m-d') : null;
                     }
                 }

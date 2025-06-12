@@ -159,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 // Funcion para cargar la app
 async function cargarApp() {
     // Obtener oficios
@@ -178,7 +177,7 @@ async function cargarApp() {
         const usuarioID = usuario.InicioSesionID;
         // console.log('usuarioID: ', usuarioID);
         //Filtrar dataOficios por usuario
-        const dataOficiosAnalista = dataOficios.filter(oficio => oficio.Turnado === String(usuarioID) && (oficio.Estado === "TURNADO" || oficio.Estado === "OBSERVACIONES" || oficio.Estado === "DEVUELTO"));
+        const dataOficiosAnalista = dataOficios.filter(oficio => oficio.Turnado === String(usuarioID));
         // Llenar tabla de oficios analista
         llenarTablaOficios(dataOficiosAnalista, "tableOficiosAnalista");
     }
@@ -285,6 +284,16 @@ async function cargarApp() {
             }, 3000); // 5 segundos 
         });
     }
+
+
+    // Evento para validar el formulario de ver correspondencia
+    const formVerCorrespondencia = document.getElementById("formVerCorrespondencia");
+    if (formVerCorrespondencia) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const correspondenciaID = urlParams.get('id');
+        // Llenar el formulario con los datos del contestacion
+        llenarformEditarCorrespondencia(correspondenciaID);
+    }
 }
 // Funcion para obtener los oficios
 async function listarOficios() {
@@ -326,17 +335,17 @@ function llenarTablaOficios(data, tableId) {
                         // BTN ELIMINAR
                         botones += `<button class="btn-icon primary" title="Eliminar" onclick="eliminarOficio(${data.ID})"><i class="fas fa-trash"></i></button>`;
                     }
-                    if (data.Estado === "CREADO") {
+                    if (data.Estado === "CREADO" && usuario.RolUser === "Oficios") {
                         // BTN TURNAR
                         botones += `<button class="btn-icon primary" title="Turnar" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}"><i class="fa-solid fa-person-walking-arrow-loop-left"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOTURNADO = OBSERVACIONES, DEVUELTO O PROCESO-FIRMA-TITULAR
                     }
-                    if (data.Estado === "PROCESO-FIRMA-TITULAR") {
+                    if (data.Estado === "PROCESO-FIRMA-TITULAR" && usuario.RolUser === "Oficios") {
                         // BTN ESCANEAR
                         botones += `<button class="btn-icon primary" title="Escanear" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}"><i class="fas fa-file-import"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOSCANEOFIRMAS = ESCANEO-FIRMAS
                     }
-                    if (data.Estado === "ACUSE-EXPEDIENTE") {
+                    if (data.Estado === "ACUSE-EXPEDIENTE" && usuario.RolUser === "Oficios") {
                         // BTN ARCHIVAR
                         botones += `<button class="btn-icon primary" title="Archivar" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}"><i class="fa-solid fa-box-archive"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOARCHIVADO = ARCHIVADO
@@ -345,6 +354,8 @@ function llenarTablaOficios(data, tableId) {
                         // BTN FIRMA TITULAR
                         botones += `<button class="btn-icon primary" title="Firma Titular" onclick="window.location.href='CorrespondenciaAnalistaActualizar.html?id=' + ${data.ID}"><i class="fas fa-file-signature"></i></button>`;
                     }
+                    // BTN de ver
+                    botones += `<button class="btn-icon primary" title="Ver Detalles" onclick="window.location.href='CorrespondenciaVer.html?id=' + ${data.ID}"><i class="fas fa-eye"></i></button>`;
                     // BTN COMENTARIOS
                     const comentarioEscapado = encodeURIComponent(data.Comentarios || "");
                     botones += `<button class="btn-icon primary" title="Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
@@ -359,13 +370,17 @@ function llenarTablaOficios(data, tableId) {
             },
             { data: "ID" },
             { data: "Folio" },
+            { data: "NumeroOficio" },
             { data: "FechaCreacion" },
             { data: "FechaRecepcion" },
-            { data: "Solicitante" },
-            { data: "Dependencia" },
-            { data: "Departamento" },
-            { data: "NumeroOficio" },
+            { data: "FechaRetroactiva" },
+            { data: "FechaVencimiento" },
             { data: "tipoOficio" },
+            { data: "Estado" },
+            { data: "TurnadoNombreCompleto" },
+            { data: "Dependencia" },
+            { data: "Solicitante" },
+            { data: "Departamento" },
             { data: "Asunto" },
             { data: "Concepto" },
             {
@@ -374,11 +389,7 @@ function llenarTablaOficios(data, tableId) {
                     return data ? formatoMoneda.format(data) : "$0.00";
                 }
             },
-            { data: "FechaVencimiento" },
-            { data: "TurnadoNombreCompleto" },
             { data: "RespuestaConocimiento" },
-            { data: "FechaRetroactiva" },
-            { data: "Estado" },
             { data: "UsuarioRegistroNombreCompleto" }
         ],
         paging: true,
@@ -409,7 +420,7 @@ function llenarTablaOficios(data, tableId) {
         pageLength: 10,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[3, "DESC"]],
+        order: [[4, "DESC"]],
     });
 }
 // Función para generar y descargar el archivo Excel
@@ -479,7 +490,7 @@ function llenarformEditarOficios(oficioID) {
     // Usar función segura para asignar valores
     setValueIfExists("ID", oficio.ID);
     setValueIfExists("Folio", oficio.Folio);
-    setValueIfExists("FechaRecepcion", oficio.FechaRecepcion?.substring(0, 10));
+    setValueIfExists("FechaRecepcion", oficio.FechaRecepcion);
     setValueIfExists("Solicitante", oficio.Solicitante);
     setValueIfExists("Dependencia", oficio.Dependencia);
     setValueIfExists("Departamento", oficio.Departamento);
@@ -496,6 +507,7 @@ function llenarformEditarOficios(oficioID) {
     setValueIfExists("UsuarioRegistro", oficio.UsuarioRegistro);
     setValueIfExists("Comentarios", oficio.Comentarios);
     setValueIfExists("FechaEntregaAcuse", oficio.FechaEntregaAcuse?.substring(0, 10));
+    setValueIfExists("FKOficio", oficio.FKOficio);
 }
 // Función para actualizar un oficio
 function actualizarOficio(data) {
@@ -755,6 +767,68 @@ function filtrarTramites(filtros) {
 
     console.log('Filtrados:', filtrados);
     llenarTablaOficios(filtrados, 'tableOficios');
+}
+// Función para llenar el formulario de edición de contestaciones
+function llenarformEditarCorrespondencia(correspondenciaID) {
+    const idNumerico = Number(correspondenciaID);
+    const correspondencia = dataOficios.find(item => item.ID === idNumerico);
+
+    console.log('Correspondencia: ', correspondencia);
+
+    if (!correspondencia) {
+        console.error("No se encontró la correspondencia con ID:", correspondenciaID);
+        return;
+    }
+
+    // Helper
+    const setValueIfExists = (id, valor) => {
+        const el = document.getElementById(id);
+        if (el && valor !== undefined && valor !== null) {
+            el.value = valor;
+        }
+    };
+
+    // DATOS GENERALES
+    setValueIfExists("Folio", correspondencia.Folio);
+    setValueIfExists("FechaRecepcion", correspondencia.FechaRecepcion);
+    setValueIfExists("Solicitante", correspondencia.Solicitante);
+    setValueIfExists("Dependencia", correspondencia.Dependencia);
+    setValueIfExists("Departamento", correspondencia.Departamento);
+    setValueIfExists("UsuarioRegistro", correspondencia.UsuarioRegistro);
+
+    // INFORMACIÓN DEL OFICIO
+    setValueIfExists("NumeroOficio", correspondencia.NumeroOficio);
+    setValueIfExists("tipoOficio", correspondencia.tipoOficio);
+    setValueIfExists("Asunto", correspondencia.Asunto);
+    setValueIfExists("Monto", correspondencia.Monto);
+    setValueIfExists("Concepto", correspondencia.Concepto);
+
+    // FECHAS
+    setValueIfExists("FechaVencimiento", formatDateInput(correspondencia.FechaVencimiento));
+    setValueIfExists("FechaRetroactiva", formatDateInput(correspondencia.FechaRetroactiva));
+    setValueIfExists("FechaEntregaAcuse", formatDateInput(correspondencia.FechaEntregaAcuse));
+    setValueIfExists("FechaLimitePago", formatDateTimeInput(correspondencia.FechaLimitePago));
+
+    // FLUJO DEL OFICIO
+    setValueIfExists("Turnado", correspondencia.Turnado);
+    setValueIfExists("RespuestaConocimiento", correspondencia.RespuestaConocimiento);
+    setValueIfExists("Estado", correspondencia.Estado);
+    setValueIfExists("Comentarios", correspondencia.Comentarios);
+
+    // RELACIONES
+    setValueIfExists("FKOficio", correspondencia.FKOficio);
+}
+// Funciones auxiliares para formato
+function formatDateInput(fechaStr) {
+    if (!fechaStr) return "";
+    const d = new Date(fechaStr);
+    return d.toISOString().split("T")[0]; // yyyy-mm-dd
+}
+function formatDateTimeInput(fechaStr) {
+    if (!fechaStr) return "";
+    const d = new Date(fechaStr);
+    const pad = n => n.toString().padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 // Agrega esta línea al final de tu archivo Oficios.js

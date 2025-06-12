@@ -8,6 +8,7 @@ const NombreUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;
 
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("localStorage:", usuario);
     // Evento para crear un trámite
     const formTramite = document.getElementById("formcreateTramite");
     if (formTramite) {
@@ -117,6 +118,24 @@ document.addEventListener("DOMContentLoaded", function () {
             updateTramiteCompleto(data);
         });
     }
+
+    const rolesConPermisosCompletos = ['Admin', 'OP_KPI', 'Analista'];
+    const rolesConPermisoRemesa = ['OP_Remesa', ...rolesConPermisosCompletos];
+
+    const mostrarElemento = id => {
+        const el = document.getElementById(id);
+        if (el) el.removeAttribute("hidden");
+    };
+
+    if (rolesConPermisosCompletos.includes(usuario.RolUser)) {
+        mostrarElemento("docsap");
+        mostrarElemento("integra");
+    }
+
+    if (rolesConPermisoRemesa.includes(usuario.RolUser)) {
+        mostrarElemento("remesa");
+    }
+
 });
 // Función para crear un trámite
 function createTramite(data) {
@@ -244,7 +263,7 @@ async function obtenerTramite(ID_CONTRATO) {
                 //console.log('Tramite obtenido:', tramite);
 
                 if (tramite) {
-                    console.log('Trámite encontrado:', tramite);
+                    // console.log('Trámite encontrado:', tramite);
                     document.getElementById("ID_CONTRATO").value = tramite.ID_CONTRATO || "";
                     document.getElementById("Mes").value = tramite.Mes || "";
                     document.getElementById("FechaRecepcion").value = tramite.FechaRecepcion ? tramite.FechaRecepcion.split(" ")[0] : new Date().toISOString().split("T")[0];
@@ -286,27 +305,27 @@ async function obtenerTramite(ID_CONTRATO) {
                     document.getElementById("AnalistaID").value = tramite.AnalistaID || "";
                     const RemesaNumero = document.getElementById("RemesaNumero");
                     if (RemesaNumero) {
-                        RemesaNumero.value = tramite.RemesaNumero  || "";
+                        RemesaNumero.value = tramite.RemesaNumero || "";
                     }
                     const DocSAP = document.getElementById("DocSAP");
                     if (DocSAP) {
-                        DocSAP.value = tramite.DocSAP  || "";
+                        DocSAP.value = tramite.DocSAP || "";
                     }
                     const IntegraSAP = document.getElementById("IntegraSAP");
                     if (IntegraSAP) {
-                        IntegraSAP.value = tramite.IntegraSAP  || "";
+                        IntegraSAP.value = tramite.IntegraSAP || "";
                     }
                     const OfPeticion = document.getElementById("OfPeticion");
                     if (OfPeticion) {
-                        OfPeticion.value = tramite.OfPeticion  || "";
+                        OfPeticion.value = tramite.OfPeticion || "";
                     }
                     const NoTramite = document.getElementById("NoTramite");
                     if (NoTramite) {
-                        NoTramite.value = tramite.NoTramite  || "";
+                        NoTramite.value = tramite.NoTramite || "";
                     }
                     const DoctacionAnexo = document.getElementById("DoctacionAnexo");
                     if (DoctacionAnexo) {
-                        DoctacionAnexo.value = tramite.DoctacionAnexo  || "";
+                        DoctacionAnexo.value = tramite.DoctacionAnexo || "";
                     }
                 } else {
                     console.error("Trámite no encontrado");

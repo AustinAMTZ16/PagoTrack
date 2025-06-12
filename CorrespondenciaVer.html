@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Oficio</title>
+    <title>Ver Correspondencia</title>
     <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
-    <!-- <link rel="stylesheet" href="./assets/css/style.css"> -->
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
@@ -26,6 +25,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Estilos Personalizados  lugar si importa-->
     <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
+
 </head>
 
 <body>
@@ -34,31 +34,32 @@
         <h1>Sistema Institucional</h1>
     </header>
 
-    <nav class="navbar navbar-expand-lg"></nav>
+    <nav class="navbar navbar-expand-lg">
+    </nav>
 
     <main class="container py-4">
-        <h2 class="mb-4">Crear Oficio</h2>
-        <form id="formCrearOficios" method="POST" enctype="multipart/form-data">
+        <h1 class="mb-4">Ver Correspondencia</h1>
+        <form id="formVerCorrespondencia" method="POST">            
             <!-- DATOS GENERALES -->
             <div class="mb-4 p-3 rounded bg-white shadow-sm border">
                 <h5 class="mb-3 text-primary">Datos Generales</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="Folio">Folio</label>
-                        <input type="text" class="form-control" id="Folio" name="Folio" required>
+                        <input type="text" class="form-control" id="Folio" name="Folio" disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="FechaRecepcion">Fecha de Recepción</label>
                         <input type="datetime-local" class="form-control" id="FechaRecepcion" name="FechaRecepcion"
-                            required>
+                            disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="Solicitante">Solicitante</label>
-                        <input type="text" class="form-control" id="Solicitante" name="Solicitante" required>
+                        <input type="text" class="form-control" id="Solicitante" name="Solicitante" disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="Dependencia" class="form-label">Institución</label>
-                        <select name="Dependencia" id="Dependencia" placeholder="Institución" required
+                        <select name="Dependencia" id="Dependencia" placeholder="Institución" disabled
                             class="form-select">
                             <option value="" disabled selected>Seleccione una Institución</option>
                             <!-- Dependencias -->
@@ -117,7 +118,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="Departamento">Departamento</label>
-                        <select class="form-select" id="Departamento" name="Departamento" required>
+                        <select class="form-select" id="Departamento" name="Departamento" disabled>
                             <option value="">Seleccione el Departamento</option>
                             <option value="Direccion_Egresos_Control_Presupuestal">Dirección de Egresos y Control
                                 Presupuestal</option>
@@ -130,7 +131,7 @@
                     <div class="col-md-6">
                         <label for="UsuarioRegistro">Usuario que registra</label>
                         <select name="UsuarioRegistro" id="UsuarioRegistro" placeholder="Usuario" class="form-select"
-                            required>
+                            disabled>
                             <option value="" disabled selected>Seleccione el Usuario</option>
                             <option value="39">Gloria Dolores Rodríguez Medina</option>
                             <option value="35">Eugenia Bermejo García</option>
@@ -145,11 +146,11 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="NumeroOficio">Número de Oficio</label>
-                        <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio" required>
+                        <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio" disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="tipoOficio">Tipo de Oficio</label>
-                        <select class="form-select" id="tipoOficio" name="tipoOficio" required>
+                        <select class="form-select" id="tipoOficio" name="tipoOficio" disabled>
                             <option value="">Seleccione el Tipo de Oficio</option>
                             <option value="Regularizacion">Regularización</option>
                             <option value="Suficiencia_Presupuestal">Suficiencia Presupuestal</option>
@@ -177,19 +178,19 @@
                     </div>
                     <div class="col-md-6">
                         <label for="Asunto">Asunto</label>
-                        <input type="text" class="form-control" id="Asunto" name="Asunto" required>
+                        <input type="text" class="form-control" id="Asunto" name="Asunto" disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="Monto">Monto</label>
-                        <input type="number" step="0.01" class="form-control" id="Monto" name="Monto" required>
+                        <input type="number" step="0.01" class="form-control" id="Monto" name="Monto" disabled>
                     </div>
                     <div class="col-12">
                         <label for="Concepto">Concepto</label>
-                        <textarea class="form-control" id="Concepto" name="Concepto" rows="3" required></textarea>
+                        <textarea class="form-control" id="Concepto" name="Concepto" rows="3" disabled></textarea>
                     </div>
                     <div class="col-12">
                         <label for="Archivo">Archivo Escaneado</label>
-                        <input type="file" class="form-control" id="Archivo" name="Archivo" required>
+                        <input type="file" class="form-control" id="Archivo" name="Archivo" disabled>
                     </div>
                 </div>
             </div>
@@ -200,19 +201,19 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="FechaVencimiento">Fecha de Vencimiento</label>
-                        <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento" required>
+                        <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento" disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="FechaRetroactiva">Fecha Retroactiva</label>
-                        <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva" required>
+                        <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva" disabled>
                     </div>
-                    <div class="col-md-6" hidden>
+                    <div class="col-md-6">
                         <label for="FechaEntregaAcuse">Fecha de Entrega del Acuse</label>
-                        <input type="date" class="form-control" id="FechaEntregaAcuse" name="FechaEntregaAcuse">
+                        <input type="date" class="form-control" id="FechaEntregaAcuse" name="FechaEntregaAcuse" disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="FechaLimitePago">Fecha Límite de Pago</label>
-                        <input type="datetime-local" class="form-control" id="FechaLimitePago" name="FechaLimitePago">
+                        <input type="datetime-local" class="form-control" id="FechaLimitePago" name="FechaLimitePago" disabled>
                     </div>
                 </div>
             </div>
@@ -223,8 +224,7 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="Turnado">Turnado A</label>
-                        <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required class="form-select"
-                            required>
+                        <select name="Turnado" id="Turnado" placeholder="Analista Turnado" disabled class="form-select" disabled>
                             <option value="" disabled selected>Seleccione el Analista</option>
                             <option value="36">Leobardo Armenta Suárez</option>
                             <option value="39">Gloria Dolores Rodríguez Medina</option>
@@ -263,19 +263,19 @@
                             <option value="37">Dora Maria Torres Herrera</option>
                         </select>
                     </div>
-                    <div class="col-md-6" hidden>
+                    <div class="col-md-6">
                         <label for="RespuestaConocimiento">Respuesta Conocimiento</label>
-                        <input type="text" class="form-control" id="RespuestaConocimiento" name="RespuestaConocimiento">
+                        <input type="text" class="form-control" id="RespuestaConocimiento" name="RespuestaConocimiento" disabled>
                     </div>
                     <div class="col-md-6">
                         <label for="Estado">Estado</label>
-                        <select class="form-select" id="Estado" name="Estado">
+                        <select class="form-select" id="Estado" name="Estado" disabled>
                             <option value="CREADO" selected>CREADO</option>
                         </select>
                     </div>
                     <div class="col-12">
                         <label for="Comentarios">Comentarios</label>
-                        <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2"></textarea>
+                        <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2" disabled></textarea>
                     </div>
                 </div>
             </div>
@@ -286,21 +286,12 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="FKOficio">Oficio Relacionado</label>
-                        <input type="number" class="form-control" id="FKOficio" name="FKOficio">
+                        <input type="number" class="form-control" id="FKOficio" name="FKOficio" disabled>
                     </div>
                 </div>
             </div>
-
-            <!-- BOTONES -->
-            <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Guardar Oficio</button>
-                <!-- <button type="button" class="btn btn-secondary"
-                    onclick="window.location.href='CorrespondenciaPanelControl.html'">Cancelar</button> -->
-            </div>
-
         </form>
     </main>
-
     <footer>
         <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
     </footer>

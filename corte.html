@@ -138,7 +138,7 @@
             <div id="Grupo">Remesa</div>
         </div>
 
-        <table id="tablaRemesa">
+        <table id="tablaRemesaCorte">
             <thead>
                 <tr>
 
@@ -150,32 +150,64 @@
         </table>
         <br>
         <div id="divComentarios">
-            <textarea name="Comentarios" id="Comentarios" cols="138.5" rows="4" style="font-size: 8px !important;"></textarea>
+            <textarea name="Comentarios" id="Comentarios" cols="138.5" rows="4"
+                style="font-size: 8px !important;"></textarea>
         </div>
-        <br><br>
-        <div class="firmas">
-            <!-- <div class="firma-item">
-                <div>Glosador</div><br><br><br><br>
-                <hr>
-                <div id="nombreGlosador"></div>
-            </div> -->
-            <div class="firma-item">
-                <div>Revisó</div><br><br><br><br>
-                <hr>
-                <div>María Concepción Soriano Tejeda</div>
-            </div>
-            <div class="firma-item">
-                <div>Validó</div><br><br><br><br>
-                <hr>
-                <div>Dora María Torres Herrera</div>
-            </div>
-            <div class="firma-item">
-                <div>Recibe en Órdenes de Pago</div><br><br><br><br>
-                <hr>
-                <div>Alan Michell Navarrete Flores</div>
-            </div>
-        </div>
+
     </div>
+
+    <script>
+
+        async function armarRemesa(consecutivo) {
+            const data = {
+                consecutivo: consecutivo,
+                Analista: NombreUser
+            };
+            try {
+                const response = await fetch(URL_BASE + 'getDetalleRemesas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+                }
+
+                // Mostrar la respuesta original
+                const result = await response.json();
+                if (!Array.isArray(result.data)) {
+                    console.error("Error: La API no devolvió un array en 'data'");
+                    return;
+                }
+
+                // Convertir Fondo a objeto si es necesario
+                const remesas = result.data.map(remesa => {
+                    if (typeof remesa.Fondo === "string") {
+                        try {
+                            remesa.Fondo = JSON.parse(remesa.Fondo);
+                        } catch (error) {
+                            console.error(`Error al parsear Fondo en remesa ${remesa.ID_CONTRATO}:`, error);
+                            remesa.Fondo = {}; // Si falla, asignar objeto vacío
+                        }
+                    }
+                    return remesa;
+                });
+
+                // console.log('remesas:', remesas);
+                ltRemesas = remesas;
+                mostrarRemesasCorte(remesas);
+            } catch (error) {
+                console.error('Error al obtener el listado de remesas:', error.message);
+            }
+        }
+
+
+
+
+    </script>
 </body>
 
 </html>

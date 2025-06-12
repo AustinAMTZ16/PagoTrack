@@ -11,7 +11,7 @@
     <script src="./assets/js/MenuSistema.js"></script>
 
     <script type="module" src="./assets/js/Correspondencia.js"></script>
-    
+
     <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -39,205 +39,274 @@
     <main class="container py-4">
         <h2 class="mb-4">Editar Oficio</h2>
         <form id="formEditarOficios" method="POST">
-            <div class="row g-3">
-                <!-- ID -->
-                <div class="mb-3">
-                    <label for="ID" class="form-label">ID</label>
-                    <input type="text" class="form-control" id="ID" name="ID" readonly>
-                </div>
-                <!-- Folio -->
-                <div class="mb-3">
-                    <label for="Folio" class="form-label">Folio</label>
-                    <input type="text" class="form-control" id="Folio" name="Folio" readonly>
-                </div>
+            <!-- DATOS GENERALES -->
+            <div class="mb-4 p-3 rounded bg-white shadow-sm border">
+                <h5 class="mb-3 text-primary">Datos Generales</h5>
+                <div class="row g-3">
+                    <div class="col-md-6" hidden>
+                        <label for="Folio">ID</label>
+                        <input type="text" class="form-control" id="ID" name="ID" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Folio">Folio</label>
+                        <input type="text" class="form-control" id="Folio" name="Folio" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="FechaRecepcion">Fecha de Recepción</label>
+                        <input type="datetime-local" class="form-control" id="FechaRecepcion" name="FechaRecepcion"
+                            required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Solicitante">Solicitante</label>
+                        <input type="text" class="form-control" id="Solicitante" name="Solicitante" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Dependencia" class="form-label">Institución</label>
+                        <select name="Dependencia" id="Dependencia" placeholder="Institución" required
+                            class="form-select">
+                            <option value="" disabled selected>Seleccione una Institución</option>
+                            <!-- Dependencias -->
+                            <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
+                            <option value="Presidencia Municipal">Presidencia Municipal</option>
+                            <option value="Sindicatura Municipal">Sindicatura Municipal</option>
+                            <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
+                            <option value="Contraloría Municipal">Contraloría Municipal</option>
+                            <option value="Tesorería Municipal">Tesorería Municipal</option>
+                            <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
+                            <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y
+                                Participación Ciudadana</option>
+                            <option value="Secretaría para la Igualdad Sustantiva de Género">Secretaría para la Igualdad
+                                Sustantiva de Género</option>
+                            <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de
+                                Administración y Tecnologías de la Información</option>
+                            <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo
+                                Urbano</option>
+                            <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro
+                                Histórico y Patrimonio Cultural</option>
+                            <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
+                            <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e
+                                Infraestructura</option>
+                            <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
+                            <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
+                            <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
+                            <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación
+                                General
+                                de Transparencia y Municipio Abierto</option>
+                            <option value="Coordinación General de Comunicación Social">Coordinación General de
+                                Comunicación
+                                Social</option>
+                            <option value="Dirección General de Desarrollo y Formación Profesional">Dirección General de
+                                Desarrollo y Formación Profesional</option>
 
-                <!-- Fecha de Recepción -->
-                <div class="mb-3">
-                    <label for="FechaRecepcion" class="form-label">Fecha de Recepción</label>
-                    <input type="date" class="form-control" id="FechaRecepcion" name="FechaRecepcion" readonly>
+                            <!-- Organismos -->
+                            <option value="Sistema Municipal DIF">Sistema Municipal DIF</option>
+                            <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de
+                                Puebla</option>
+                            <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud
+                                del
+                                Municipio de Puebla</option>
+                            <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte
+                                y
+                                Cultura de Puebla</option>
+                            <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo
+                                Operador del Servicio de Limpia del Municipio de Puebla</option>
+                            <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
+                            <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
+
+                            <!--Estatales-->
+                            <option value="Secretaría de Planeación, Finanzas y Administración">Secretaría de
+                                Planeación,
+                                Finanzas y Administración</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Departamento">Departamento</label>
+                        <select class="form-select" id="Departamento" name="Departamento" required>
+                            <option value="">Seleccione el Departamento</option>
+                            <option value="Direccion_Egresos_Control_Presupuestal">Dirección de Egresos y Control
+                                Presupuestal</option>
+                            <option value="Departamento_Presupuesto">Departamento de Presupuesto</option>
+                            <option value="Departamento_Ordenes_Pago">Departamento de Órdenes de Pago</option>
+                            <option value="Departamento_Planeacion_Crediticia">Departamento de Planeación Crediticia
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="UsuarioRegistro">Usuario que registra</label>
+                        <select name="UsuarioRegistro" id="UsuarioRegistro" placeholder="Usuario" class="form-select"
+                            required>
+                            <option value="" disabled selected>Seleccione el Usuario</option>
+                            <option value="39">Gloria Dolores Rodríguez Medina</option>
+                            <option value="35">Eugenia Bermejo García</option>
+                        </select>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Solicitante -->
-                <div class="mb-3">
-                    <label for="Solicitante" class="form-label">Solicitante</label>
-                    <input type="text" class="form-control" id="Solicitante" name="Solicitante" readonly>
+            <!-- INFORMACIÓN DEL OFICIO -->
+            <div class="mb-4 p-3 rounded bg-white shadow-sm border">
+                <h5 class="mb-3 text-primary">Información del Oficio</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="NumeroOficio">Número de Oficio</label>
+                        <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tipoOficio">Tipo de Oficio</label>
+                        <select class="form-select" id="tipoOficio" name="tipoOficio" required>
+                            <option value="">Seleccione el Tipo de Oficio</option>
+                            <option value="Regularizacion">Regularización</option>
+                            <option value="Suficiencia_Presupuestal">Suficiencia Presupuestal</option>
+                            <option value="Suficiencia_Compromiso_Gasto">Suficiencia Compromiso Gasto</option>
+                            <option value="Suficiencia_Anticipada">Suficiencia Anticipada</option>
+                            <option value="Modificaciones_Suficiencia_Presupuestal">Modificaciones Suficiencia
+                                Presupuestal</option>
+                            <option value="Ampliacion_de_suficiencia">Ampliación de suficiencia</option>
+                            <option value="Oficio">Oficio</option>
+                            <option value="Memorando">Memorando</option>
+                            <option value="Circular">Circular</option>
+                            <option value="Recalendarizacion">Recalendarización</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Uso_de_partida">Uso de partida</option>
+                            <option value="Lic_Romay">Lic. Romay</option>
+                            <option value="Ampliacion_Presupuestal">Ampliación Presupuestal</option>
+                            <option value="Ampliacion_Liquida">Ampliación Líquida</option>
+                            <option value="Reasignacion">Reasignación</option>
+                            <option value="Disposicion_y_Reasignacion">Disposición y Reasignación</option>
+                            <option value="Disposicion">Disposición</option>
+                            <option value="Apertura_de_Fondo_Fijo">Apertura de Fondo Fijo</option>
+                            <option value="Multianuales">Multianuales</option>
+                            <option value="Transparencia">Transparencia</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Asunto">Asunto</label>
+                        <input type="text" class="form-control" id="Asunto" name="Asunto" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Monto">Monto</label>
+                        <input type="number" step="0.01" class="form-control" id="Monto" name="Monto" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="Concepto">Concepto</label>
+                        <textarea class="form-control" id="Concepto" name="Concepto" rows="3" required></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="Archivo">Archivo Escaneado</label>
+                        <input type="file" class="form-control" id="Archivo" name="Archivo">
+                    </div>
                 </div>
+            </div>
 
-                <!-- Dependencia -->
-                <div class="mb-3">
-                    <label for="Dependencia" class="form-label">Institución</label>
-                    <select name="Dependencia" id="Dependencia" placeholder="Institución" required class="form-select">
-                        <option value="" disabled selected>Seleccione una Institución</option>
-                        <!-- Dependencias -->
-                        <option value="Coordinación de las Regidurías">Coordinación de las Regidurías</option>
-                        <option value="Presidencia Municipal">Presidencia Municipal</option>
-                        <option value="Sindicatura Municipal">Sindicatura Municipal</option>
-                        <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
-                        <option value="Contraloría Municipal">Contraloría Municipal</option>
-                        <option value="Tesorería Municipal">Tesorería Municipal</option>
-                        <option value="Secretaría General de Gobierno">Secretaría General de Gobierno</option>
-                        <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de Bienestar y
-                            Participación Ciudadana</option>
-                        <option value="Secretaría para la Igualdad Sustantiva de Género">Secretaría para la Igualdad
-                            Sustantiva de Género</option>
-                        <option value="Secretaría de Administración y Tecnologías de la Información">Secretaría de
-                            Administración y Tecnologías de la Información</option>
-                        <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y Desarrollo
-                            Urbano</option>
-                        <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del Centro
-                            Histórico y Patrimonio Cultural</option>
-                        <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo</option>
-                        <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e
-                            Infraestructura</option>
-                        <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana</option>
-                        <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos</option>
-                        <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
-                        <option value="Coordinación General de Transparencia y Municipio Abierto">Coordinación
-                            General
-                            de Transparencia y Municipio Abierto</option>
-                        <option value="Coordinación General de Comunicación Social">Coordinación General de
-                            Comunicación
-                            Social</option>
-                        <option value="Dirección General de Desarrollo y Formación Profesional">Dirección General de
-                            Desarrollo y Formación Profesional</option>
-
-                        <!-- Organismos -->
-                        <option value="Sistema Municipal DIF">Sistema Municipal DIF</option>
-                        <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del Deporte de
-                            Puebla</option>
-                        <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la Juventud
-                            del
-                            Municipio de Puebla</option>
-                        <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal de Arte
-                            y
-                            Cultura de Puebla</option>
-                        <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">Organismo
-                            Operador del Servicio de Limpia del Municipio de Puebla</option>
-                        <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla</option>
-                        <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación</option>
-
-                        <!--Estatales-->
-                        <option value="Secretaría de Planeación, Finanzas y Administración">Secretaría de Planeación, Finanzas y Administración</option>
+            <!-- FECHAS RELEVANTES -->
+            <div class="mb-4 p-3 rounded bg-white shadow-sm border">
+                <h5 class="mb-3 text-primary">Fechas Relevantes</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="FechaVencimiento">Fecha de Vencimiento</label>
+                        <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="FechaRetroactiva">Fecha Retroactiva</label>
+                        <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="FechaEntregaAcuse">Fecha de Entrega del Acuse</label>
+                        <input type="date" class="form-control" id="FechaEntregaAcuse" name="FechaEntregaAcuse">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="FechaLimitePago">Fecha Límite de Pago</label>
+                        <input type="datetime-local" class="form-control" id="FechaLimitePago" name="FechaLimitePago">
+                    </div>
                 </div>
+            </div>
 
-                <!-- Departamento -->
-                <div class="mb-3">
-                    <label for="Departamento" class="form-label">Departamento</label>
-                    <input type="text" class="form-control" id="Departamento" name="Departamento" readonly>
+            <!-- FLUJO DEL OFICIO -->
+            <div class="mb-4 p-3 rounded bg-white shadow-sm border">
+                <h5 class="mb-3 text-primary">Flujo del Oficio</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="Turnado">Turnado A</label>
+                        <select name="Turnado" id="Turnado" placeholder="Analista Turnado" required class="form-select"
+                            required>
+                            <option value="" disabled selected>Seleccione el Analista</option>
+                            <option value="36">Leobardo Armenta Suárez</option>
+                            <option value="39">Gloria Dolores Rodríguez Medina</option>
+                            <option value="35">Eugenia Bermejo García</option>
+                            <option value="29">Laura Hernandez Garcia</option>
+                            <option value="24">Alan Michell Navarrete Flores</option>
+                            <option value="41">José Gilberto Bello Ramírez</option>
+                            <option value="4">Juan Carlos García Tagle</option>
+                            <option value="8">Isabel Cristina Pavón Nava</option>
+                            <option value="11">Isabel Cortes Varillas</option>
+                            <option value="20">Maria Isabel Marín León</option>
+                            <option value="21">Ariosto Emilio Lechuga Aparicio</option>
+                            <option value="22">Gonzalo Ochoa Huerta</option>
+                            <option value="23">Laura Alatriste Torres</option>
+                            <option value="5">Maria Blanca Soriano Rojas</option>
+                            <option value="1">Agustín Arenas Martinez</option>
+                            <option value="17">Maria Del Carmen Damian Aguilar</option>
+                            <option value="10">Maria De Lourdes Molina Quiroz</option>
+                            <option value="7">Maria De Lourdes Gutierrez Castañeda</option>
+                            <option value="16">Maria Valeria Corro Stefanoni</option>
+                            <option value="12">Ariadna Michel Sánchez Rodríguez</option>
+                            <option value="13">Michelle Córdova Torres</option>
+                            <option value="19">Francisco Javier Rivera Castillo</option>
+                            <option value="15">Antonio Castañon Ruiz</option>
+                            <option value="18">Ofelia Olguin Aguilar</option>
+                            <option value="6">Xochil Cuatepitzi Torres</option>
+                            <option value="14">Daniel Rodríguez Cardenas</option>
+                            <option value="9">Roberta Marcela Uvera Saucedo</option>
+                            <option value="43">Elisa Castillo Ramírez</option>
+                            <option value="41">Cèsar Andrès Marìn Àlvarez</option>
+                            <option value="31">Sonia Pavon Nava</option>
+                            <option value="32">Yamil Méndez Valdez</option>
+                            <option value="27">Gisela González Martínez</option>
+                            <option value="25">Alejandra Rojas Hernández</option>
+                            <option value="26">Arnulfo Sánchez Mora</option>
+                            <option value="37">Dora Maria Torres Herrera</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="RespuestaConocimiento">Respuesta Conocimiento</label>
+                        <input type="text" class="form-control" id="RespuestaConocimiento" name="RespuestaConocimiento">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Estado">Estado</label>
+                        <select class="form-select" id="Estado" name="Estado">
+                            <option value="CREADO">CREADO</option>
+                            <option value="TURNADO">TURNADO</option>
+                            <option value="OBSERVACIONES">OBSERVACIONES</option>
+                            <option value="DEVUELTO">DEVUELTO</option>
+                            <option value="PROCESO-FIRMA-TITULAR">FIRMA POR DIRECTORA TESORERIA</option>
+                            <option value="ACUSE-EXPEDIENTE">ESCANEO DE SELLOS</option>
+                            <option value="ARCHIVADO-ENTREGADO">ARCHIVADO</option>
+                            <option value="CANCELADO">CANCELADO</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="Comentarios">Comentarios</label>
+                        <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2"></textarea>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Número de Oficio -->
-                <div class="mb-3">
-                    <label for="NumeroOficio" class="form-label">Número de Oficio</label>
-                    <input type="text" class="form-control" id="NumeroOficio" name="NumeroOficio" readonly>
+            <!-- RELACIONES -->
+            <div class="mb-4 p-3 rounded bg-white shadow-sm border">
+                <h5 class="mb-3 text-primary">Relaciones</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="FKOficio">Oficio Relacionado</label>
+                        <input type="number" class="form-control" id="FKOficio" name="FKOficio">
+                    </div>
                 </div>
+            </div>
 
-                <!-- Tipo de Oficio -->
-                <div class="mb-3">
-                    <label for="tipoOficio" class="form-label">Tipo de Oficio</label>
-                    <select class="form-select" id="tipoOficio" name="tipoOficio">
-                        <option value="">Seleccione el Tipo de Oficio</option>
-                        <option value="Regularizacion">Regularización</option>
-                        <option value="Suficiencia_Presupuestal">Suficiencia Presupuestal</option>
-                        <option value="Suficiencia_Compromiso_Gasto">Suficiencia Compromiso Gasto</option>
-                        <option value="Suficiencia_Anticipada">Suficiencia Anticipada</option>
-                        <option value="Modificaciones_Suficiencia_Presupuestal">Modificaciones Suficiencia Presupuestal
-                        </option>
-                        <option value="Ampliacion_de_suficiencia">Ampliación de suficiencia</option>
-                        <option value="Oficio">Oficio</option>
-                        <option value="Memorando">Memorando</option>
-                        <option value="Circular">Circular</option>
-                        <option value="Recalendarizacion">Recalendarización</option>
-                        <option value="Transferencia">Transferencia</option>
-                        <option value="Uso_de_partida">Uso de partida</option>
-                        <option value="Lic_Romay">Lic. Romay</option>
-                        <option value="Ampliacion_Presupuestal">Ampliación Presupuestal</option>
-                        <option value="Ampliacion_Liquida">Ampliación Líquida</option>
-                        <option value="Reasignacion">Reasignación</option>
-                        <option value="Disposicion_y_Reasignacion">Disposición y Reasignación</option>
-                        <option value="Disposicion">Disposición</option>
-                        <option value="Apertura_de_Fondo_Fijo">Apertura de Fondo Fijo</option>
-                        <option value="Multianuales">Multianuales</option>
-                        <option value="Transparencia">Transparencia</option>
-                        <option value="Reduccion">Reducción</option>
-                    </select>
-                </div>
-
-                <!-- Asunto -->
-                <div class="mb-3">
-                    <label for="Asunto" class="form-label">Asunto</label>
-                    <input type="text" class="form-control" id="Asunto" name="Asunto" readonly>
-                </div>
-
-                <!-- Concepto -->
-                <div class="mb-3">
-                    <label for="Concepto" class="form-label">Concepto</label>
-                    <textarea class="form-control" id="Concepto" name="Concepto" rows="3" readonly></textarea>
-                </div>
-
-                <!-- Monto -->
-                <div class="mb-3">
-                    <label for="Monto" class="form-label">Monto</label>
-                    <input type="number" step="0.01" class="form-control" id="Monto" name="Monto" readonly>
-                </div>
-
-                <!-- Fecha de Vencimiento -->
-                <div class="mb-3">
-                    <label for="FechaVencimiento" class="form-label">Fecha de Vencimiento</label>
-                    <input type="date" class="form-control" id="FechaVencimiento" name="FechaVencimiento" readonly>
-                </div>
-
-                <!-- Turnado A -->
-                <div class="mb-3">
-                    <label for="Turnado" class="form-label">Turnado A</label>
-                    <input type="text" class="form-control" id="Turnado" name="Turnado" readonly>
-                </div>
-
-                <!-- Fecha Entrega Acuse -->
-                <div class="mb-3">
-                    <label for="FechaEntregaAcuse" class="form-label">Fecha Entrega Acuse</label>
-                    <input type="date" class="form-control" id="FechaEntregaAcuse" name="FechaEntregaAcuse">
-                </div>
-
-                <!-- Fecha Retroactiva -->
-                <div class="mb-3">
-                    <label for="FechaRetroactiva" class="form-label">Fecha Retroactiva</label>
-                    <input type="date" class="form-control" id="FechaRetroactiva" name="FechaRetroactiva">
-                </div>
-
-                <!-- Estado -->
-                <div class="mb-3">
-                    <label for="Estado" class="form-label">Estado del Oficio</label>
-                    <select class="form-select" id="Estado" name="Estado">
-                        <option value="CREADO">CREADO</option>
-                        <option value="TURNADO">TURNADO</option>
-                        <option value="OBSERVACIONES">OBSERVACIONES</option>
-                        <option value="DEVUELTO">DEVUELTO</option>
-                        <option value="PROCESO-FIRMA-TITULAR">FIRMA POR DIRECTORA TESORERIA</option>
-                        <option value="ACUSE-EXPEDIENTE">ESCANEO DE SELLOS</option>
-                        <option value="ARCHIVADO-ENTREGADO">ARCHIVADO</option>
-                        <option value="CANCELADO">CANCELADO</option>
-                    </select>
-                </div>
-
-                <!-- UsuarioRegistro -->
-                <div class="mb-3">
-                    <label for="UsuarioRegistro" class="form-label">Usuario que registra</label>
-                    <input type="text" class="form-control" id="UsuarioRegistro" name="UsuarioRegistro" readonly>
-                </div>
-
-                <!-- Comentarios -->
-                <div class="mb-3">
-                    <label for="Comentarios" class="form-label">Comentarios</label>
-                    <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2"></textarea>
-                </div>
-
-                <!-- Botón Enviar -->
-                <div class="col-12 d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary toggleButton">Guardar Cambios</button>
-                    <button type="button" class="btn btn-primary toggleButton"
-                        onclick="window.location.href='CorrespondenciaPanelControl.html'">Regresar</button>
-                </div>
+            <!-- Botón Enviar -->
+            <div class="col-12 d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary toggleButton">Guardar Cambios</button>
+                <button type="button" class="btn btn-primary toggleButton"
+                    onclick="window.location.href='CorrespondenciaPanelControl.html'">Regresar</button>
             </div>
         </form>
     </main>

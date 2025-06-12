@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
           <li id="Tramite" class="nav-item dropdown" style="display: none;">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">Trámite</a>
@@ -109,6 +110,17 @@ document.addEventListener("DOMContentLoaded", () => {
               <li id="Oficios" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelAnalista.html">Panel Analista</a></li>
             </ul>
           </li>
+
+          <li id="Suficiencias" class="nav-item dropdown" style="display: none;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">Correspondencia y Oficios</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">              
+              <li id="Suficiencias" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelAnalista.html">Correspondencia</a></li>
+              <li id="Suficiencias" style="display: none;"><a class="dropdown-item" href="CorrespondenciaCrear.html">Crear Correspondencia</a></li>
+            </ul>
+          </li>
+
+
           <li><a class="nav-link" href="manual.html">Manual</a></li>
           <li><a class="nav-link" href="help.html">Estados</a></li>
           <li><a class="nav-link" href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>

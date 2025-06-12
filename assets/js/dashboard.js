@@ -43,6 +43,7 @@ const ordenEstatus = [
     'OrdenesPago',
     'CRF'
 ];
+let localStorageUser = JSON.parse(localStorage.getItem("usuario"));
 
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
@@ -445,7 +446,7 @@ function actualizarTablaTramites(data, tableId) {
                         botones += `<button class="btn-icon primary" title="Asignar Remesa" onclick="createRemesa(${data.ID_CONTRATO})"><i class="fas fa-money-check-alt"></i></button> `;
                     }
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
-                    if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "OP_KPI") || usuario.RolUser === "Operador" || usuario.RolUser === "OP_Tramite") {
+                    if (usuario && (usuario.RolUser === "Admin" || usuario.RolUser === "OP_KPI") || usuario.RolUser === "Operador" || usuario.RolUser === "OP_Tramite" || usuario.RolUser === "OP_Remesa") {
                         // BTN ACCION MODIFICAR
                         botones += `<button class="btn-icon primary" title="Modificar" onclick="modificarTramite(${data.ID_CONTRATO})"><i class="fas fa-edit"></i></button>`;
                     }
@@ -590,8 +591,12 @@ function actualizarTablaTurnados(data, tableId) {
                 data: null,
                 render: function (data) {
                     let botones = "";
-                    if (["Devuelto", "Turnado", "Observaciones"].includes(data.Estatus)) {
-                        botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(
+
+
+
+                    if (localStorageUser.RolUser === "Analista" || localStorageUser.RolUser === "Admin") {
+                        if (["Devuelto", "Turnado", "Observaciones"].includes(data.Estatus)) {
+                            botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(
                             decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
                             decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
                             decodeURIComponent('${encodeURIComponent(data.Concepto)}'),
@@ -601,13 +606,14 @@ function actualizarTablaTurnados(data, tableId) {
                             decodeURIComponent('${encodeURIComponent(data.Dependencia)}'),
                             decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}')
                         )"><i class="fa-solid fa-pen-to-square"></i></button>`;
+                        }
+                        // BTN ACCION DETALLE
+                        botones += `<button class="btn-icon primary" title="Ver Detalles" onclick="window.location.href = 'TramiteDetalle.html?id=${data.ID_CONTRATO}'"><i class="fas fa-eye"></i></button>`;
+                        botones += `<button class="btn-icon primary" title="QR" onclick="generarQR(${data.ID_CONTRATO}, '${data.NombreUser}', '${data.NoTramite}')"><i class="fas fa-qrcode"></i></button>`;
+
+                        const comentarioEscapado = encodeURIComponent(data.Comentarios || "");
+                        botones += `<button class="btn-icon primary" title="Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
                     }
-
-                    botones += `<button class="btn-icon primary" title="QR" onclick="generarQR(${data.ID_CONTRATO}, '${data.NombreUser}', '${data.NoTramite}')"><i class="fas fa-qrcode"></i></button>`;
-
-                    const comentarioEscapado = encodeURIComponent(data.Comentarios || "");
-                    botones += `<button class="btn-icon primary" title="Comentarios" onclick="mostrarComentario('${comentarioEscapado}')"><i class="fas fa-comment-dots"></i></button>`;
-
                     return botones;
                 }
             },

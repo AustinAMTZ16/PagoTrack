@@ -363,6 +363,20 @@ class CorrespondenciaModel
                 if (array_key_exists($campo, $data)) {
                     $valor = $data[$campo];
 
+                    // TRATAMIENTO ESPECÍFICO PARA RespuestaConocimiento Y OTROS STRINGS NO REQUERIDOS
+                    // Si el campo es tipo 'string', no es requerido y el valor es una cadena vacía,
+                    // lo convertimos a NULL explícitamente para la base de datos.
+                    if (
+                        $config['tipo'] === 'string' &&
+                        isset($config['requerido']) && $config['requerido'] === false &&
+                        (string)$valor === '' // Asegúrate de que es una cadena vacía, no solo un valor "falso"
+                    ) {
+                        $setClauses[] = "$campo = NULL";
+                        // No añadimos nada a $params para este campo, ya que es NULL directo en el SQL
+                        continue; // Pasa a la siguiente iteración del bucle
+                    }
+
+
                     switch ($config['tipo']) {
                         case 'date':
                         case 'datetime':
@@ -381,6 +395,9 @@ class CorrespondenciaModel
 
                         case 'json':
                             $setClauses[] = "$campo = :$campo";
+                            // Si el valor de 'Comentarios' viene vacío y es un JSON, puedes querer que sea NULL también
+                            // O si la lógica ya lo maneja para que no se envíe un JSON vacío.
+                            // Aquí asumo que $data['Comentarios'] ya está correctamente formateado como JSON o vacio por tu lógica anterior.
                             $params[$campo] = is_array($valor) ? json_encode($valor, JSON_UNESCAPED_UNICODE) : $valor;
                             break;
 

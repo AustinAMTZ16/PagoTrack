@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </li>
 
 
+          <li><a class="nav-link" href="obtenerReportePrioridadTramites.html">Prioridad</a></li>
           <li><a class="nav-link" href="manual.html">Manual</a></li>
           <li><a class="nav-link" href="help.html">Estados</a></li>
           <li><a class="nav-link" href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>

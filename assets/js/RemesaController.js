@@ -471,7 +471,7 @@ function actualizarTablaRemesas(data, tableId) {
                     }
 
                     if (estatus === "Pendiente" &&
-                        DeoartametoUserLocalStorage === 'Presupuesto' || DeoartametoUserLocalStorage === 'Admin') {
+                        DeoartametoUserLocalStorage === 'Presupuesto' || DeoartametoUserLocalStorage === 'Admin' || DeoartametoUserLocalStorage === 'Tramite') {
                         buttons += `
                                         <button class="btn btn-success toggleButton" onclick="cambiarEstatusRemesa('${grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
                                     `;

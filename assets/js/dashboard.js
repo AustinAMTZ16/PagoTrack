@@ -594,7 +594,7 @@ function actualizarTablaTurnados(data, tableId) {
 
 
 
-                    if (localStorageUser.RolUser === "Analista" || localStorageUser.RolUser === "Admin" || localStorageUser.RolUser === "OP_Remesa") {
+                    if (localStorageUser.RolUser === "Analista" || localStorageUser.RolUser === "Admin" || localStorageUser.RolUser === "OP_Remesa" || localStorageUser.RolUser === "Operador") {
                         if (["Devuelto", "Turnado", "Observaciones"].includes(data.Estatus)) {
                             botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(
                             decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),

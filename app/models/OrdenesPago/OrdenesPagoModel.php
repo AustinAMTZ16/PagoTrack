@@ -129,203 +129,103 @@ class OrdenesPagoModel
         }
     }
     // Actualiza el estado de un trámite + comentarios
-    // public function actualizarEstadoTramite($data)
-    // {
-    //     date_default_timezone_set('America/Mexico_City');
-    //     $fechaActual = date('Y-m-d H:i:s');
-
-    //     try {
-    //         // Campos que permiten NULL
-    //         $camposNullables = ['RemesaNumero', 'DocSAP', 'IntegraSAP', 'FK_SRF', 'FechaLimitePago'];
-    //         // Convertir valores vacíos, "0" o no definidos a NULL
-    //         foreach ($camposNullables as $campo) {
-    //             if (!isset($data[$campo]) || $data[$campo] === "0" || $data[$campo] === 0 || trim($data[$campo]) === '') {
-    //                 $data[$campo] = null;
-    //             }
-    //         }
-
-    //         $querySelect = "SELECT Estatus, Comentarios, AnalistaID FROM ConsentradoGeneralTramites WHERE ID_CONTRATO = :ID_CONTRATO";
-    //         $stmtSelect = $this->conn->prepare($querySelect);
-    //         $stmtSelect->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
-    //         $stmtSelect->execute();
-    //         $currentData = $stmtSelect->fetch(PDO::FETCH_ASSOC);
-
-    //         if (!$currentData) {
-    //             return false;
-    //         }
-
-    //         $estatus = !empty($data['Estatus']) ? $data['Estatus'] : $currentData['Estatus'];
-    //         $AnalistaID = !empty($data['AnalistaID']) ? $data['AnalistaID'] : $currentData['AnalistaID'];
-
-    //         $nuevoComentario = !empty($data['Comentarios']) ? json_encode([
-    //             "ID_CONTRATO" => $data['ID_CONTRATO'],
-    //             "Modificado_Por" => $data['Analista'],
-    //             "Fecha" => $fechaActual,
-    //             "Estatus" => $data['Estatus'],
-    //             "Comentario" => $data['Comentarios']
-    //         ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : '';
-
-    //         $comentariosArray = !empty($currentData['Comentarios']) ? json_decode($currentData['Comentarios'], true) : [];
-
-    //         if (!empty($nuevoComentario)) {
-    //             $comentariosArray[] = json_decode($nuevoComentario, true);
-    //         }
-
-    //         $comentariosActualizados = json_encode($comentariosArray, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-    //         $queryUpdate = "UPDATE ConsentradoGeneralTramites 
-    //                     SET Estatus = :Estatus, 
-    //                         Comentarios = :Comentarios,  
-    //                         AnalistaID = :AnalistaID";
-
-    //         // Variables auxiliares
-    //         // $docSAP = null;
-    //         // $integraSAP = null;
-
-    //         if ($estatus === 'Devuelto') {
-    //             $queryUpdate .= ", FechaDevuelto = :FechaDevuelto";
-    //         }
-    //         if ($estatus === 'Turnado') {
-    //             $queryUpdate .= ", FechaTurnado = :FechaTurnado";
-    //         }
-    //         if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
-    //             $queryUpdate .= ", FechaTurnadoEntrega = :FechaTurnadoEntrega,
-    //                          RemesaNumero = :RemesaNumero,
-    //                          DocSAP = :DocSAP,
-    //                          IntegraSAP = :IntegraSAP";
-
-    //             // Convertir "0" o 0 a null
-    //             $docSAP = ($data['DocSAP'] === "0" || $data['DocSAP'] === 0) ? null : $data['DocSAP'];
-    //             $integraSAP = ($data['IntegraSAP'] === "0" || $data['IntegraSAP'] === 0) ? null : $data['IntegraSAP'];
-    //         }
-
-    //         $queryUpdate .= " WHERE ID_CONTRATO = :ID_CONTRATO";
-
-    //         $stmtUpdate = $this->conn->prepare($queryUpdate);
-
-    //         $stmtUpdate->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
-    //         $stmtUpdate->bindParam(':Estatus', $estatus);
-    //         $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
-    //         $stmtUpdate->bindParam(':AnalistaID', $AnalistaID);
-
-    //         if ($estatus === 'Devuelto') {
-    //             $stmtUpdate->bindParam(':FechaDevuelto', $fechaActual, PDO::PARAM_STR);
-    //         }
-    //         if ($estatus === 'Turnado') {
-    //             $stmtUpdate->bindParam(':FechaTurnado', $fechaActual, PDO::PARAM_STR);
-    //         }
-    //         if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
-    //             $stmtUpdate->bindParam(':FechaTurnadoEntrega', $fechaActual, PDO::PARAM_STR);
-    //             $stmtUpdate->bindValue(':RemesaNumero', $data['RemesaNumero'], $data['RemesaNumero'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-    //             $stmtUpdate->bindValue(':DocSAP', $data['DocSAP'], $data['DocSAP'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-    //             $stmtUpdate->bindValue(':IntegraSAP', $data['IntegraSAP'], $data['IntegraSAP'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-    //             $stmtUpdate->bindValue(':FK_SRF', $data['FK_SRF'], $data['FK_SRF'] === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
-    //             $stmtUpdate->bindValue(':FechaLimitePago', $data['FechaLimitePago'], $data['FechaLimitePago'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-    //         }
-
-    //         return $stmtUpdate->execute();
-    //     } catch (PDOException $e) {
-    //         throw new Exception("Error al actualizar el trámite: " . $e->getMessage());
-    //     }
-    // }
     public function actualizarEstadoTramite($data)
-{
-    date_default_timezone_set('America/Mexico_City');
-    $fechaActual = date('Y-m-d H:i:s');
+    {
+        date_default_timezone_set('America/Mexico_City');
+        $fechaActual = date('Y-m-d H:i:s');
 
-    try {
-        // Campos que permiten NULL
-        $camposNullables = ['RemesaNumero', 'DocSAP', 'IntegraSAP', 'FK_SRF', 'FechaLimitePago'];
+        try {
+            // Campos que permiten NULL
+            $camposNullables = ['RemesaNumero', 'DocSAP', 'IntegraSAP', 'FK_SRF', 'FechaLimitePago'];
 
-        // Convertir valores vacíos, "0" o no definidos a NULL
-        foreach ($camposNullables as $campo) {
-            if (!isset($data[$campo]) || $data[$campo] === "0" || $data[$campo] === 0 || trim($data[$campo]) === '') {
-                $data[$campo] = null;
+            // Convertir valores vacíos, "0" o no definidos a NULL
+            foreach ($camposNullables as $campo) {
+                if (!isset($data[$campo]) || $data[$campo] === "0" || $data[$campo] === 0 || trim($data[$campo]) === '') {
+                    $data[$campo] = null;
+                }
             }
-        }
 
-        // Obtener datos actuales
-        $querySelect = "SELECT Estatus, Comentarios, AnalistaID FROM ConsentradoGeneralTramites WHERE ID_CONTRATO = :ID_CONTRATO";
-        $stmtSelect = $this->conn->prepare($querySelect);
-        $stmtSelect->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
-        $stmtSelect->execute();
-        $currentData = $stmtSelect->fetch(PDO::FETCH_ASSOC);
+            // Obtener datos actuales
+            $querySelect = "SELECT Estatus, Comentarios, AnalistaID FROM ConsentradoGeneralTramites WHERE ID_CONTRATO = :ID_CONTRATO";
+            $stmtSelect = $this->conn->prepare($querySelect);
+            $stmtSelect->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
+            $stmtSelect->execute();
+            $currentData = $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
-        if (!$currentData) {
-            return false;
-        }
+            if (!$currentData) {
+                return false;
+            }
 
-        $estatus = !empty($data['Estatus']) ? $data['Estatus'] : $currentData['Estatus'];
-        $AnalistaID = !empty($data['AnalistaID']) ? $data['AnalistaID'] : $currentData['AnalistaID'];
+            $estatus = !empty($data['Estatus']) ? $data['Estatus'] : $currentData['Estatus'];
+            $AnalistaID = !empty($data['AnalistaID']) ? $data['AnalistaID'] : $currentData['AnalistaID'];
 
-        $nuevoComentario = !empty($data['Comentarios']) ? json_encode([
-            "ID_CONTRATO" => $data['ID_CONTRATO'],
-            "Modificado_Por" => $data['Analista'],
-            "Fecha" => $fechaActual,
-            "Estatus" => $data['Estatus'],
-            "Comentario" => $data['Comentarios']
-        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : '';
+            $nuevoComentario = !empty($data['Comentarios']) ? json_encode([
+                "ID_CONTRATO" => $data['ID_CONTRATO'],
+                "Modificado_Por" => $data['Analista'],
+                "Fecha" => $fechaActual,
+                "Estatus" => $data['Estatus'],
+                "Comentario" => $data['Comentarios']
+            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : '';
 
-        $comentariosArray = !empty($currentData['Comentarios']) ? json_decode($currentData['Comentarios'], true) : [];
+            $comentariosArray = !empty($currentData['Comentarios']) ? json_decode($currentData['Comentarios'], true) : [];
 
-        if (!empty($nuevoComentario)) {
-            $comentariosArray[] = json_decode($nuevoComentario, true);
-        }
+            if (!empty($nuevoComentario)) {
+                $comentariosArray[] = json_decode($nuevoComentario, true);
+            }
 
-        $comentariosActualizados = json_encode($comentariosArray, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $comentariosActualizados = json_encode($comentariosArray, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        // Construcción del query dinámico
-        $queryUpdate = "UPDATE ConsentradoGeneralTramites 
+            // Construcción del query dinámico
+            $queryUpdate = "UPDATE ConsentradoGeneralTramites 
                         SET Estatus = :Estatus, 
                             Comentarios = :Comentarios,  
                             AnalistaID = :AnalistaID";
 
-        if ($estatus === 'Devuelto') {
-            $queryUpdate .= ", FechaDevuelto = :FechaDevuelto";
-        }
-        if ($estatus === 'Turnado') {
-            $queryUpdate .= ", FechaTurnado = :FechaTurnado";
-        }
-        if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
-            $queryUpdate .= ", FechaTurnadoEntrega = :FechaTurnadoEntrega,
+            if ($estatus === 'Devuelto') {
+                $queryUpdate .= ", FechaDevuelto = :FechaDevuelto";
+            }
+            if ($estatus === 'Turnado') {
+                $queryUpdate .= ", FechaTurnado = :FechaTurnado";
+            }
+            if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
+                $queryUpdate .= ", FechaTurnadoEntrega = :FechaTurnadoEntrega,
                              RemesaNumero = :RemesaNumero,
                              DocSAP = :DocSAP,
                              IntegraSAP = :IntegraSAP,
                              FK_SRF = :FK_SRF,
                              FechaLimitePago = :FechaLimitePago";
+            }
+
+            $queryUpdate .= " WHERE ID_CONTRATO = :ID_CONTRATO";
+
+            // Preparar y bindear
+            $stmtUpdate = $this->conn->prepare($queryUpdate);
+
+            $stmtUpdate->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
+            $stmtUpdate->bindParam(':Estatus', $estatus);
+            $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
+            $stmtUpdate->bindParam(':AnalistaID', $AnalistaID);
+
+            if ($estatus === 'Devuelto') {
+                $stmtUpdate->bindParam(':FechaDevuelto', $fechaActual, PDO::PARAM_STR);
+            }
+            if ($estatus === 'Turnado') {
+                $stmtUpdate->bindParam(':FechaTurnado', $fechaActual, PDO::PARAM_STR);
+            }
+            if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
+                $stmtUpdate->bindParam(':FechaTurnadoEntrega', $fechaActual, PDO::PARAM_STR);
+                $stmtUpdate->bindValue(':RemesaNumero', $data['RemesaNumero'], $data['RemesaNumero'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmtUpdate->bindValue(':DocSAP', $data['DocSAP'], $data['DocSAP'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmtUpdate->bindValue(':IntegraSAP', $data['IntegraSAP'], $data['IntegraSAP'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmtUpdate->bindValue(':FK_SRF', $data['FK_SRF'], $data['FK_SRF'] === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmtUpdate->bindValue(':FechaLimitePago', $data['FechaLimitePago'], $data['FechaLimitePago'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+            }
+
+            return $stmtUpdate->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Error al actualizar el trámite: " . $e->getMessage());
         }
-
-        $queryUpdate .= " WHERE ID_CONTRATO = :ID_CONTRATO";
-
-        // Preparar y bindear
-        $stmtUpdate = $this->conn->prepare($queryUpdate);
-
-        $stmtUpdate->bindParam(':ID_CONTRATO', $data['ID_CONTRATO'], PDO::PARAM_INT);
-        $stmtUpdate->bindParam(':Estatus', $estatus);
-        $stmtUpdate->bindParam(':Comentarios', $comentariosActualizados);
-        $stmtUpdate->bindParam(':AnalistaID', $AnalistaID);
-
-        if ($estatus === 'Devuelto') {
-            $stmtUpdate->bindParam(':FechaDevuelto', $fechaActual, PDO::PARAM_STR);
-        }
-        if ($estatus === 'Turnado') {
-            $stmtUpdate->bindParam(':FechaTurnado', $fechaActual, PDO::PARAM_STR);
-        }
-        if (in_array($estatus, ['RegistradoSAP', 'JuntasAuxiliares', 'Inspectoria'])) {
-            $stmtUpdate->bindParam(':FechaTurnadoEntrega', $fechaActual, PDO::PARAM_STR);
-            $stmtUpdate->bindValue(':RemesaNumero', $data['RemesaNumero'], $data['RemesaNumero'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-            $stmtUpdate->bindValue(':DocSAP', $data['DocSAP'], $data['DocSAP'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-            $stmtUpdate->bindValue(':IntegraSAP', $data['IntegraSAP'], $data['IntegraSAP'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-            $stmtUpdate->bindValue(':FK_SRF', $data['FK_SRF'], $data['FK_SRF'] === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
-            $stmtUpdate->bindValue(':FechaLimitePago', $data['FechaLimitePago'], $data['FechaLimitePago'] === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-        }
-
-        return $stmtUpdate->execute();
-    } catch (PDOException $e) {
-        throw new Exception("Error al actualizar el trámite: " . $e->getMessage());
     }
-}
-
     // Eliminar un trámite + validación de ID_CONTRATO
     public function eliminarTramite($data)
     {
@@ -706,6 +606,46 @@ class OrdenesPagoModel
             return ["error" => "Error al obtenerHistorialTramitesPorAnalista: " . $e->getMessage()];
         } catch (Exception $e) {
             error_log("Error general en obtenerHistorialTramitesPorAnalista: " . $e->getMessage());
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+    // Reporte Prioridad Tramites Fecha Limite de Pago
+    public function obtenerReportePrioridadTramites($data){
+         try {
+            $query = "
+                        SELECT 
+                            CASE
+                                WHEN cgt.FechaLimitePago IS NULL THEN 'No urgente'
+                                WHEN cgt.FechaLimitePago = cgt.FechaLimite THEN 'No urgente'
+                                WHEN cgt.FechaLimitePago < cgt.FechaLimite THEN 'Urgente'
+                                ELSE 'No urgente' -- puedes ajustar este caso si deseas otro criterio
+                            END AS Prioridad,
+                            cgt.ID_CONTRATO,
+                            cgt.FechaLimite,
+                            cgt.FechaLimitePago,
+                            cgt.Estatus,
+                            cgt.Dependencia,
+                            cgt.Proveedor,
+                            cgt.Concepto,
+                            CONCAT(is2.NombreUser, ' ', is2.ApellidoUser) AS Analista         
+                        FROM 
+                            ConsentradoGeneralTramites cgt
+                        INNER JOIN 
+                            InicioSesion is2 
+                        ON
+                            is2.InicioSesionID = cgt.AnalistaID
+                        WHERE 
+                            cgt.Mes = :Mes
+                        ORDER BY Prioridad DESC
+                    ";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':Mes', $data['Mes']);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ["error" => "Error al ReportePrioridadTramitesJunio: " . $e->getMessage()];
+        } catch (Exception $e) {
+            error_log("Error general en ReportePrioridadTramitesJunio: " . $e->getMessage());
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }

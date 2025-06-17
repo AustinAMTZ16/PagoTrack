@@ -313,6 +313,24 @@ function handlePostRequest($action, $data)
             }
             exit;
             break;
+        case 'obtenerReportePrioridadTramites':
+            if (!empty($data)) {
+                global $controllerTramite;
+                $respuesta = $controllerTramite->obtenerReportePrioridadTramites((array) $data);
+            } else {
+                echo "Datos no proporcionados";
+                exit;
+            }
+            if ($respuesta) {
+                http_response_code(200);
+                echo json_encode(array('message' => 'Reporte de prioridad de trámites.', 'data' => $respuesta), JSON_UNESCAPED_UNICODE);
+            } else {
+                http_response_code(404);
+                echo json_encode(array('message' => 'No se encontraron reporte de prioridad de trámites.'), JSON_UNESCAPED_UNICODE);
+            }
+            exit;
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(['Message' => 'Acción POST desconocida.'], JSON_UNESCAPED_UNICODE);

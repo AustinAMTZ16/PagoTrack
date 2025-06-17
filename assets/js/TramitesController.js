@@ -233,7 +233,7 @@ async function updateTramiteCompleto(data) {
         .then(result => {
             try {
                 alert(result.message);
-                // window.location.href = 'dashboard.html';
+                window.location.href = 'dashboard.html';
             } catch (error) {
                 console.error("Error al actualizar el trámite:", error);
             }

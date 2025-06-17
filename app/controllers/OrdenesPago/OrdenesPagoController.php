@@ -73,5 +73,11 @@ class OrdenesPagoController {
         $result = $this->model->obtenerHistorialTramitesPorAnalista($data);
         return $result;
     }
+
+    // Reporte Prioridad Tramites Fecha Limite de Pago
+    public function obtenerReportePrioridadTramites($data) {
+        $result = $this->model->obtenerReportePrioridadTramites($data);
+        return $result;
+    }
 }
 ?>

@@ -616,7 +616,7 @@ class OrdenesPagoModel
                         SELECT 
                             CASE
                                 WHEN cgt.FechaLimitePago IS NULL THEN 'No urgente'
-                                WHEN cgt.FechaLimitePago = cgt.FechaLimite THEN 'No urgente'
+                                WHEN cgt.FechaLimitePago = cgt.FechaLimite THEN 'Urgente'
                                 WHEN cgt.FechaLimitePago < cgt.FechaLimite THEN 'Urgente'
                                 ELSE 'No urgente' -- puedes ajustar este caso si deseas otro criterio
                             END AS Prioridad,
@@ -636,6 +636,7 @@ class OrdenesPagoModel
                             is2.InicioSesionID = cgt.AnalistaID
                         WHERE 
                             cgt.Mes = :Mes
+                        AND cgt.Estatus IN ('Turnado', 'Observaciones', 'RemesaAprobada', 'Remesa', 'Devuelto', 'RegistradoSAP')
                         ORDER BY Prioridad DESC
                     ";
             $stmt = $this->conn->prepare($query);

@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 'docSAPSelect', type: 'text' },
                 { id: 'numeroTramiteSelect', type: 'text' },
                 { id: 'fechaRecepcionSelect', type: 'date' },
+                { id: 'fechaCreacionSelect', type: 'date' },
                 { id: 'fechaVencimientoSelect', type: 'date' }
             ];
 
@@ -227,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            //console.log('Filtros aplicados:', appliedFilters);
+            // console.log('Filtros aplicados:', appliedFilters);
             filtrarTramites(appliedFilters);
         });
     }
@@ -553,6 +554,15 @@ function actualizarTablaTramites(data, tableId) {
 }
 // Función para actualizar la tabla de trámites turnados
 function actualizarTablaTurnados(data, tableId) {
+    // filtrar data con el usuario actual logged in
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    console.log('Usuario actual:', usuario);
+
+    // filtrar trámites turnados por el usuario AnalistaID
+    if (usuario && usuario.InicioSesionID) {
+        data = data.filter(tramite => tramite.AnalistaID === usuario.InicioSesionID);
+    } 
+
     if (!Array.isArray(data)) {
         console.error("Error: La respuesta no es un array válido.", data);
         alert("Error: Datos inválidos.");
@@ -712,7 +722,8 @@ function filtrarTramites(filtros) {
         docSAP: 'DocSAP',
         numeroTramite: 'NoTramite',
         fechaRecepcion: 'FechaRecepcion',
-        fechaVencimiento: 'FechaLimite'
+        fechaVencimiento: 'FechaLimite',
+        fechaCreacion: 'FechaCreacion'
     };
 
     // 🔹 Campos con comparación exacta
@@ -727,8 +738,11 @@ function filtrarTramites(filtros) {
         'docSAP',
         'numeroTramite',
         'fechaRecepcion',
-        'fechaVencimiento'
+        'fechaVencimiento',
+        'fechaCreacion'
     ];
+
+    console.log('filtros aplicados:', filtros); 
 
     // 🔹 Aplicar filtros uno por uno
     const filtrados = base.filter(tramite => {
@@ -742,8 +756,9 @@ function filtrarTramites(filtros) {
             // Comparaciones específicas
             if (campo === 'importe') {
                 if (parseFloat(valorTramite) !== parseFloat(valorFiltro)) return false;
-            } else if (campo === 'fechaRecepcion' || campo === 'fechaVencimiento') {
+            } else if (campo === 'fechaRecepcion' || campo === 'fechaVencimiento' || campo === 'fechaCreacion') {
                 const fechaBase = valorTramite ? valorTramite.split(' ')[0] : '';
+                // const fechaBase = valorTramite ? new Date(valorTramite).toISOString().split('T')[0] : '';
                 if (fechaBase !== valorFiltro) return false;
             } else if (typeof valorTramite === 'string') {
                 if (camposExactos.includes(campo)) {

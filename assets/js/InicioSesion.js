@@ -53,13 +53,13 @@ function inicioSesion(CorreoUserForm, ClaveUserForm){
                 case 'Pagos' :
                     window.location.href = 'seguimientoOrdenesPago.html';
                     break;
-                case 'Suficiencias' :
+                case 'OP_Suficiencias' :
                     window.location.href = 'CorrespondenciaPanelAnalista.html';
                     break;  
-                case 'KPI' :
-                    window.location.href = 'kpi.html';
-                    break;
-                case 'Oficios' :
+                case 'CP_Analista' :
+                    window.location.href = 'CorrespondenciaPanelAnalista.html';
+                    break; 
+                case 'OP_Correspondencia' :
                     window.location.href = 'CorrespondenciaPanelControl.html';
                     break;
 

@@ -486,6 +486,15 @@ function actualizarTablaRemesas(data, tableId) {
                                     `;
                     }
 
+                    if (
+                        estatus === "OrdenesPago" &&
+                        (DeoartametoUserLocalStorage === 'OrdenesPago' || DeoartametoUserLocalStorage === 'Admin')
+                    ) {
+                        buttons += `
+                                        <button class="btn btn-info toggleButton" onclick="cambiarEstatusRemesa('${grupo}', 'Pagado')">Remesa Pagada</button>
+                                    `;
+                    }
+
 
                     return buttons;
                 }
@@ -537,73 +546,74 @@ function actualizarTablaRemesas(data, tableId) {
 
     });
 }
-function llenarTablaRemesas(listadoRemesas) {
-    tableListaRemesas.innerHTML = '';
+// function llenarTablaRemesas(listadoRemesas) {
+//     tableListaRemesas.innerHTML = '';
 
-    // Encabezado
-    const headerRow = document.createElement('tr');
-    headerRow.innerHTML = ` 
-        <th>#</th>
-        <th>Remesa</th>
-        <th>No. Trámites</th>
-        <th>Acciones</th>
-    `;
-    tableListaRemesas.appendChild(headerRow);
+//     // Encabezado
+//     const headerRow = document.createElement('tr');
+//     headerRow.innerHTML = ` 
+//         <th>#</th>
+//         <th>Remesa</th>
+//         <th>No. Trámites</th>
+//         <th>Acciones</th>
+//     `;
+//     tableListaRemesas.appendChild(headerRow);
 
-    // Función para extraer fecha si tiene formato válido
-    function extraerFecha(remesa) {
-        let match8 = remesa.Grupo.match(/^(\d{8})-\d+$/); // 05062025-100
-        if (match8) return match8[1];
+//     // Función para extraer fecha si tiene formato válido
+//     function extraerFecha(remesa) {
+//         let match8 = remesa.Grupo.match(/^(\d{8})-\d+$/); // 05062025-100
+//         if (match8) return match8[1];
 
-        let match6 = remesa.Grupo.match(/^(\d{6})-\d+$/); // 050625-100
-        if (match6) {
-            let raw = match6[1]; // 050625
-            let dia = raw.slice(0, 2);
-            let mes = raw.slice(2, 4);
-            let anioCorto = raw.slice(4, 6);
-            let anio = parseInt(anioCorto) >= 50 ? `19${anioCorto}` : `20${anioCorto}`;
-            return `${dia}${mes}${anio}`; // Devuelve 05062025
-        }
+//         let match6 = remesa.Grupo.match(/^(\d{6})-\d+$/); // 050625-100
+//         if (match6) {
+//             let raw = match6[1]; // 050625
+//             let dia = raw.slice(0, 2);
+//             let mes = raw.slice(2, 4);
+//             let anioCorto = raw.slice(4, 6);
+//             let anio = parseInt(anioCorto) >= 50 ? `19${anioCorto}` : `20${anioCorto}`;
+//             return `${dia}${mes}${anio}`; // Devuelve 05062025
+//         }
 
-        return null;
-    }
+//         return null;
+//     }
 
-    // Ordenar remesas
-    listadoRemesas.sort((a, b) => {
-        const fechaA = extraerFecha(a);
-        const fechaB = extraerFecha(b);
+//     // Ordenar remesas
+//     listadoRemesas.sort((a, b) => {
+//         const fechaA = extraerFecha(a);
+//         const fechaB = extraerFecha(b);
 
-        // Si ambas tienen fecha válida
-        if (fechaA && fechaB) {
-            return parseInt(fechaB) - parseInt(fechaA); // más reciente primero
-        }
+//         // Si ambas tienen fecha válida
+//         if (fechaA && fechaB) {
+//             return parseInt(fechaB) - parseInt(fechaA); // más reciente primero
+//         }
 
-        // Si solo A tiene formato válido
-        if (fechaA) return -1;
+//         // Si solo A tiene formato válido
+//         if (fechaA) return -1;
 
-        // Si solo B tiene formato válido
-        if (fechaB) return 1;
+//         // Si solo B tiene formato válido
+//         if (fechaB) return 1;
 
-        // Ninguno tiene formato válido, mantener orden original
-        return 0;
-    });
+//         // Ninguno tiene formato válido, mantener orden original
+//         return 0;
+//     });
 
-    // Llenar tabla
-    listadoRemesas.forEach((remesa, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${remesa.Grupo}</td>
-            <td>${remesa.TotalRegistros}</td>
-            <td>
-                <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
-                <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
-                <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
-            </td>
-        `;
-        tableListaRemesas.appendChild(row);
-    });
-}
+//     // Llenar tabla
+//     listadoRemesas.forEach((remesa, index) => {
+//         const row = document.createElement('tr');
+//         row.innerHTML = `
+//             <td>${index + 1}</td>
+//             <td>${remesa.Grupo}</td>
+//             <td>${remesa.TotalRegistros}</td>
+//             <td>
+//                 <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
+//                 <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
+//                 <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
+//             </td>
+//         `;
+//         tableListaRemesas.appendChild(row);
+//     });
+// }
+
 async function crearRemesa(RemesaNumero, Analista) {
     // Paso 2: Extrae ID de remesa (ej. "04062025-1-1" => "04062025-1")
     const remesaID = RemesaNumero.split('-').slice(0, 2).join('-');

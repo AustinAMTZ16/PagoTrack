@@ -221,7 +221,7 @@
 
         <div class="col-md-6">
           <label for="FechaLimitePago" class="form-label">Fecha Límite de Pago</label>
-          <input type="date" name="FechaLimitePago" id="FechaLimitePago" class="form-control" required>
+          <input type="date" name="FechaLimitePago" id="FechaLimitePago" class="form-control">
         </div>
 
         <!-- 📄 REFERENCIA ADMINISTRATIVA -->
@@ -313,7 +313,7 @@
 
       // LOGICA PARA CALCULAR FECHAS
       const campoFecha = document.getElementById('FechaLimite');
-      const FechaLimitePago = document.getElementById('FechaLimitePago');
+      // const FechaLimitePago = document.getElementById('FechaLimitePago');
       const inputFechaRecepcion = document.getElementById('FechaRecepcion');
 
       // Escucha cuando el usuario elige una fecha
@@ -330,7 +330,7 @@
           const fechaFormateada = `${yyyy}-${mm}-${dd}`;
 
           campoFecha.value = fechaFormateada;
-          FechaLimitePago.value = fechaFormateada;
+          // FechaLimitePago.value = fechaFormateada;
         }
       });
 
@@ -344,7 +344,7 @@
           const dd = String(fechaLimite.getDate()).padStart(2, '0');
           const fechaFormateada = `${yyyy}-${mm}-${dd}`;
           campoFecha.value = fechaFormateada;
-          FechaLimitePago.value = fechaFormateada;
+          // FechaLimitePago.value = fechaFormateada;
         }
       });
       // LOGICA PARA CALCULAR FECHAS

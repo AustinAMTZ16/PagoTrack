@@ -209,11 +209,7 @@ async function cargarApp() {
         formEditarOficios.addEventListener("submit", function (e) {
             e.preventDefault(); // ✅ evita el envío automático
             const formData = new FormData(formEditarOficios);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-            actualizarOficio(data);
+            actualizarOficio(formData);
             setTimeout(() => {
                 window.location.href = "CorrespondenciaPanelControl.html";
             }, 3000); // 5 segundos
@@ -284,8 +280,6 @@ async function cargarApp() {
             }, 3000); // 5 segundos 
         });
     }
-
-
     // Evento para validar el formulario de ver correspondencia
     const formVerCorrespondencia = document.getElementById("formVerCorrespondencia");
     if (formVerCorrespondencia) {
@@ -327,7 +321,7 @@ function llenarTablaOficios(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
-                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
+                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "OP_Correspondencia") {
                         // BTN ACTUALIZAR
                         botones += `<button class="btn-icon primary" title="Actualizar" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}"><i class="fas fa-edit"></i></button>`;
                     }
@@ -335,17 +329,17 @@ function llenarTablaOficios(data, tableId) {
                         // BTN ELIMINAR
                         botones += `<button class="btn-icon primary" title="Eliminar" onclick="eliminarOficio(${data.ID})"><i class="fas fa-trash"></i></button>`;
                     }
-                    if (data.Estado === "CREADO" && usuario.RolUser === "Oficios") {
+                    if (data.Estado === "CREADO" && usuario.RolUser === "OP_Correspondencia") {
                         // BTN TURNAR
                         botones += `<button class="btn-icon primary" title="Turnar" onclick="window.location.href='CorrespondenciaTurnado.html?id=' + ${data.ID}"><i class="fa-solid fa-person-walking-arrow-loop-left"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOTURNADO = OBSERVACIONES, DEVUELTO O PROCESO-FIRMA-TITULAR
                     }
-                    if (data.Estado === "PROCESO-FIRMA-TITULAR" && usuario.RolUser === "Oficios") {
+                    if (data.Estado === "PROCESO-FIRMA-TITULAR" && usuario.RolUser === "OP_Correspondencia") {
                         // BTN ESCANEAR
                         botones += `<button class="btn-icon primary" title="Escanear" onclick="window.location.href='CorrespondenciaScaneoFirmas.html?id=' + ${data.ID}"><i class="fas fa-file-import"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOSCANEOFIRMAS = ESCANEO-FIRMAS
                     }
-                    if (data.Estado === "ACUSE-EXPEDIENTE" && usuario.RolUser === "Oficios") {
+                    if (data.Estado === "ACUSE-EXPEDIENTE" && usuario.RolUser === "OP_Correspondencia") {
                         // BTN ARCHIVAR
                         botones += `<button class="btn-icon primary" title="Archivar" onclick="window.location.href='CorrespondenciaEditar.html?id=' + ${data.ID}"><i class="fa-solid fa-box-archive"></i></button>`;
                         //RESULTADO DE LA VISTA OFICIOARCHIVADO = ARCHIVADO
@@ -515,13 +509,12 @@ function actualizarOficio(data) {
         method: 'POST',
         body: data // ✅ Si es FormData, no uses JSON.stringify
     };
-
-    // Solo añadir headers si es JSON
-    if (!(data instanceof FormData)) {
+    // Usar headers solo si NO es FormData
+    const isFormData = typeof data?.append === 'function' && typeof data?.get === 'function';
+    if (!isFormData) {
         fetchOptions.headers = { 'Content-Type': 'application/json' };
         fetchOptions.body = JSON.stringify(data);
     }
-
     fetch(URL_BASE + 'actualizarOficioArchivo', fetchOptions)
         .then(async response => {
             const text = await response.text();

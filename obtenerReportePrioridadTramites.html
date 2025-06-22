@@ -37,7 +37,7 @@
     <nav class="navbar navbar-expand-lg">
     </nav>
     <main>
-        <h1 class="mb-4">Reporte de Prioridad de Trámites</h1>
+        <h1 class="mb-4">Reporte Trámites Prioritarios (Con fecha límite de pago)</h1>
 
         <div class="mb-3">
             <label for="mesSelect" class="form-label">Seleccionar Mes:</label>
@@ -90,6 +90,7 @@
                 })
                 .then(data => {
                     // Filtrar solo prioridad urgente
+                    console.log(data);
                     const urgentes = (data.data || []).filter(d => d.Prioridad === "Urgente");
                     renderTable2(urgentes);
                 })

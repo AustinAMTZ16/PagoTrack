@@ -225,7 +225,7 @@ function llenarTablaContestaciones(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     const usuario = JSON.parse(localStorage.getItem("usuario"));
-                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "Oficios") {
+                    if (usuario && usuario.RolUser === "Admin" || usuario.RolUser === "OP_Correspondencia" || usuario.RolUser === "OP_Suficiencias") {
                         // BTN de editar
                         botones += `<button class="btn-icon primary" title="Editar" onclick="window.location.href='ContestacionEditar.html?ID_RegistroOficios=' + ${data.ID_RegistroOficios}"><i class="fas fa-edit"></i></button>`;
                         // BTN de ver

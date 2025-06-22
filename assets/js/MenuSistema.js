@@ -29,6 +29,7 @@ function gestionarMenu(rolUsuario, departamentoUsuario) {
         'Glosa': '#Glosa',
         'Presupuesto': '#Presupuesto',
         'OrdenesPago': '#OrdenesPago',
+        'Correspondencia': '#Correspondencia',
     };
     // Inicialmente ocultar todos los menús y submenús
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -112,6 +113,21 @@ function gestionarMenu(rolUsuario, departamentoUsuario) {
         }
         if (rolUsuario === 'OP_OrdenesPago' || rolUsuario === 'Admin') {
             document.querySelectorAll(`${selectorBase}#OP_OrdenesPago`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'OP_Suficiencias' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#OP_Suficiencias`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'CP_Analista' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#CP_Analista`).forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+        if (rolUsuario === 'OP_Correspondencia' || rolUsuario === 'Admin') {
+            document.querySelectorAll(`${selectorBase}#OP_Correspondencia`).forEach(item => {
                 item.style.display = 'block';
             });
         }

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revienta los globos</title>
+    <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
+    <script src="./assets/js/SesionUser.js"></script>
+    <script src="./assets/js/MenuContenido.js"></script>
+    <script src="./assets/js/MenuSistema.js"></script>
+    <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (necesario para DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Estilos Personalizados  lugar si importa-->
+    <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background: #d0f0ff;
+        }
+
+        #juego {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            background: #c2e9fb;
+            border: 2px solid #000;
+        }
+
+        .globo {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(circle, #ff6666, #cc0000);
+            border-radius: 50% 50% 45% 45%;
+            cursor: pointer;
+            animation: flotar 6s linear forwards;
+        }
+
+        @keyframes flotar {
+            0% {
+                bottom: -80px;
+            }
+
+            100% {
+                bottom: 100%;
+            }
+        }
+
+        #info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="./assets/images/lg_banner.jpg" alt="Logo" class="logo" style="width: 30%; height: 50%;">
+        <h1>Sistema Institucional</h1>
+    </header>
+    <nav class="navbar navbar-expand-lg">
+    </nav>
+    <main class="pdf-container">
+        <h2>🎈 Revienta los globos 🎈</h2>
+        <button onclick="iniciarJuego()">Comenzar Juego</button>
+
+        <div id="info">
+            <p>Globos reventados: <span id="contador">0</span></p>
+            <p>Tiempo jugado: <span id="tiempo">0</span> seg</p>
+        </div>
+
+        <div id="juego"></div>
+    </main>
+    <footer>
+        <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
+    </footer>
+    <script>
+        let contador = 0;
+        let tiempoJugado = 0;
+        let juegoActivo = false;
+        let intervaloGlobos, cronometro;
+
+        function iniciarJuego() {
+            contador = 0;
+            tiempoJugado = 0;
+            juegoActivo = true;
+            document.getElementById("contador").textContent = contador;
+            document.getElementById("tiempo").textContent = tiempoJugado;
+            intervaloGlobos = setInterval(crearGlobo, 1000);
+            cronometro = setInterval(() => {
+                tiempoJugado++;
+                document.getElementById("tiempo").textContent = tiempoJugado;
+            }, 1000);
+            //   setTimeout(finalizarJuego, 30 * 1000); // 30 segundos
+        }
+
+        function crearGlobo() {
+            const globo = document.createElement("div");
+            globo.className = "globo";
+            globo.style.left = Math.random() * 90 + "%";
+            globo.onclick = () => {
+                contador++;
+                document.getElementById("contador").textContent = contador;
+                globo.remove();
+            };
+            globo.addEventListener("animationend", () => globo.remove());
+            document.getElementById("juego").appendChild(globo);
+        }
+
+        function finalizarJuego() {
+            juegoActivo = false;
+            clearInterval(intervaloGlobos);
+            clearInterval(cronometro);
+
+            // Enviar datos a PHP
+            fetch("guardar_resultado.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    usuario: "<?= $_SESSION['usuario'] ?? 'anonimo' ?>",
+                    globos: contador,
+                    tiempo: tiempoJugado
+                })
+            });
+            alert("Juego terminado. ¡Gracias por participar!");
+        }
+    </script>
+
+</body>
+
+</html>

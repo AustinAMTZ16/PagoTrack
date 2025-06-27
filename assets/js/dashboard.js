@@ -156,15 +156,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Limpiar filtros
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', function () {
-            document.querySelectorAll('.filtro-select, .filtro-input, .filtro-date').forEach(element => {
-                if (element.tagName === 'SELECT') {
-                    element.value = 'Todos';
+            const ids = [
+                'ID_CONTRATO', 'estadoSelect', 'mesSelect', 'tipoTramiteSelect', 'analistaSelect',
+                'dependenciaSelect', 'proveedorSelect', 'conceptoSelect', 'importeSelect',
+                'remesaSelect', 'integracionSAPSelect', 'docSAPSelect', 'numeroTramiteSelect',
+                'fechaRecepcionSelect', 'fechaCreacionSelect', 'fechaVencimientoSelect'
+            ];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                if (el.tagName === 'SELECT') {
+                    el.value = 'Todos';
                 } else {
-                    element.value = '';
+                    el.value = '';
                 }
             });
-            console.clear();
-            //console.log('Filtros limpiados');
             const filtrosIniciales = {
                 ID_CONTRATO: '',
                 estado: '',
@@ -243,6 +250,20 @@ document.addEventListener('DOMContentLoaded', () => {
             filtros.setAttribute('hidden', true);
         }
     });
+    // Mostrar/ocultar tablas
+
+    const btnExportartablas = document.getElementById('btn-mostrar-ocultar-tablas');
+    if (btnExportartablas) {
+        const filtrosTabla = document.querySelector('.tablasAnalistas');
+        btnExportartablas.addEventListener('click', () => {
+            if (filtrosTabla.hasAttribute('hidden')) {
+                filtrosTabla.removeAttribute('hidden');
+            } else {
+                filtrosTabla.setAttribute('hidden', true);
+            }
+        });
+    }
+
 });
 // Función para obtener la lista de trámites
 function getTramites() {
@@ -560,8 +581,12 @@ function actualizarTablaTurnados(data, tableId) {
 
     // filtrar trámites turnados por el usuario AnalistaID
     if (usuario && usuario.InicioSesionID) {
-        data = data.filter(tramite => tramite.AnalistaID === usuario.InicioSesionID);
-    } 
+        if (usuario.InicioSesionID == 1) {
+            data;
+        } else {
+            data = data.filter(tramite => tramite.AnalistaID === usuario.InicioSesionID);
+        }
+    }
 
     if (!Array.isArray(data)) {
         console.error("Error: La respuesta no es un array válido.", data);
@@ -742,7 +767,7 @@ function filtrarTramites(filtros) {
         'fechaCreacion'
     ];
 
-    console.log('filtros aplicados:', filtros); 
+    console.log('filtros aplicados:', filtros);
 
     // 🔹 Aplicar filtros uno por uno
     const filtrados = base.filter(tramite => {
@@ -1440,7 +1465,18 @@ function showHistoricoMes(InicioSesionID) {
             if (!response.data || !Array.isArray(response.data)) {
                 throw new Error('La estructura de datos no es válida');
             }
-            const tramites = response.data;
+
+            // const tm = response.data filtrar por mes en que se encuentra el usuario
+            const fechaActual = new Date();
+            const mesActual = fechaActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
+            const anioActual = fechaActual.getFullYear();
+            const tramites = response.data.filter(tramite => {
+                const fechaRecepcion = new Date(tramite.FechaRecepcion);
+                return fechaRecepcion.getMonth() + 1 === mesActual && fechaRecepcion.getFullYear() === anioActual;
+            });
+
+            // const tramites = response.data; //acotar al mes en que se encuentra el usuario
+
             // Crear modal o ventana con los detalles
             const modalHtml = `
             <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">

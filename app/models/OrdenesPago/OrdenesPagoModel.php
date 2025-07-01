@@ -256,30 +256,23 @@ class OrdenesPagoModel
     public function obtenerResumenTramitesPorAnalista()
     {
         try {
-            $query = "
-                        SELECT 
-                            ISN.InicioSesionID,
-                            ISN.NombreUser AS Analista,
-                            ISN.ApellidoUser AS Apellido,
-                            SUM(CASE WHEN CGT.TipoTramite = 'OC' THEN 1 ELSE 0 END) AS OC,
-                            SUM(CASE WHEN CGT.TipoTramite = 'OP' THEN 1 ELSE 0 END) AS OP,
-                            SUM(CASE WHEN CGT.TipoTramite = 'SRF' THEN 1 ELSE 0 END) AS SRF,
-                            SUM(CASE WHEN CGT.TipoTramite = 'CRF' THEN 1 ELSE 0 END) AS CRF,
-                            SUM(CASE WHEN CGT.TipoTramite = 'JA' THEN 1 ELSE 0 END) AS JA,
-                            SUM(CASE WHEN CGT.TipoTramite = 'IPS' THEN 1 ELSE 0 END) AS IPS,
-                            SUM(CASE WHEN CGT.TipoTramite = 'Obra' THEN 1 ELSE 0 END) AS Obra,
-                            SUM(CASE WHEN CGT.TipoTramite = 'OCO' THEN 1 ELSE 0 END) AS OCO,
-                            SUM(CASE WHEN CGT.TipoTramite = 'OPO' THEN 1 ELSE 0 END) AS OPO,
-                            COUNT(*) AS Total
-                        FROM ConsentradoGeneralTramites CGT
-                        INNER JOIN InicioSesion ISN ON CGT.AnalistaID = ISN.InicioSesionID
-                        WHERE CGT.Estatus IN ('Turnado', 'Observaciones')
-                        GROUP BY ISN.InicioSesionID, ISN.NombreUser, ISN.ApellidoUser
-                        ORDER BY Total DESC;
-                    ";
+            date_default_timezone_set('America/Mexico_City'); // Forzar zona horaria correcta
+            // Obtener la fecha actual
+            $fechaInicio = date('Y-m-01'); // Ej: "2025-07-01"
+
+            // Sumar 1 día a la fecha actual
+            $fechaFin = date('Y-m-d'); //día al corte
+            // $fechaFin = date('Y-m-d', strtotime('+1 day')); //día al corte +1 día 
+
+
+            $query = "CALL sp_ReporteResumenTramitesPorFecha(?, ?)";
             $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->execute([$fechaInicio, $fechaFin]);
+
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+
+            return $resultados;
         } catch (PDOException $e) {
             error_log("Error en obtenerResumenTramitesPorAnalista: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'No se pudo obtener el resumen de trámites.'];
@@ -292,6 +285,7 @@ class OrdenesPagoModel
     public function obtenerHistoricoTramitesPorMesActual()
     {
         try {
+            date_default_timezone_set('America/Mexico_City'); // Forzar zona horaria correcta
             // Traducción de mes en inglés a español
             $meses = [
                 'January' => 'Enero',
@@ -610,8 +604,9 @@ class OrdenesPagoModel
         }
     }
     // Reporte Prioridad Tramites Fecha Limite de Pago
-    public function obtenerReportePrioridadTramites($data){
-         try {
+    public function obtenerReportePrioridadTramites($data)
+    {
+        try {
             $query = "
                         SELECT 
                             CASE

@@ -251,7 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     // Mostrar/ocultar tablas
-
     const btnExportartablas = document.getElementById('btn-mostrar-ocultar-tablas');
     if (btnExportartablas) {
         const filtrosTabla = document.querySelector('.tablasAnalistas');
@@ -922,13 +921,12 @@ function createRemesa(id) {
 }
 // Reporte de estatus de comentarios
 function renderTable(data) {
-    const tableId = "tramitesTable"; // ID de la tabla
+    const tableId = "tramitesTable";
     const table = document.getElementById(tableId);
     const tableHead = table.querySelector("thead tr");
     const tableBody = table.querySelector("tbody");
 
-    // Limpiar la tabla antes de insertar nuevos datos
-    tableHead.innerHTML = "<th>InicioSesionID</th>";
+    tableHead.innerHTML = "";
     tableBody.innerHTML = "";
 
     if (data.length === 0) {
@@ -936,47 +934,85 @@ function renderTable(data) {
         return;
     }
 
-    // Obtener los nombres de los tipos de trámites dinámicamente
-    const columns = Object.keys(data[0]).filter(key => key !== "InicioSesionID");
+    // Definir columnas fijas + dinámicas
+    const columnasFijas = ["OrdenGrupo", "Estatus", "NombreCompleto"];
+    const columnasDinamicas = Object.keys(data[0]).filter(
+        key => !columnasFijas.includes(key)
+    );
 
-    // Generar encabezados de tabla dinámicos
-    columns.forEach(col => {
+    const allColumns = [...columnasFijas, ...columnasDinamicas];
+
+    // Construir encabezados
+    allColumns.forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
         tableHead.appendChild(th);
     });
 
-    // Insertar filas con los datos
     data.forEach(row => {
         const tr = document.createElement("tr");
 
-        // Celda del analista
-        const tdAnalista = document.createElement("td");
-        tdAnalista.textContent = row.InicioSesionID;
-        tr.appendChild(tdAnalista);
-
-        // Celdas de conteo de trámites
-        columns.forEach(col => {
+        allColumns.forEach(col => {
             const td = document.createElement("td");
 
-            if (col === "Total") {
-                // Hacer el Total clickeable
+            if (col === "TotalGeneral") {
+                // const link = document.createElement("a");
+                // link.href = "#";
+                // link.textContent = row[col] || 0;
+                // link.style.cursor = "pointer";
+                // link.style.color = "#007bff";
+                // link.style.textDecoration = "underline";
+
+                // // Evento para mostrar detalles al hacer clic
+                // link.addEventListener("click", function (e) {
+                //     e.preventDefault();
+                //     showTramitesDetails(row.Estatus);
+                // });
+
+                // td.appendChild(link);
+
+
                 const link = document.createElement("a");
-                link.href = `#`;
+                link.href = "#";
                 link.textContent = row[col] || 0;
                 link.style.cursor = "pointer";
-                link.style.color = "#007bff";
                 link.style.textDecoration = "underline";
+                link.style.fontWeight = "bold";
+                link.style.fontSize = "18px";
 
-                // Agregar evento click para mostrar detalles
+
+
+                // Aplicar color al link basado en el Estatus
+                const colorPorEstatus = {
+                    "Turnado": "#eab211",             // marrón oscuro
+                    "RegistradoSAP": "#004085",       // azul oscuro
+                    "Remesa": "#004085",
+                    "RemesaAprobada": "#004085",
+                    "OrdenesPago": "#004085",
+                    "Pagado": "#155724",              // verde oscuro
+                    "Observaciones": "#ea8e11",       // naranja oscuro
+                    "Devuelto": "#721c24",            // rojo oscuro
+                    "Rechazado": "#721c24",
+                    "Cancelado": "#721c24",
+                    "JuntasAuxiliares": "#155724",
+                    "Inspectoria": "#155724",
+                    "ComprobacionRecurso": "#155724",
+                    "Total general": "#000000"
+                };
+
+                const color = colorPorEstatus[row.Estatus?.trim()] || "#007bff";
+                link.style.color = color;
+
                 link.addEventListener("click", function (e) {
                     e.preventDefault();
-                    showTramitesDetails(row.InicioSesionID);
+                    showTramitesDetails(row.Estatus);
                 });
 
                 td.appendChild(link);
+
+
             } else {
-                td.textContent = row[col] || 0;
+                td.textContent = row[col] !== null ? row[col] : "";
             }
 
             tr.appendChild(td);
@@ -985,7 +1021,7 @@ function renderTable(data) {
         tableBody.appendChild(tr);
     });
 
-    // Destruir DataTable si ya estaba inicializado
+    // Reinicializar DataTable
     if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
         $(`#${tableId}`).DataTable().clear().destroy();
     }
@@ -1014,13 +1050,18 @@ function renderTable(data) {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        pageLength: 20, // Número de filas por página
+        pageLength: 30, // Número de filas por página
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[11, "DESC"]],
+        // order: [[11, "DESC"]],
+        columnDefs: [
+            {
+                targets: 0, // Ocultar OrdenGrupo
+                visible: false,
+                searchable: false
+            }
+        ]
     });
-
-
 }
 // Tabla de historico de trámites por mes
 function renderTablegetHistoricoMes(data) {
@@ -1069,6 +1110,8 @@ function renderTablegetHistoricoMes(data) {
                 link.style.cursor = "pointer";
                 link.style.color = "#007bff";
                 link.style.textDecoration = "underline";
+                link.style.fontWeight = "bold";
+                link.style.fontSize = "18px";
 
                 // Agregar evento click para mostrar detalles
                 link.addEventListener("click", function (e) {
@@ -1300,145 +1343,139 @@ function generarQR(id, nombreAnalista, noTramite) {
     }, 500);
 }
 // Función para mostrar los detalles de los trámites
-function showTramitesDetails(InicioSesionID) {
-    const data = {
-        InicioSesionID: InicioSesionID
-    };
+function showTramitesDetails(filtro) {
 
-    // Obtener los trámites del analista
-    fetch(URL_BASE + 'getTallesTramites', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return response.json();
-        })
-        .then(response => {
-            // Verificar si la respuesta tiene la estructura esperada
-            if (!response.data || !Array.isArray(response.data)) {
-                throw new Error('La estructura de datos no es válida');
-            }
-            const tramites = response.data;
-            // Crear modal o ventana con los detalles
-            const modalHtml = `
-            <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl" role="document">
-                    <div class="modal-content">                        
-                        <div class="modal-body">
-                            <div class="table-responsive">
-                                <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>ID Tramite</th>
-                                            <th>Tipo</th>
-                                            <th>Dependencia</th>
-                                            <th>Proveedor</th>
-                                            <th>Concepto</th>
-                                            <th>Importe</th>
-                                            <th>Estatus</th>
-                                            <th>Fecha Recepción</th>
-                                            <th>Fecha Limite</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${tramites.map(tramite => {
-                const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
-                return `
-                                                <tr>
-                                                    <td>${tramite.ID_CONTRATO || 'N/A'}</td>
-                                                    <td>${tramite.TipoTramite || 'N/A'}</td>
-                                                    <td>${tramite.Dependencia || 'N/A'}</td>
-                                                    <td>${tramite.Proveedor || 'N/A'}</td>
-                                                    <td>${tramite.Concepto || 'N/A'}</td>
-                                                    <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
-                                                    <td>
-                                                        <span class="badge ${tramite.Estatus === 'Observaciones' ? 'bg-warning' : 'bg-primary'}">
-                                                            ${tramite.Estatus || 'N/A'}
-                                                        </span>
-                                                    </td>
-                                                    <td>${formatDate(tramite.FechaRecepcion)}</td>
-                                                    <td>${formatDate(tramite.FechaLimite)}</td>
-                                                    <td>
-                                                        <button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
-                                                    </td>
-                                                </tr>
-                                            `;
-            }).join('')}
-                                    </tbody>
+    // parametros AnalistaID (int) o Estatus (string) Filtrado
+    getTramites()
+    // console.log('tramitesArray()', tramitesArray); 
+    const tramitesDelMes = getMesActualNombre();
+    let tramites = [];
 
-                                </table>
+    if (typeof filtro === "number") {
+        tramites = tramitesArray.filter(t =>
+            t.AnalistaID === filtro && t.Mes === tramitesDelMes
+        );
+        console.log(`Filtrando por AnalistaID = ${filtro} y Mes = ${tramitesDelMes}`, tramites);
+    } else if (typeof filtro === "string") {
+        tramites = tramitesArray.filter(t =>
+            t.Estatus === filtro && t.Mes === tramitesDelMes
+        );
+        console.log(`Filtrando por Estatus = "${filtro}" y Mes = ${tramitesDelMes}`, tramites);
+    } else {
+        console.warn("⚠ Tipo de filtro no reconocido:", filtro);
+    }
+
+
+
+    // Crear modal o ventana con los detalles
+    const modalHtml = `
+                            <div class="modal fade" id="tramitesModal" tabindex="-1" role="dialog" aria-labelledby="tramitesModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl" role="document">
+                                    <div class="modal-content">                        
+                                        <div class="modal-body">
+                                            <div class="table-responsive">
+                                                <table id="detalleTramitesTable" class="table table-striped table-bordered" style="width:100%">
+                                                    <thead class="thead-dark">
+                                                        <tr>
+                                                            <th>ID Tramite</th>
+                                                            <th>Tipo</th>
+                                                            <th>Dependencia</th>
+                                                            <th>Proveedor</th>
+                                                            <th>Concepto</th>
+                                                            <th>Importe</th>
+                                                            <th>Estatus</th>
+                                                            <th>Fecha Recepción</th>
+                                                            <th>Fecha Limite</th>
+                                                            <th>Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        ${tramites.map(tramite => {
+        const comentarioEscapado = encodeURIComponent(tramite.Comentarios || '');
+        return `
+                                                                <tr>
+                                                                    <td>${tramite.ID_CONTRATO || 'N/A'}</td>
+                                                                    <td>${tramite.TipoTramite || 'N/A'}</td>
+                                                                    <td>${tramite.Dependencia || 'N/A'}</td>
+                                                                    <td>${tramite.Proveedor || 'N/A'}</td>
+                                                                    <td>${tramite.Concepto || 'N/A'}</td>
+                                                                    <td>$${tramite.Importe ? parseFloat(tramite.Importe).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
+                                                                    <td>
+                                                                        <span class="badge ${tramite.Estatus === 'Observaciones' ? 'bg-warning' : 'bg-primary'}">
+                                                                            ${tramite.Estatus || 'N/A'}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>${formatDate(tramite.FechaRecepcion)}</td>
+                                                                    <td>${formatDate(tramite.FechaLimite)}</td>
+                                                                    <td>
+                                                                        <button class="btn btn-primary toggleButton" onclick="mostrarComentario('${comentarioEscapado}')">Ver Comentario</button>
+                                                                    </td>
+                                                                </tr>
+                                                            `;
+    }).join('')}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                       
-                    </div>
-                </div>
-            </div>
-        `;
+                        `;
 
-            // Agregar el modal al body
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
+    // Agregar el modal al body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-            // Mostrar el modal
-            $('#tramitesModal').modal('show');
+    // Mostrar el modal
+    $('#tramitesModal').modal('show');
 
-            // Inicializar DataTable en la tabla de detalles
-            $('#detalleTramitesTable').DataTable({
-                language: {
-                    processing: "Procesando...",
-                    search: "Buscar:",
-                    lengthMenu: "Mostrar _MENU_ registros",
-                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
-                    infoFiltered: "(filtrado de _MAX_ registros totales)",
-                    infoPostFix: "",
-                    loadingRecords: "Cargando...",
-                    zeroRecords: "No se encontraron resultados",
-                    emptyTable: "No hay datos disponibles en la tabla",
-                    paginate: {
-                        first: "Primero",
-                        previous: "Anterior",
-                        next: "Siguiente",
-                        last: "Último"
-                    },
-                    aria: {
-                        sortAscending: ": Activar para ordenar la columna de manera ascendente",
-                        sortDescending: ": Activar para ordenar la columna de manera descendente"
-                    }
-                },
-                pageLength: 10,
-                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
-                responsive: true,
-                dom: '<"top"Bf>rt<"bottom"lip><"clear">',
-                buttons: [
-                    {
-                        extend: 'excel',
-                        text: 'Exportar a Excel',
-                        className: 'btn btn-success'
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Imprimir',
-                        className: 'btn btn-info'
-                    }
-                ]
-            });
+    // Inicializar DataTable en la tabla de detalles
+    $('#detalleTramitesTable').DataTable({
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            infoFiltered: "(filtrado de _MAX_ registros totales)",
+            infoPostFix: "",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "No hay datos disponibles en la tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            },
+            aria: {
+                sortAscending: ": Activar para ordenar la columna de manera ascendente",
+                sortDescending: ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
+        responsive: true,
+        dom: '<"top"Bf>rt<"bottom"lip><"clear">',
+        buttons: [
+            {
+                extend: 'excel',
+                text: 'Exportar a Excel',
+                className: 'btn btn-success'
+            },
+            {
+                extend: 'print',
+                text: 'Imprimir',
+                className: 'btn btn-info'
+            }
+        ]
+    });
 
-            // Eliminar el modal cuando se cierre
-            $('#tramitesModal').on('hidden.bs.modal', function () {
-                $(this).remove();
-            });
-        })
-        .catch(error => {
-            console.error('Error al obtener los trámites:', error);
-            alert('Error al cargar los detalles de los trámites: ' + error.message);
-        });
+    // Eliminar el modal cuando se cierre
+    $('#tramitesModal').on('hidden.bs.modal', function () {
+        $(this).remove();
+    });
 }
 // Tabla de historico de trámites por mes
 function showHistoricoMes(InicioSesionID) {
@@ -1682,4 +1719,12 @@ function showTramitesModal(titulo, tramites) {
     $('#tramitesModal').on('hidden.bs.modal', function () {
         $(this).remove();
     });
+}
+function getMesActualNombre() {
+    const meses = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+    const mesActual = new Date().getMonth(); // 0-based (0 = Enero)
+    return meses[mesActual];
 }

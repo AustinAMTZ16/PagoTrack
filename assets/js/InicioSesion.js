@@ -1,7 +1,9 @@
 // Obtener la URL base dinámicamente
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
-const URL_BASE = `${URL_B}index.php?action=`;
+// https://apipagotrack.mexiclientes.com/index.php?action=listarOficios
+// const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function() {
     // Verificar si hay un formulario de inicio de sesión en la página actual

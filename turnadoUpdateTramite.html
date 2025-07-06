@@ -74,7 +74,7 @@
                     <input type="text" id="Dependencia" name="Dependencia" placeholder="Dependencia" readonly
                         class="form-control">
                 </div>
-                
+
                 <div class="col-md-6">
                     <label for="NombreUser">Nombre del Usuario</label>
                     <input type="text" id="NombreUser" name="NombreUser" placeholder="Nombre del Usuario" readonly
@@ -85,14 +85,16 @@
                     <label for="Estatus">Estatus del tramite</label>
                     <select name="Estatus" id="Estatus" placeholder="Estatus" required class="form-select">
                         <option value="" disabled selected>Selecciona una opción</option>
-                        <option value="Observaciones">Observaciones</option>
-                        <option value="Devuelto">Devuelto</option>
-                        <option value="RegistradoSAP">Registrado SAP</option>
-                        <option value="RegistradoSAP">Solicitud de Recurso Financiero</option>
-                        <option value="RegistradoSAP">Comprobacion de Recurso Financiero</option>
-                        <option value="ComprobacionRecurso">Comprobacion de Rercuso</option>
-                        <option value="JuntasAuxiliares">Juntas Auxiliares</option>
-                        <option value="Inspectoria">Inspectoria</option>
+                        <option id="Observaciones" value="Observaciones">Observaciones</option>
+                        <option id="Devuelto" value="Devuelto">Devuelto</option>
+                        <option id="RegistradoSAP" value="RegistradoSAP">Registrado SAP</option>
+                        <option id="SolicitudRecursoFinanciero" value="RegistradoSAP">Solicitud de Recurso Financiero
+                        </option>
+                        <option id="ComprobacionRecursoFinanciero" value="RegistradoSAP">Comprobacion de Recurso
+                            Financiero</option>
+                        <option id="ComprobacionRecurso" value="ComprobacionRecurso">Comprobacion de Rercuso</option>
+                        <option id="JuntasAuxiliares" value="JuntasAuxiliares">Juntas Auxiliares</option>
+                        <option id="Inspectoria" value="Inspectoria">Inspectoria</option>
                     </select>
                 </div>
                 <div class="col-md-6" id="divSap" hidden>
@@ -108,15 +110,13 @@
                 <div class="col-12">
                     <label for="Comentarios" class="form-label">Comentarios</label>
                     <textarea type="text" class="form-control" id="Comentarios" name="Comentarios" rows="10"
-                        placeholder="Ejemplo: Describa las aciones a realizar, el responsable de la actividad y observaciones.                
-                        ⚠ Antecedentes:
-                        * [Fecha]: [Descripción breve de cada evento importante en orden cronológico]
-                        * [Fecha]: [Descripción de observaciones o devoluciones]
-                        * [Fecha]: [Motivo del rechazo o devolución más reciente]
-                        ✅ Acción Requerida:
-                        1. [Descripción clara de la primera acción necesaria]
-                        2. [Segunda acción requerida]
-                    " required></textarea>
+                        placeholder="
+                        Devuelto:
+                            1.  Motivo: Discrepancia entre montos reportados y comprobantes adjuntos.
+                            2.  Fundamento: Art. 15 del Reglamento de Comprobación de Gastos.
+                            3.  Acción requerida: Ajustar los montos en el reporte y/o anexar comprobantes faltantes.
+                            4.  Volante: DV-2025-07-001.
+                        " required></textarea>
                 </div>
 
                 <div class="col-12 d-flex justify-content-between">
@@ -230,6 +230,52 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const estatusSelect = document.getElementById('Estatus');
+            const comentariosTextarea = document.getElementById('Comentarios');
+
+            // Define los textos a precargar, usando los IDs de tus opciones como claves
+            const textosPrecargadosPorId = {
+                "Observaciones": `                1. Motivo/Por qué:
+                2. Fundamento/Con base en:
+                3. Acción requerida/Se necesita:`,
+                "Devuelto": `                1. Motivo/Por qué:
+                2. Fundamento/Con base en:
+                3. Acción requerida/Se necesita:
+                4. Volante/Referencia:`,
+                "RegistradoSAP": "Glosado de expediente concluido y registrado en SAP. Expediente devuelto al Operador para seguimiento.",
+                // Los IDs de estas opciones ahora son las claves para sus textos específicos
+                "SolicitudRecursoFinanciero": "Glosado de expediente concluido. Expediente devuelto al Operador para seguimiento.",
+                "ComprobacionRecursoFinanciero": "Glosado de expediente concluido. Expediente devuelto al Operador para seguimiento.",
+                "ComprobacionRecurso": "Glosado de expediente concluido. Expediente devuelto al Operador para seguimiento.",
+                "JuntasAuxiliares": "Glosado de expediente concluido. Expediente devuelto al Operador para seguimiento.",
+                "Inspectoria": "Glosado de expediente concluido. Expediente devuelto al Operador para seguimiento."
+            };
+
+            // Agrega un event listener al cambio del select de estatus
+            estatusSelect.addEventListener('change', function () {
+                // Obtiene la opción (<option>) que está actualmente seleccionada
+                const selectedOption = estatusSelect.options[estatusSelect.selectedIndex];
+                // Obtiene el ID de la opción seleccionada
+                const selectedOptionId = selectedOption.id;
+
+                // Si la opción seleccionada tiene un ID y ese ID existe como clave en nuestros textos precargados
+                if (selectedOptionId && textosPrecargadosPorId[selectedOptionId]) {
+                    comentariosTextarea.value = textosPrecargadosPorId[selectedOptionId];
+                } else {
+                    // Si no hay un ID o no hay texto definido para ese ID, limpia el textarea
+                    comentariosTextarea.value = '';
+                }
+            });
+
+            // Opcional: Para cargar el texto si el formulario se precarga con una opción ya seleccionada
+            // const initialSelectedOption = estatusSelect.options[estatusSelect.selectedIndex];
+            // if (initialSelectedOption && initialSelectedOption.id && textosPrecargadosPorId[initialSelectedOption.id]) {
+            //     comentariosTextarea.value = textosPrecargadosPorId[initialSelectedOption.id];
+            // }
+        });
+    </script>
     <footer>
         <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
     </footer>

@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">OrdenesPago</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> 
-              <li id="OP_OrdenesPago" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Trámites</a></li>          
+              <li id="OP_OrdenesPago" style="display: none;"><a class="dropdown-item" href="dashboard.html">Trámites</a></li>          
               <li id="OP_OrdenesPago" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a></li>
             </ul>
           </li>

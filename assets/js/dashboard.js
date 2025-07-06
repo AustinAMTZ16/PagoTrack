@@ -15,7 +15,8 @@
 // Obtener la URL base dinámicamente
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
-const URL_BASE = `${URL_B}index.php?action=`;
+const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+// const URL_BASE = `${URL_B}index.php?action=`;
 // Variable global para almacenar la lista trámites
 let tramitesArray = [];
 let nombreAnalista = "";
@@ -628,7 +629,7 @@ function actualizarTablaTurnados(data, tableId) {
 
 
 
-                    if (localStorageUser.RolUser === "Analista" || localStorageUser.RolUser === "Admin" || localStorageUser.RolUser === "OP_Remesa" || localStorageUser.RolUser === "Operador") {
+                    if (localStorageUser.RolUser === "Analista" || localStorageUser.RolUser === "Admin" || localStorageUser.RolUser === "OP_Remesa" || localStorageUser.RolUser === "Operador" || localStorageUser.RolUser === "OP_KPI") {
                         if (["Devuelto", "Turnado", "Observaciones"].includes(data.Estatus)) {
                             botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(
                             decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
@@ -1351,11 +1352,12 @@ function showTramitesDetails(filtro) {
     const tramitesDelMes = getMesActualNombre();
     let tramites = [];
 
-    if (typeof filtro === "number") {
+    if (!isNaN(filtro)) {
+        const numFiltro = Number(filtro);  // Convertir a número
         tramites = tramitesArray.filter(t =>
-            t.AnalistaID === filtro && t.Mes === tramitesDelMes
+            t.AnalistaID === numFiltro && t.Mes === tramitesDelMes
         );
-        console.log(`Filtrando por AnalistaID = ${filtro} y Mes = ${tramitesDelMes}`, tramites);
+        console.log(`Filtrando por AnalistaID = ${numFiltro} y Mes = ${tramitesDelMes}`, tramites);
     } else if (typeof filtro === "string") {
         tramites = tramitesArray.filter(t =>
             t.Estatus === filtro && t.Mes === tramitesDelMes

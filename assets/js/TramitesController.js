@@ -1,7 +1,7 @@
 // Obtener la URL base dinámicamente
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
-const URL_BASE = `${URL_B}index.php?action=`;
+const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
 // Obtener el nombre + apellido del usuario de LocalStorage
 const usuario = JSON.parse(localStorage.getItem('usuario'));
 const NombreUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;

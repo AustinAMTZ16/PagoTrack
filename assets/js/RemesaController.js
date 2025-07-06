@@ -1,7 +1,7 @@
 // Obtener la URL base dinámicamente
 const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
-const URL_BASE = `${URL_B}index.php?action=`;
+const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
 
 let ltRemesas = [];
 

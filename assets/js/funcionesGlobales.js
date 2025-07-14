@@ -2,6 +2,20 @@
 
 const Global = {
     /**
+     * Conexion a la API de PagoTrack por entorno
+    */
+
+    /** 
+     * URL_BASE : `https://apipagotrack.mexiclientes.com/index.php?action=`, 
+     * URL_BASE : `http://localhost/DigitalOcean/Egresos/BackEndPagoTrack/index.php?action=`, 
+    */
+
+    URL_BASE : `https://apipagotrack.mexiclientes.com/index.php?action=`,
+
+
+
+
+    /**
      * Exportar tabla HTML a Excel
      * @param {string} tableId - ID de la tabla en el DOM
      * @param {string} nombreArchivo - Nombre del archivo Excel resultante
@@ -55,12 +69,6 @@ const Global = {
             return true;
         });
     },
-
-
-
-    holaMundo: function () {
-        return "Hola mundo desde funcionesGlobales.js";
-    }
 };
 
 export default Global;

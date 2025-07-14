@@ -1,9 +1,5 @@
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-// https://apipagotrack.mexiclientes.com/index.php?action=listarOficios
-// const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+// Funciones globales y utilidades
+import Global from './funcionesGlobales.js';
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function() {
     // Verificar si hay un formulario de inicio de sesión en la página actual
@@ -21,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // Función para iniciar sesión
 function inicioSesion(CorreoUserForm, ClaveUserForm){
     const data = { CorreoUser: CorreoUserForm, ClaveUser: ClaveUserForm};
-    fetch(URL_BASE + 'loginUser', {
+    fetch(Global.URL_BASE + 'loginUser', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {

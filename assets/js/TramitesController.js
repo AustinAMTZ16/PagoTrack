@@ -1,11 +1,8 @@
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+// Funciones globales y utilidades
+import Global from './funcionesGlobales.js';
 // Obtener el nombre + apellido del usuario de LocalStorage
 const usuario = JSON.parse(localStorage.getItem('usuario'));
 const NombreUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;
-
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function () {
     console.log("localStorage:", usuario);
@@ -140,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Función para crear un trámite
 function createTramite(data) {
     data.Analista = NombreUser;
-    fetch(URL_BASE + 'createTramite', {
+    fetch(Global.URL_BASE + 'createTramite', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -170,7 +167,7 @@ function turnarTramite(data) {
     data.FechaTurnado = fechaActual;
     data.Analista = NombreUser;
 
-    fetch(URL_BASE + 'updateTramite', {
+    fetch(Global.URL_BASE + 'updateTramite', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -194,7 +191,7 @@ function turnarTramite(data) {
 // Función para actualizar un trámite
 function updateTramite(data) {
     data.Analista = NombreUser;
-    fetch(URL_BASE + 'updateTramite', {
+    fetch(Global.URL_BASE + 'updateTramite', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -219,7 +216,7 @@ function updateTramite(data) {
 // Función Actualizar Tramite Completo
 async function updateTramiteCompleto(data) {
     data.Analista = NombreUser;
-    return fetch(URL_BASE + 'updateTramiteCompleto', {
+    return fetch(Global.URL_BASE + 'updateTramiteCompleto', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -246,7 +243,7 @@ async function updateTramiteCompleto(data) {
 // Función para obtener un trámite
 async function obtenerTramite(ID_CONTRATO) {
     //console.log('ID_CONTRATO: ', ID_CONTRATO);
-    return fetch(URL_BASE + 'getTramites', {
+    return fetch(Global.URL_BASE + 'getTramites', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })

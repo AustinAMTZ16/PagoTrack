@@ -1,21 +1,15 @@
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
-
+// Funciones globales y utilidades
+import Global from './funcionesGlobales.js';
+// Declarar una variable global para almacenar las remesas
 let ltRemesas = [];
-
 // Obtener el nombre + apellido del usuario de LocalStorage
 const usuario = JSON.parse(localStorage.getItem('usuario'));
 const NombreUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;
 const DeoartametoUserLocalStorage = usuario.DepartamentoUser;
-
-
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function () {
     // Obtener el parámetro "consecutivo" de la URL
     const urlParams = new URLSearchParams(window.location.search);
-
     // Validar si el parámetro consecutivo existe
     const consecutivo = urlParams.get('consecutivo');
     if (consecutivo) {
@@ -34,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error al obtener el listado de remesas:", error.message);
         });
     }
-
     // Obtener el parámetro "ID_REMESA" de la URL
     const ID_REMESA = urlParams.get('ID_REMESA');
     const DepartamentoTurnado = urlParams.get('DepartamentoTurnado');
@@ -54,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('Estatus').value = Estatus;
         document.getElementById('Comentarios').value = Comentarios && Comentarios.trim() !== '' ? Comentarios : 'Nota: ';
     }
-
     // Validar formConfigurarRemesa 
     const formConfigurarRemesa = document.getElementById('formConfigurarRemesa');
     if (formConfigurarRemesa) {
@@ -72,7 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
             updateRemesa(data);
         });
     }
-
     //validar si existe el formulario de asignar remesa
     const formAsignarRemesa = document.getElementById('formAsignarRemesa');
     if (formAsignarRemesa) {
@@ -93,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
             updateTramiteCompleto(data);
         });
     }
-
     const urlParamsRemesa = new URLSearchParams(window.location.search);
     const remesaRaw = urlParamsRemesa.get("remesa");
     if (remesaRaw) {
@@ -113,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 100);
     }
 });
-
 // Funcion para ver el detalle de las remesas
 function verDetalleRemesa(consecutivo) {
     // window.location.href = 'detalleRemesas.html?consecutivo=' + consecutivo;
@@ -134,7 +123,7 @@ async function cambiarEstatusRemesa(consecutivo, estatus) {
     };
 
     try {
-        const response = await fetch(URL_BASE + 'updateRemesaTramites', {
+        const response = await fetch(Global.URL_BASE + 'updateRemesaTramites', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -274,7 +263,7 @@ async function armarRemesa(consecutivo) {
         Analista: NombreUser
     };
     try {
-        const response = await fetch(URL_BASE + 'getDetalleRemesas', {
+        const response = await fetch(Global.URL_BASE + 'getDetalleRemesas', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -316,7 +305,7 @@ async function armarRemesa(consecutivo) {
 // Funcion para obtener el listado de remesas
 async function obtenerListaRemesas() {
     try {
-        const response = await fetch(URL_BASE + 'getListaRemesas', {
+        const response = await fetch(Global.URL_BASE + 'getListaRemesas', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -345,7 +334,7 @@ async function configurarRemesa(grupo) {
     }
 
     try {
-        const response = await fetch(URL_BASE + 'createRemesa', {
+        const response = await fetch(Global.URL_BASE + 'createRemesa', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -373,7 +362,7 @@ async function configurarRemesa(grupo) {
 // Funcion para actualizar la remesa
 async function updateRemesa(data) {
     try {
-        const response = await fetch(URL_BASE + 'updateRemesa', {
+        const response = await fetch(Global.URL_BASE + 'updateRemesa', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -396,7 +385,7 @@ async function updateRemesa(data) {
 async function updateTramiteCompleto(data) {
     try {
         // Paso 1: Actualiza el trámite
-        const response = await fetch(URL_BASE + 'updateTramiteCompleto', {
+        const response = await fetch(Global.URL_BASE + 'updateTramiteCompleto', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -465,7 +454,7 @@ function actualizarTablaRemesas(data, tableId) {
                                     `;
                         if (usuario.RolUser === 'Admin') {
                             buttons += `
-                                        <button class="btn btn-primary toggleButton" onclick="verDetalleRemesaCorte('${grupo}')">IMP_CORTE</button>
+                                        <!--button class="btn btn-primary toggleButton" onclick="verDetalleRemesaCorte('${grupo}')">IMP_CORTE</button-->
                                     `;
                         }
                     }
@@ -546,74 +535,7 @@ function actualizarTablaRemesas(data, tableId) {
 
     });
 }
-// function llenarTablaRemesas(listadoRemesas) {
-//     tableListaRemesas.innerHTML = '';
-
-//     // Encabezado
-//     const headerRow = document.createElement('tr');
-//     headerRow.innerHTML = ` 
-//         <th>#</th>
-//         <th>Remesa</th>
-//         <th>No. Trámites</th>
-//         <th>Acciones</th>
-//     `;
-//     tableListaRemesas.appendChild(headerRow);
-
-//     // Función para extraer fecha si tiene formato válido
-//     function extraerFecha(remesa) {
-//         let match8 = remesa.Grupo.match(/^(\d{8})-\d+$/); // 05062025-100
-//         if (match8) return match8[1];
-
-//         let match6 = remesa.Grupo.match(/^(\d{6})-\d+$/); // 050625-100
-//         if (match6) {
-//             let raw = match6[1]; // 050625
-//             let dia = raw.slice(0, 2);
-//             let mes = raw.slice(2, 4);
-//             let anioCorto = raw.slice(4, 6);
-//             let anio = parseInt(anioCorto) >= 50 ? `19${anioCorto}` : `20${anioCorto}`;
-//             return `${dia}${mes}${anio}`; // Devuelve 05062025
-//         }
-
-//         return null;
-//     }
-
-//     // Ordenar remesas
-//     listadoRemesas.sort((a, b) => {
-//         const fechaA = extraerFecha(a);
-//         const fechaB = extraerFecha(b);
-
-//         // Si ambas tienen fecha válida
-//         if (fechaA && fechaB) {
-//             return parseInt(fechaB) - parseInt(fechaA); // más reciente primero
-//         }
-
-//         // Si solo A tiene formato válido
-//         if (fechaA) return -1;
-
-//         // Si solo B tiene formato válido
-//         if (fechaB) return 1;
-
-//         // Ninguno tiene formato válido, mantener orden original
-//         return 0;
-//     });
-
-//     // Llenar tabla
-//     listadoRemesas.forEach((remesa, index) => {
-//         const row = document.createElement('tr');
-//         row.innerHTML = `
-//             <td>${index + 1}</td>
-//             <td>${remesa.Grupo}</td>
-//             <td>${remesa.TotalRegistros}</td>
-//             <td>
-//                 <button class="btn btn-primary toggleButton" onclick="configurarRemesa('${remesa.Grupo}')">Configurar</button>
-//                 <button class="btn btn-primary toggleButton" onclick="verDetalleRemesa('${remesa.Grupo}')">Imprimir</button>
-//                 <button class="btn btn-primary toggleButton" onclick="cambiarEstatusRemesa('${remesa.Grupo}', 'RemesaAprobada')">Aprobar Remesa</button>
-//             </td>
-//         `;
-//         tableListaRemesas.appendChild(row);
-//     });
-// }
-
+// Función para crear una nueva remesa|
 async function crearRemesa(RemesaNumero, Analista) {
     // Paso 2: Extrae ID de remesa (ej. "04062025-1-1" => "04062025-1")
     const remesaID = RemesaNumero.split('-').slice(0, 2).join('-');
@@ -622,7 +544,7 @@ async function crearRemesa(RemesaNumero, Analista) {
         FKNumeroRemesa: remesaID,
         Analista: Analista
     };
-    const remesaResponse = await fetch(URL_BASE + 'createRemesa', {
+    const remesaResponse = await fetch(Global.URL_BASE + 'createRemesa', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -647,118 +569,120 @@ async function crearRemesa(RemesaNumero, Analista) {
 
 
 }
-
-
-
 // Funcion para ver el detalle de las remesas
 function verDetalleRemesaCorte(consecutivo) {
     // window.location.href = 'corte.html?consecutivo=' + consecutivo;
     window.open('corte.html?consecutivo=' + consecutivo, '_blank');
 }
 // Funcion para mostrar las remesas
-function mostrarRemesasCorte(remesas) {
-    // Mostrar el nombre del glosador
-    // document.getElementById('nombreGlosador').innerHTML = remesas[0]?.Analista || 'N/A';
+// function mostrarRemesasCorte(remesas) {
+//     // Mostrar el nombre del glosador
+//     // document.getElementById('nombreGlosador').innerHTML = remesas[0]?.Analista || 'N/A';
 
-    // Obtener la fecha de remesas o usar la fecha por defecto
-    let fecha = remesas[0]?.FechaRemesa || 'NA';
-    // Convertir la fecha a un objeto Date
-    let dateObj = new Date(fecha);
-    // Opciones para formatear la fecha
-    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    // Formatear la fecha
-    let formattedDate = dateObj.toLocaleDateString('es-ES', options);
+//     // Obtener la fecha de remesas o usar la fecha por defecto
+//     let fecha = remesas[0]?.FechaRemesa || 'NA';
+//     // Convertir la fecha a un objeto Date
+//     let dateObj = new Date(fecha);
+//     // Opciones para formatear la fecha
+//     let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+//     // Formatear la fecha
+//     let formattedDate = dateObj.toLocaleDateString('es-ES', options);
 
-    // Mostrar la fecha formateada
-    document.getElementById('FechaCreacion').innerHTML = formattedDate;
-    document.getElementById('Grupo').innerHTML = 'Remesa: ' + remesas[0]?.Grupo || 'N/A';
+//     // Mostrar la fecha formateada
+//     document.getElementById('FechaCreacion').innerHTML = formattedDate;
+//     document.getElementById('Grupo').innerHTML = 'Remesa: ' + remesas[0]?.Grupo || 'N/A';
 
-    // Mostrar los comentarios
-    document.getElementById('Comentarios').innerHTML = remesas[0]?.Comentarios || ' ';
+//     // Mostrar los comentarios
+//     document.getElementById('Comentarios').innerHTML = remesas[0]?.Comentarios || ' ';
 
-    const tabla = document.getElementById('tablaRemesaCorte');
-    const thead = tabla.querySelector('thead tr');
-    const tbody = tabla.querySelector('tbody');
+//     const tabla = document.getElementById('tablaRemesaCorte');
+//     const thead = tabla.querySelector('thead tr');
+//     const tbody = tabla.querySelector('tbody');
 
-    tbody.innerHTML = '';
+//     tbody.innerHTML = '';
 
-    // Obtener todas las claves de fondos presentes en todas las remesas
-    const clavesFondos = [...new Set(remesas.flatMap(remesa => Object.keys(remesa.Fondo || {})))];
+//     // Obtener todas las claves de fondos presentes en todas las remesas
+//     const clavesFondos = [...new Set(remesas.flatMap(remesa => Object.keys(remesa.Fondo || {})))];
 
-    // Limpiar y construir el encabezado dinámico
-    thead.innerHTML = `
-        <th style="width: 20px;">#</th>
-        <th>ID</th>
-        <th>Of. Petición</th>
-        <th>Fecha Recepción</th>
-        <th>Integra</th>
-        <th>Docto. SAP</th>
-        <th>Tipo</th>
-        <th># Trámite</th>
-        <th>Institución</th>
-        <th>Beneficiario</th>
-        <th>Concepto</th>
-        <th>Doctación. Anexa</th>
-        <th>Importe total</th>
-        ${clavesFondos.map(clave => `<th>${clave}</th>`).join('')}
-        <th>Glosador</th>
-    `;
+//     // Limpiar y construir el encabezado dinámico
+//     thead.innerHTML = `
+//         <th style="width: 20px;">#</th>
+//         <th>ID</th>
+//         <th>Of. Petición</th>
+//         <th>Fecha Recepción</th>
+//         <th>Integra</th>
+//         <th>Docto. SAP</th>
+//         <th>Tipo</th>
+//         <th># Trámite</th>
+//         <th>Institución</th>
+//         <th>Beneficiario</th>
+//         <th>Concepto</th>
+//         <th>Doctación. Anexa</th>
+//         <th>Importe total</th>
+//         ${clavesFondos.map(clave => `<th>${clave}</th>`).join('')}
+//         <th>Glosador</th>
+//     `;
 
-    // Objeto para almacenar totales
-    const totales = {
-        fondos: {},
-        granTotal: 0
-    };
+//     // Objeto para almacenar totales
+//     const totales = {
+//         fondos: {},
+//         granTotal: 0
+//     };
 
-    // Inicializar totales de cada fondo en 0
-    clavesFondos.forEach(clave => {
-        totales.fondos[clave] = 0;
-    });
+//     // Inicializar totales de cada fondo en 0
+//     clavesFondos.forEach(clave => {
+//         totales.fondos[clave] = 0;
+//     });
 
-    // Generar filas de la tabla con datos
-    remesas.forEach((remesa, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${remesa.ID_CONTRATO}</td>
-            <td>${remesa.OfPeticion}</td>
-            <td>${remesa.FechaRecepcion.split(" ")[0]}</td>
-            <td>${remesa.IntegraSAP}</td>
-            <td>${remesa.DocSAP}</td>
-            <td>${remesa.TipoTramite}</td>
-            <td>${remesa.NoTramite}</td>
-            <td>${remesa.Dependencia}</td>
-            <td>${remesa.Proveedor}</td>
-            <td>${remesa.Concepto}</td>
-            <td>${remesa.DoctacionAnexo}</td>
+//     // Generar filas de la tabla con datos
+//     remesas.forEach((remesa, index) => {
+//         const tr = document.createElement('tr');
+//         tr.innerHTML = `
+//             <td>${index + 1}</td>
+//             <td>${remesa.ID_CONTRATO}</td>
+//             <td>${remesa.OfPeticion}</td>
+//             <td>${remesa.FechaRecepcion.split(" ")[0]}</td>
+//             <td>${remesa.IntegraSAP}</td>
+//             <td>${remesa.DocSAP}</td>
+//             <td>${remesa.TipoTramite}</td>
+//             <td>${remesa.NoTramite}</td>
+//             <td>${remesa.Dependencia}</td>
+//             <td>${remesa.Proveedor}</td>
+//             <td>${remesa.Concepto}</td>
+//             <td>${remesa.DoctacionAnexo}</td>
             
 
-            <td>${formatoMoneda(
-            Object.values(remesa.Fondo || {}).reduce((sum, val) => sum + (parseFloat(val) || 0), 0)
-        )}</td>
+//             <td>${formatoMoneda(
+//             Object.values(remesa.Fondo || {}).reduce((sum, val) => sum + (parseFloat(val) || 0), 0)
+//         )}</td>
 
 
-            ${clavesFondos.map(clave => {
-            const valorFondo = parseFloat(remesa.Fondo?.[clave]) || 0;
-            totales.fondos[clave] += valorFondo;
-            return `<td>${formatoMoneda(valorFondo)}</td>`;
-        }).join('')}
-            <td>${remesa.Analista}</td>
-        `;
-        tbody.appendChild(tr);
+//             ${clavesFondos.map(clave => {
+//             const valorFondo = parseFloat(remesa.Fondo?.[clave]) || 0;
+//             totales.fondos[clave] += valorFondo;
+//             return `<td>${formatoMoneda(valorFondo)}</td>`;
+//         }).join('')}
+//             <td>${remesa.Analista}</td>
+//         `;
+//         tbody.appendChild(tr);
 
-        // Sumar al gran total
-        totales.granTotal += parseFloat(remesa.Importe) || 0;
-    });
+//         // Sumar al gran total
+//         totales.granTotal += parseFloat(remesa.Importe) || 0;
+//     });
 
-    // Fila de totales
-    const totalRow = document.createElement('tr');
-    totalRow.className = 'total-row';
-    totalRow.innerHTML = `
-        <td colspan="12">TOTALES</td>
-        <td>${formatoMoneda(totales.granTotal)}</td>
-        ${clavesFondos.map(clave => `<td>${formatoMoneda(totales.fondos[clave])}</td>`).join('')}
-        <td></td>
-    `;
-    tbody.appendChild(totalRow);
-}
+//     // Fila de totales
+//     const totalRow = document.createElement('tr');
+//     totalRow.className = 'total-row';
+//     totalRow.innerHTML = `
+//         <td colspan="12">TOTALES</td>
+//         <td>${formatoMoneda(totales.granTotal)}</td>
+//         ${clavesFondos.map(clave => `<td>${formatoMoneda(totales.fondos[clave])}</td>`).join('')}
+//         <td></td>
+//     `;
+//     tbody.appendChild(totalRow);
+// }
+
+window.configurarRemesa = configurarRemesa;
+window.verDetalleRemesa = verDetalleRemesa;
+window.verDetalleRemesaCorte = verDetalleRemesaCorte;
+window.cambiarEstatusRemesa = cambiarEstatusRemesa;

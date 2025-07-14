@@ -1,14 +1,7 @@
-// Oficios.js
+// Funciones globales y utilidades
 import Global from './funcionesGlobales.js';
-//console.log(Global.holaMundo());
-
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
 // Declarar una variable global
 let dataOficios;
-
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
     // Funcion para cargar la app   
@@ -291,7 +284,7 @@ async function cargarApp() {
 }
 // Funcion para obtener los oficios
 async function listarOficios() {
-    let resOficios = await fetch(URL_BASE + 'listarOficios');
+    let resOficios = await fetch(Global.URL_BASE + 'listarOficios');
     let jsonOficios = await resOficios.json();
     // Guardar respuesta en variable global
     dataOficios = jsonOficios.data;
@@ -356,7 +349,10 @@ function llenarTablaOficios(data, tableId) {
                     // BTN VER ARCHIVO ESCANEADO
                     const archivo = data.ArchivoScaneado || "N/A";
                     if (archivo !== "N/A" && archivo !== "Array") {
-                        const basePath = 'assets/uploads/Correspondencia/';
+                        // C:\xampp\htdocs\DigitalOcean\Egresos\BackEndPagoTrack
+                        // /var/www/html/apipagotrack
+                        // const basePath = '../BackEndPagoTrack/assets/uploads/Correspondencia/';
+                        const basePath = 'https://apipagotrack.mexiclientes.com/assets/uploads/Correspondencia/';
                         botones += `<button class="btn-icon primary" title="Ver archivo" onclick="window.open('${basePath}${archivo}', '_blank')"><i class="fas fa-file-pdf"></i></button>`;
                     }
                     return botones;
@@ -431,7 +427,7 @@ function exportToExcel(tableId) {
 function crearOficio(data) {
     //console.log('crearOficioData:', data);
 
-    fetch(URL_BASE + 'crearOficio', {
+    fetch(Global.URL_BASE + 'crearOficio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -515,7 +511,7 @@ function actualizarOficio(data) {
         fetchOptions.headers = { 'Content-Type': 'application/json' };
         fetchOptions.body = JSON.stringify(data);
     }
-    fetch(URL_BASE + 'actualizarOficioArchivo', fetchOptions)
+    fetch(Global.URL_BASE + 'actualizarOficioArchivo', fetchOptions)
         .then(async response => {
             const text = await response.text();
             try {
@@ -546,7 +542,7 @@ window.eliminarOficio = function (id) {
             ID: id
         };
         // Realizar la solicitud para eliminar el registro
-        fetch(URL_BASE + 'eliminarOficio', {
+        fetch(Global.URL_BASE + 'eliminarOficio', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -616,6 +612,7 @@ function logicaEstatusTarjetaInformativa() {
         });
     });
 }
+// Función para validar archivo PDF
 function validarArchivoPDF(formularioId, archivoInputId) {
     const archivoInput = document.getElementById(archivoInputId);
     const archivo = archivoInput?.files?.[0];
@@ -653,7 +650,7 @@ function crearOficioArchivo(data) {
         fetchOptions.body = JSON.stringify(data);
     }
 
-    fetch(URL_BASE + 'crearOficioArchivo', fetchOptions)
+    fetch(Global.URL_BASE + 'crearOficioArchivo', fetchOptions)
         .then(async response => {
             const text = await response.text();
             try {
@@ -817,13 +814,13 @@ function formatDateInput(fechaStr) {
     const d = new Date(fechaStr);
     return d.toISOString().split("T")[0]; // yyyy-mm-dd
 }
+// Función para formatear fecha y hora en el input datetime-local
 function formatDateTimeInput(fechaStr) {
     if (!fechaStr) return "";
     const d = new Date(fechaStr);
     const pad = n => n.toString().padStart(2, "0");
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
-
 // Agrega esta línea al final de tu archivo Oficios.js
 window.eliminarOficio = eliminarOficio;
 window.mostrarComentario = mostrarComentario;

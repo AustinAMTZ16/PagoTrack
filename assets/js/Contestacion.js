@@ -1,11 +1,5 @@
-// Oficios.js
+// Funciones globales y utilidades
 import Global from './funcionesGlobales.js';
-//console.log(Global.holaMundo());
-
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
 // Declarar una variable global
 let dataContestaciones;
 
@@ -196,7 +190,7 @@ async function cargarApp() {
 }
 // Funcion para obtener los oficios
 async function listarContestaciones() {
-    let resContestaciones = await fetch(URL_BASE + 'listarRegistroOficios');
+    let resContestaciones = await fetch(Global.URL_BASE + 'listarRegistroOficios');
     let jsonContestaciones = await resContestaciones.json();
     // Guardar respuesta en variable global
     dataContestaciones = jsonContestaciones.data;
@@ -239,7 +233,10 @@ function llenarTablaContestaciones(data, tableId) {
                     // BTN VER ARCHIVO ESCANEADO
                     const archivo = data.ArchivoAdjunto || "N/A";
                     if (archivo !== "N/A" && archivo !== "Array") {
-                        const basePath = 'assets/uploads/oficios/';
+                        // C:\xampp\htdocs\DigitalOcean\Egresos\BackEndPagoTrack
+                        // /var/www/html/apipagotrack
+                        // const basePath = '../BackEndPagoTrack/assets/uploads/oficios/';
+                        const basePath = 'https://apipagotrack.mexiclientes.com/assets/uploads/oficios/';
                         botones += `<button class="btn-icon primary" title="Ver archivo" onclick="window.open('${basePath}${archivo}', '_blank')"><i class="fas fa-file-pdf"></i></button>`;
                     }
                     return botones;
@@ -304,7 +301,7 @@ function llenarTablaContestaciones(data, tableId) {
 }
 // Función para crear una contestacion
 function crearContestacion(data) {
-    fetch(URL_BASE + 'crearRegistroOficio', {
+    fetch(Global.URL_BASE + 'crearRegistroOficio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -388,7 +385,7 @@ function actualizarContestacion(data) {
     }
 
 
-    fetch(URL_BASE + 'actualizarRegistroOficioArchivo', fetchOptions)
+    fetch(Global.URL_BASE + 'actualizarRegistroOficioArchivo', fetchOptions)
         .then(async response => {
             const text = await response.text();
             try {
@@ -434,7 +431,7 @@ function validarArchivoPDF(formularioId, archivoInputId) {
 // Eliminar oficio por ID_RegistroOficios
 window.eliminarContestacion = function (ID_RegistroOficios) {
     if (confirm("¿Estás seguro de eliminar este oficio?")) {
-        fetch(URL_BASE + 'eliminarRegistroOficio', {
+        fetch(Global.URL_BASE + 'eliminarRegistroOficio', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

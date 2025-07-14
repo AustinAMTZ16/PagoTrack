@@ -10,7 +10,7 @@
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
 
-    <script src="./assets/js/RemesaController.js"></script>
+    <script type="module" src="./assets/js/RemesaController.js"></script>
 
     <style>
         @page {
@@ -157,14 +157,19 @@
     </div>
 
     <script>
+        if (document.getElementById('tablaRemesaCorte')) {
+    mostrarRemesasCorte(remesas);
+} else {
+    mostrarRemesas(remesas);
+}
 
-        async function armarRemesa(consecutivo) {
+        async function mostrarRemesasCorte(consecutivo) {
             const data = {
                 consecutivo: consecutivo,
                 Analista: NombreUser
             };
             try {
-                const response = await fetch(URL_BASE + 'getDetalleRemesas', {
+                const response = await fetch(Global.URL_BASE + 'getDetalleRemesas', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

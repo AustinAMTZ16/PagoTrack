@@ -10,7 +10,7 @@
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
 
-    <script src="./assets/js/TramitesController.js"></script>
+    <script type="module" src="./assets/js/TramitesController.js"></script>
 
     <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -114,8 +114,7 @@
                         Devuelto:
                             1.  Motivo: Discrepancia entre montos reportados y comprobantes adjuntos.
                             2.  Fundamento: Art. 15 del Reglamento de Comprobación de Gastos.
-                            3.  Acción requerida: Ajustar los montos en el reporte y/o anexar comprobantes faltantes.
-                            4.  Volante: DV-2025-07-001.
+                            3.  Volante: DV-2025-07-001.
                         " required></textarea>
                 </div>
 
@@ -232,18 +231,34 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // 👇 NUEVO BLOQUE - Actualizar comentarios con SAP y INTEGRA
+            function actualizarComentarioSAP() {
+                const comentarioBase = comentariosTextarea.value.split('\n')[0]; // Se queda con el primer párrafo o línea principal
+                const docSAP = document.getElementById("DocSAP").value.trim();
+                const integraSAP = document.getElementById("IntegraSAP").value.trim();
+
+                let extra = "";
+                if (docSAP) extra += `\nDOC_SAP : ${docSAP}`;
+                if (integraSAP) extra += `\nINTEGRA : ${integraSAP}`;
+
+                comentariosTextarea.value = comentarioBase + extra;
+            }
+
+            // Escuchar cambios en ambos inputs
+            document.getElementById("DocSAP").addEventListener("input", actualizarComentarioSAP);
+            document.getElementById("IntegraSAP").addEventListener("input", actualizarComentarioSAP);
+
+
             const estatusSelect = document.getElementById('Estatus');
             const comentariosTextarea = document.getElementById('Comentarios');
 
             // Define los textos a precargar, usando los IDs de tus opciones como claves
             const textosPrecargadosPorId = {
                 "Observaciones": `                1. Motivo/Por qué:
-                2. Fundamento/Con base en:
-                3. Acción requerida/Se necesita:`,
+                2. Fundamento/Con base en:`,
                 "Devuelto": `                1. Motivo/Por qué:
                 2. Fundamento/Con base en:
-                3. Acción requerida/Se necesita:
-                4. Volante/Referencia:`,
+                3. Volante/Referencia:`,
                 "RegistradoSAP": "Glosado de expediente concluido y registrado en SAP. Expediente devuelto al Operador para seguimiento.",
                 // Los IDs de estas opciones ahora son las claves para sus textos específicos
                 "SolicitudRecursoFinanciero": "Glosado de expediente concluido. Expediente devuelto al Operador para seguimiento.",

@@ -12,11 +12,15 @@
  *    3.4. actualizarTablaTurnados - Renderizar la tabla de trámites turnados
  *    3.5. exportToExcel - Exportar trámites a un archivo Excel
  */
+// Importar funciones globales
+import Global from './funcionesGlobales.js';
+
 // Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
+// const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
 // Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
-// const URL_BASE = `${URL_B}index.php?action=`;
+// const Global.URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+// const Global.URL_BASE = `http://localhost/DigitalOcean/Egresos/BackEndPagoTrack/index.php?action=`;
+// const Global.URL_BASE = `${URL_B}index.php?action=`;
 // Variable global para almacenar la lista trámites
 let tramitesArray = [];
 let nombreAnalista = "";
@@ -267,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // Función para obtener la lista de trámites
 function getTramites() {
-    fetch(URL_BASE + 'getTramites', {
+    fetch(Global.URL_BASE + 'getTramites', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -298,7 +302,7 @@ function getTramites() {
 }
 //funcion para obtener el seguimiento de trámites
 function getSeguimientoTramites() {
-    fetch(URL_BASE + 'getSeguimientoTramites', {
+    fetch(Global.URL_BASE + 'getSeguimientoTramites', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -321,7 +325,7 @@ function getSeguimientoTramites() {
 }
 //funcion para obtener el historico de trámites por mes
 function getHistoricoMes() {
-    fetch(URL_BASE + 'getHistoricoMes', {
+    fetch(Global.URL_BASE + 'getHistoricoMes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -343,7 +347,7 @@ function getHistoricoMes() {
 }
 //funcion para obtener el conteo de estatus
 function getConteoEstatus() {
-    fetch(URL_BASE + 'getConteoEstatus', {
+    fetch(Global.URL_BASE + 'getConteoEstatus', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -366,7 +370,7 @@ function getConteoEstatus() {
 }
 //funcion para obtener el reporte de estatus de comentarios
 function getReporteEstatusComentarios() {
-    fetch(URL_BASE + 'getReporteEstatusComentarios', {
+    fetch(Global.URL_BASE + 'getReporteEstatusComentarios', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -389,7 +393,7 @@ function getReporteEstatusComentarios() {
 }
 //funcion para obtener la lista de trámites turnados
 function getTramitesTurnados() {
-    fetch(URL_BASE + 'getTramites', {
+    fetch(Global.URL_BASE + 'getTramites', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -461,7 +465,7 @@ function actualizarTablaTramites(data, tableId) {
                     }
                     if (data.Estatus === "VoBO") {
                         // BTN ACCION VoBo
-                        botones += `<button class="btn-icon primary" title="VoBo" onclick="aprobarTramite(${data.ID_CONTRATO})"><i class="fas fa-thumbs-up"></i></button> `;
+                        botones += `<button class="btn-icon primary" title="VoBo" onclick="turnarTramite(${data.ID_CONTRATO})"><i class="fas fa-thumbs-up"></i></button> `;
                     }
                     if (data.Estatus === "RegistradoSAP" || data.Estatus === "Inspectoria" || data.Estatus === "JuntasAuxiliares") {
                         // BTN ACCION ASIGNAR REMESA
@@ -887,7 +891,7 @@ function eliminarTramite(id) {
             ID_CONTRATO: id
         };
         // Realizar la solicitud para eliminar el registro
-        fetch(URL_BASE + 'deleteTramite', {
+        fetch(Global.URL_BASE + 'deleteTramite', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -985,6 +989,7 @@ function renderTable(data) {
 
                 // Aplicar color al link basado en el Estatus
                 const colorPorEstatus = {
+                    "Creado": "#eab211",
                     "Turnado": "#eab211",             // marrón oscuro
                     "RegistradoSAP": "#004085",       // azul oscuro
                     "Remesa": "#004085",
@@ -1486,7 +1491,7 @@ function showHistoricoMes(InicioSesionID) {
     };
 
     // Obtener los trámites del analista
-    fetch(URL_BASE + 'getDetalleHistoricoMes', {
+    fetch(Global.URL_BASE + 'getDetalleHistoricoMes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -1730,3 +1735,10 @@ function getMesActualNombre() {
     const mesActual = new Date().getMonth(); // 0-based (0 = Enero)
     return meses[mesActual];
 }
+window.modificarTramite = modificarTramite;
+window.eliminarTramite = eliminarTramite;
+window.generarQR = generarQR;
+window.mostrarComentario = mostrarComentario;
+window.turnarTramite = turnarTramite;
+window.createRemesa = createRemesa;
+window.editarTramite = editarTramite;

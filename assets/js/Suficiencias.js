@@ -1,7 +1,5 @@
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+// Funciones globales y utilidades
+import Global from './funcionesGlobales.js';
 // Declarar una variable global
 let respuestaGlobal;
 // Evento para cargar el contenido de la página
@@ -61,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
-
+// Función para obtener las suficiencias
 function getSuficiencias() {
-    fetch(URL_BASE + 'getSuficiencias', {
+    fetch(Global.URL_BASE + 'getSuficiencias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -83,7 +81,7 @@ function getSuficiencias() {
         console.error('Error al obtener las remesas con trámites:', error.message);
     });
 }
-
+// Función para llenar la tabla de suficiencias
 function llenarTablaSuficiencias(data) {
     const tableId = "tableSuficiencias";
 
@@ -185,10 +183,10 @@ function llenarTablaSuficiencias(data) {
         order: [[0, "DESC"]],
     });
 }
-
+// Función para registrar una nueva suficiencia
 function registrarSuficiencia(data){
     //console.log('registrarSuficienciaData: ',data);
-    fetch(URL_BASE + 'registrarSuficiencia', {
+    fetch(Global.URL_BASE + 'registrarSuficiencia', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -209,9 +207,9 @@ function registrarSuficiencia(data){
         console.error('Error al obtener las remesas con trámites:', error.message);
     });
 }
-
+// Función para llenar el formulario de actualización de suficiencias
 function llenarformActualizarSuficiencias(suficienciaID) {
-    fetch(URL_BASE + 'getSuficiencias', {
+    fetch(Global.URL_BASE + 'getSuficiencias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -266,7 +264,7 @@ function llenarformActualizarSuficiencias(suficienciaID) {
         console.error('Error al obtener las suficiencias:', error.message);
     });
 }
-
+// Función para actualizar una suficiencia
 function actualizarSuficiencia(data){
     //Obtener el ID del URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -277,7 +275,7 @@ function actualizarSuficiencia(data){
     data.SuficienciasID = SuficienciasID;
 
 
-    fetch(URL_BASE + 'actualizarSuficiencia', {
+    fetch(Global.URL_BASE + 'actualizarSuficiencia', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -298,7 +296,7 @@ function actualizarSuficiencia(data){
         console.error('Error al obtener las remesas con trámites:', error.message);
     });
 }
-
+// Función para eliminar una suficiencia
 function eliminarSuficiencia(SuficienciasID){
     // Confirmación del usuario antes de eliminar
     const confirmDelete = confirm("¿Estás seguro de que deseas eliminar la Suficiencia?");
@@ -308,7 +306,7 @@ function eliminarSuficiencia(SuficienciasID){
     const data = {
         SuficienciasID: SuficienciasID
     };
-    fetch(URL_BASE + 'eliminarSuficiencia', {
+    fetch(Global.URL_BASE + 'eliminarSuficiencia', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

@@ -1,7 +1,5 @@
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+// Funciones globales y utilidades
+import Global from './funcionesGlobales.js';
 // Declaración global para almacenar datos parseados
 let parsedData = {};
 // Evento para cargar el contenido de la página
@@ -10,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // Funcion para obtener los KPI'S
 function obtenerKPI() {
-    fetch(URL_BASE + 'obtenerKPI', {
+    fetch(Global.URL_BASE + 'obtenerKPI', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -311,3 +309,6 @@ function actualizarTablaEstatus(conteo_estatus, tableId) {
         order: [[1, "desc"]]
     });
 }
+
+
+window.mostrarComentario = mostrarComentario;

@@ -1,7 +1,5 @@
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
+// Funciones globales y utilidades
+import Global from './funcionesGlobales.js';
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
     // Obtener el parámetro "id" de la URL
@@ -44,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 //getRemesasWithTramites
 function getRemesasWithTramites() {
-    fetch(URL_BASE + 'getRemesasWithTramites', {
+    fetch(Global.URL_BASE + 'getRemesasWithTramites', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -71,7 +69,7 @@ const formatoMoneda = new Intl.NumberFormat("es-MX", {
     currency: "MXN",
     minimumFractionDigits: 2,
 });
-
+// Función para renderizar la tabla con los datos obtenidos
 function renderTable2(data) {
     const tableId = "tramitesTable2"; // ID de la tabla
     const table = document.getElementById(tableId);
@@ -186,7 +184,7 @@ function actualizarRegistro(row) {
 // Función para actualizar un trámite y remesa
 function updateTramiteRemesa(data) {
     //console.log('updateTramiteRemesa: ', data)
-    fetch(URL_BASE + 'updateTramiteRemesa', {
+    fetch(Global.URL_BASE + 'updateTramiteRemesa', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -207,7 +205,7 @@ function updateTramiteRemesa(data) {
             console.error('Error al actualizar el trámite y remesa:', error.message);
         });
 }
-//
+// Función para mostrar el comentario en un modal
 function mostrarComentario(comentario) {
     // Decodificar el comentario
     var comentarioDecoded = decodeURIComponent(comentario);

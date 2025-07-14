@@ -1,14 +1,7 @@
-// Oficios.js
+// Funciones globales y utilidades
 import Global from './funcionesGlobales.js';
-//console.log(Global.holaMundo());
-
-// Obtener la URL base dinámicamente
-const URL_B = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
-// Completar con la URI
-const URL_BASE = `https://apipagotrack.mexiclientes.com/index.php?action=`;
 // Declarar una variable global
 let dataOficios;
-
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
     // Funcion para cargar la app   
@@ -49,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
 // Funcion para cargar la app
 async function cargarApp() {
     // Obtener oficios
@@ -180,7 +172,7 @@ async function cargarApp() {
 }
 // Funcion para obtener los oficios
 async function listarOficios() {
-    let resOficios = await fetch(URL_BASE + 'listarOficios');
+    let resOficios = await fetch(Global.URL_BASE + 'listarOficios');
     let jsonOficios = await resOficios.json();
     // Guardar respuesta en variable global
     dataOficios = jsonOficios.data;
@@ -318,7 +310,7 @@ function exportToExcel(tableId) {
 function crearOficio(data) {
     //console.log('crearOficioData:', data);
 
-    fetch(URL_BASE + 'crearOficio', {
+    fetch(Global.URL_BASE + 'crearOficio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -405,7 +397,7 @@ function actualizarOficio(data) {
         fetchOptions.body = JSON.stringify(data);
     }
 
-    fetch(URL_BASE + 'actualizarOficioArchivo', fetchOptions)
+    fetch(Global.URL_BASE + 'actualizarOficioArchivo', fetchOptions)
         .then(async response => {
             const text = await response.text();
             try {
@@ -436,7 +428,7 @@ window.eliminarOficio = function(id) {
             ID: id
         };
         // Realizar la solicitud para eliminar el registro
-        fetch(URL_BASE + 'eliminarOficio', {
+        fetch(Global.URL_BASE + 'eliminarOficio', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -506,6 +498,7 @@ function logicaEstatusTarjetaInformativa() {
         });
     });
 }
+// Función para validar el archivo PDF
 function validarArchivoPDF(formularioId, archivoInputId) {
     const archivoInput = document.getElementById(archivoInputId);
     const archivo = archivoInput?.files?.[0];

@@ -29,9 +29,6 @@
     <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
     <!-- Estilos de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
-
 </head>
 
 <body>
@@ -50,12 +47,17 @@
             <div class="d-flex gap-2 flex-wrap">
                 <button class="btn btn-outline-success" id="btn-mostrar-ocultar-tablas" title="Mostrar Tablas/Ocultar">
                     <i class="fa-solid fa-table"></i> Indicadores
-                </button>
-                <button class="btn btn-outline-primary" id="btn-filtrar">
-                    <i class="fas fa-search"></i> Aplicar Filtros
-                </button>
+                <button class="btn btn-outline-success" id="btn-mostrar-ocultar-tablasrezagados" title="Mostrar Rezagados">
+                    <i class="fa-solid fa-hourglass-half"></i> Rezagados
+                </button>   
+                <button class="btn btn-outline-success" id="btn-mostrar-ocultar-liquidez" title="Mostrar Estimación de Liquidez">
+                    <i class="fa-solid fa-chart-line"></i>Liquidez
+                </button>             
                 <button class="btn btn-outline-secondary" id="btn-mostrar-ocultar">
                     <i class="fa-solid fa-eye"></i> Filtros
+                </button>
+                <button class="btn btn-outline-primary" id="btn-filtrar">
+                    <i class="fas fa-search"></i> Buscar
                 </button>
                 <button class="btn btn-outline-danger" id="btn-limpiar">
                     <i class="fas fa-undo"></i> Limpiar Filtros
@@ -64,7 +66,7 @@
 
             <!-- Acciones Globales -->
             <div class="d-flex gap-2">
-                <a href="createTramite.html" class="btn btn-success">
+                <a href="createTramite.html" id="btn-nuevo-tramite" class="btn btn-success">
                     <i class="fas fa-plus"></i> Nuevo Trámite
                 </a>
                 <button id="downloadExcelTramites" class="btn btn-primary">
@@ -73,17 +75,7 @@
             </div>
         </div>
 
-        <h2 class="text-center">Listado de Trámites</h2>
-
         <div class="table-responsive">
-            <!-- <button id="generarResumen" class="btn btn-info" hidden>Generar Resumen Corporativo</button>
-            <div id="resumenGPT" class="mt-3 p-3 border rounded bg-light" hidden></div> -->
-            <!-- Contenedor para el gráfico -->
-            <!-- <div>
-                <button class="btn btn-primary toggleButton" id="btn-mostrar-ocultar-tablas"><i
-                        class="fa-solid fa-table" title="Mostrar Tablas/Ocultar"></i></button>
-            </div> -->
-
             <!-- Tabla de Indicadores -->
             <div hidden class="tablasAnalistas">
                 <h2 style="text-align: center;">Seguimiento de Trámites</h2>
@@ -106,10 +98,29 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Tabla de Trámites Rezagados -->
+            <div hidden class="tablasRezagados"> 
+                <h2 style="text-align: center;">Trámites Rezagados</h2>
+                <table id="tramitesRezagados" class="table table-bordered table-hover display nowrap" style="width:100%">
+                    <thead>
+                        <tr id="tableHead">
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+            <!-- Tabla de Estimación de Liquidez -->
+            <div hidden class="tablasLiquidez" style="text-align: center;">
+                <h2 style="text-align: center;">Estimación de Liquidez</h2>
+                <button id="downloadExcelLiquidez" class="btn btn-primary">
+                    <i class="fas fa-file-excel"></i> Descargar Tabla
+                </button>
+                <table id="tablaEstimacion" class="table table-bordered table-hover display nowrap" style="width:100%">
+                </table>
+            </div>
             <!-- Filtros y Tabla de Trámites -->
             <div>
-                <!-- <h2 class="titulo-filtros"><i class="fas fa-filter"></i> Filtrar Trámites</h2> -->
-
                 <div class="row g-3" hidden>
                     <!-- Columna Id -->
                     <div class="col-md-6">
@@ -137,7 +148,7 @@
 
                             <option value="JuntasAuxiliares">Juntas Auxiliares</option>
                             <option value="Inspectoria">Inspectorías</option>
-                            <option value="CRF">Comprobación Recurso Financieros</option>
+                            <option value="ComprobacionRecursosFinancieros">Comprobación Recurso Financieros</option>
                         </select>
                     </div>
                     <!-- Columna Mes -->
@@ -202,7 +213,7 @@
                             <option value="9">Roberta Marcela Uvera Saucedo</option>
                             <option value="48">Erika Lopez Zepeda</option>
                             <option value="49">Luis Enrique Silva Santiago</option>
-<option value="46">Nahim Nava Ortiz</option>
+                            <option value="46">Nahim Nava Ortiz</option>
                         </select>
                     </div>
                     <!-- Columna Dependencia -->
@@ -210,81 +221,34 @@
                         <label for="dependenciaSelect">Institución</label>
                         <select name="dependenciaSelect" id="dependenciaSelect" class="form-select">
                             <option value="Todos">Todos</option>
-                            <option value="Coordinación de las Regidurias">Coordinación de las Regidurias
-                            </option>
-                            <option value="Presidencia Municipal">Presidencia Municipal</option>
-                            <option value="Sindicatura Municipal">Sindicatura Municipal</option>
-                            <option value="Secretaría del Ayuntamiento">Secretaría del Ayuntamiento</option>
-                            <option value="Tesorería Municipal">Tesorería Municipal</option>
-                            <option value="Contraloría Municipal">Contraloría Municipal</option>
-                            <option value="Secretaría General de Gobierno">Secretaría General de Gobierno
-                            </option>
-                            <option value="Secretaría de Bienestar y Participación Ciudadana">Secretaría de
-                                Bienestar y
-                                Participación Ciudadana</option>
-                            <option value="Secretaría de Movilidad e Infraestructura">Secretaría de Movilidad e
-                                Infraestructura
-                            </option>
-                            <option value="Secretaría de Gestión y Desarrollo Urbano">Secretaría de Gestión y
-                                Desarrollo
-                                Urbano
-                            </option>
-                            <option value="Secretaría de Economía y Turismo">Secretaría de Economía y Turismo
-                            </option>
-                            <option value="Secretaría de Administración y Tecnologías de la Información">
-                                Secretaría
-                                de
-                                Administración y Tecnologías de la Información</option>
-                            <option value="Secretaría de Seguridad Ciudadana">Secretaría de Seguridad Ciudadana
-                            </option>
-                            <option value="Coordinación General de Transparencia y Municipio Abierto">
-                                Coordinación
-                                General de
-                                Transparencia y Municipio Abierto</option>
-                            <option value="Sistemas Municipal DIF">Sistemas Municipal DIF</option>
-                            <option value="Organismo Operador del Servicio de Limpia del Municipio de Puebla">
-                                Organismo
-                                Operador
-                                del
-                                Servicio de Limpia del Municipio de Puebla</option>
-                            <option value="Instituto Municipal de Arte y Cultura de Puebla">Instituto Municipal
-                                de
-                                Arte
-                                y
-                                Cultura de
-                                Puebla</option>
-                            <option value="Instituto Municipal de Planeación">Instituto Municipal de Planeación
-                            </option>
-                            <option value="Instituto Municipal del Deporte de Puebla">Instituto Municipal del
-                                Deporte de
-                                Puebla
-                            </option>
-                            <option value="Instituto de la Juventud del Municipio de Puebla">Instituto de la
-                                Juventud
-                                del
-                                Municipio
-                                de Puebla</option>
-                            <option value="Industrial de Abastos de Puebla">Industrial de Abastos de Puebla
-                            </option>
-                            <option value="Coordinación General de Comunicación Social">Coordinación General de
-                                Comunicación
-                                Social
-                            </option>
-                            <option value="Secretaria para la Igualdad Sustantiva de Género">Secretaria para la
-                                Igualdad
-                                Sustantiva
-                                de Género</option>
-                            <option value="Secretaría de Servicios Públicos">Secretaría de Servicios Públicos
-                            </option>
-                            <option value="Secretaría de Medio Ambiente">Secretaría de Medio Ambiente</option>
-                            <option value="Direccion General De Desarrollo y Formación Profesional">Direccion
-                                General De
-                                Desarrollo
-                                y Formación Profesional</option>
-                            <option value="Gerencia del Centro Histórico y Patrimonio Cultural">Gerencia del
-                                Centro
-                                Histórico y
-                                Patrimonio Cultural</option>
+                            <option value="20">Contraloría Municipal</option>
+                            <option value="18">Coordinación de Regidurías</option>
+                            <option value="16">Coordinación General de Comunicación Social</option>
+                            <option value="26">Coordinación General de Trasparencia y Municipio Abierto</option>
+                            <option value="27">Direccion General De Desarrollo y Formación Profesional</option>
+                            <option value="6">Gerencia del Centro Histórico y Patrimonio Cultural</option>
+                            <option value="25">Industrial de Abastos de Pueba</option>
+                            <option value="12">Instituto de la Juventud del Municipio de Puebla</option>
+                            <option value="9">Instituto Municipal de Arte y Cultura de Puebla</option>
+                            <option value="5">Instituto Municipal de Planeación</option>
+                            <option value="23">Instituto Municipal del Deporte de Puebla</option>
+                            <option value="11">Organismo Operador del Servicio de Limpia del municipio de Puebla</option>
+                            <option value="2">Presidencia Municipal</option>
+                            <option value="1">Secretaría de Administración y Tecnologías de la Información</option>
+                            <option value="7">Secretaría de Bienestar y Participación Ciudadna</option>
+                            <option value="15">Secretaría de Economía y Turismo</option>
+                            <option value="21">Secretaría de Gestión y Desarrollo Urbano</option>
+                            <option value="19">Secretaría de Medio Ambiente</option>
+                            <option value="24">Secretaría de Movilidad e Infraestructura</option>
+                            <option value="22">Secretaría de Seguridad Ciudadana</option>
+                            <option value="13">Secretaría de Servicios Públicos</option>
+                            <option value="4">Secretaría del Ayuntamiento</option>
+                            <option value="14">Secretaría General de Gobierno</option>
+                            <option value="8">Secretaría para la Igualdad Sustantiva de Género</option>
+                            <option value="28">SEMOVINFRA_Subsecretaría de Infraestructura</option>
+                            <option value="3">Sindicatura Municipal</option>
+                            <option value="10">Sistema Municipal DIF</option>
+                            <option value="17">Tesorería Municipal</option>
                         </select>
                     </div>
                     <!-- Columna Proveedor -->
@@ -338,27 +302,10 @@
                         <input type="date" id="fechaVencimientoSelect" class="form-control">
                     </div>
                 </div>
-
-                <!-- <div class="col-12 d-flex justify-content-between">
-                    <button class="btn btn-primary toggleButton" id="btn-filtrar"><i class="fas fa-search"></i>
-                        Aplicar
-                        Filtros</button>
-                    <button class="btn btn-primary toggleButton" id="btn-mostrar-ocultar"><i class="fa-solid fa-eye"
-                            title="Mostrar Filtros/Ocultar"></i></button>
-                    <button class="btn btn-primary toggleButton" id="btn-limpiar"><i class="fas fa-undo"></i>
-                        Limpiar
-                        Filtros</button>
-                </div> -->
             </div>
             <!-- Tabla de Trámites -->
             <div>
-                <!-- <h2 style="text-align: center;">Listado de Trámites</h2>
-
-                <button class="btn btn-primary toggleButton"><a href="createTramite.html" style="color: white;">Nuevo
-                        Trámite</a></button>
-
-                <button id="downloadExcelTramites" class="btn btn-primary toggleButton">Descargar Excel</button> -->
-
+                <h2 class="text-center">Listado de Trámites</h2>
                 <table id="tableTramites" class="table table-bordered table-hover display nowrap"
                     style="width:100%; table-layout: auto;">
                     <thead>
@@ -380,7 +327,9 @@
                             <th>DocSAP</th>
                             <th>IntegraSAP</th>
                             <th>SRF Relacionada</th>
+                            <th>Volante</th>
                             <th>Numero de Trámite</th>
+                            <th>Numero de Obra</th>
                         </tr>
                     </thead>
                     <tbody>

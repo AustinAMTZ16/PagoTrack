@@ -497,7 +497,7 @@ function mostrarComentario(comentario) {
 // Filtrar trámites por estado
 function filtrarTramites(filtros) {
     let base = dataContestaciones;
-    console.log('Datos en Memoria:', base);
+    // console.log('Datos en Memoria:', base);
 
     const mapaCampos = {
         DirigidoA : 'DirigidoA',
@@ -559,7 +559,7 @@ function filtrarTramites(filtros) {
         return true;
     });
 
-    console.log('Filtrados:', filtrados);
+    // console.log('Filtrados:', filtrados);
     llenarTablaContestaciones(filtrados, 'tableContestaciones');
 }
 // Agrega esta línea al final de tu archivo Oficios.js

@@ -10,7 +10,15 @@ const Global = {
      * URL_BASE : `http://localhost/DigitalOcean/Egresos/BackEndPagoTrack/index.php?action=`, 
     */
 
-    URL_BASE : `https://apipagotrack.mexiclientes.com/index.php?action=`,
+    // URL_BASE : `https://qaapipagotrack.mexiclientes.com/index.php?action=`,
+    // URL_VolanteObservaciones : `https://qaapipagotrack.mexiclientes.com/RouterVolabteObservaciones.php?action=`,
+
+    // URL_BASE : `https://apipagotrack.mexiclientes.com/index.php?action=`,
+    // URL_VolanteObservaciones : `https://apipagotrack.mexiclientes.com/RouterVolabteObservaciones.php?action=`,
+
+
+    URL_BASE : `http://localhost/DigitalOcean/Egresos/BackEndPagoTrack/index.php?action=`,
+    URL_VolanteObservaciones : `http://localhost/DigitalOcean/Egresos/BackEndPagoTrack/RouterVolabteObservaciones.php?action=`,
 
 
 

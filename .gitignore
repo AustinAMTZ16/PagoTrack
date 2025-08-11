@@ -1,11 +1,2 @@
-# Created by venv; see https://docs.python.org/3/library/venv.html
-/vendor
-.env
-# Ignorar archivos de configuración de la base de datos
-/app/config/Database.php
 /assets/data/*.mp3
-/assets/uploads/
-/dataformatocorrecto.json
 /assets/data/
-
-

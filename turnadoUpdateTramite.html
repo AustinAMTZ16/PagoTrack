@@ -74,13 +74,11 @@
                     <input type="text" id="Dependencia" name="Dependencia" placeholder="Dependencia" readonly
                         class="form-control">
                 </div>
-
                 <div class="col-md-6">
                     <label for="NombreUser">Nombre del Usuario</label>
                     <input type="text" id="NombreUser" name="NombreUser" placeholder="Nombre del Usuario" readonly
                         class="form-control">
                 </div>
-
                 <div class="col-md-6">
                     <label for="Estatus">Estatus del tramite</label>
                     <select name="Estatus" id="Estatus" placeholder="Estatus" required class="form-select">
@@ -90,11 +88,9 @@
                         <option id="RegistradoSAP" value="RegistradoSAP">Registrado SAP</option>
                         <option id="SolicitudRecursoFinanciero" value="RegistradoSAP">Solicitud de Recurso Financiero
                         </option>
-                        <option id="ComprobacionRecursoFinanciero" value="RegistradoSAP">Comprobacion de Recurso
-                            Financiero</option>
-                        <option id="ComprobacionRecurso" value="ComprobacionRecurso">Comprobacion de Rercuso</option>
-                        <option id="JuntasAuxiliares" value="JuntasAuxiliares">Juntas Auxiliares</option>
-                        <option id="Inspectoria" value="Inspectoria">Inspectoria</option>
+                        <!-- <option id="ComprobacionRecursoFinanciero" value="RegistradoSAP">Comprobacion de Recurso Financiero</option> -->
+                        <option id="JuntasAuxiliares" value="JuntasAuxiliares">Comprobacion Juntas Auxiliares</option>
+                        <option id="Inspectoria" value="Inspectoria">Comprobacion Inspectoria</option>
                     </select>
                 </div>
                 <div class="col-md-6" id="divSap" hidden>
@@ -106,18 +102,19 @@
                     <input type="number" id="IntegraSAP" name="IntegraSAP" placeholder="Debe ser unico. Ejemplo: 180655"
                         class="form-control">
                 </div>
-
                 <div class="col-12">
                     <label for="Comentarios" class="form-label">Comentarios</label>
                     <textarea type="text" class="form-control" id="Comentarios" name="Comentarios" rows="10"
                         placeholder="
                         Devuelto:
                             1.  Motivo: Discrepancia entre montos reportados y comprobantes adjuntos.
-                            2.  Fundamento: Art. 15 del Reglamento de Comprobación de Gastos.
-                            3.  Volante: DV-2025-07-001.
                         " required></textarea>
                 </div>
-
+                <div class="col-12" hidden id="divFundamento">
+                    <label for="FundamentoLegal">Fundamento Legal</label>
+                    <textarea id="FundamentoLegal" name="FundamentoLegal" class="form-control" rows="2" required
+                        placeholder="Ej: Art. 15 del Reglamento de Comprobación de Gastos."> </textarea>
+                </div>
                 <div class="col-12 d-flex justify-content-between">
                     <button type="submit" id="btnGuardar" class="btn btn-primary toggleButton">Guardar Tramite</button>
                     <button type="button" onclick="window.location.href = 'listadoTurnados.html';"
@@ -135,7 +132,12 @@
         document.getElementById('Estatus').addEventListener('change', function () {
             const botonWhatsApp = document.getElementById('enviarWhatsApp');
             botonWhatsApp.hidden = this.value !== 'Devuelto' && this.value !== 'Observaciones';
+
+            const divFundamento = document.getElementById('divFundamento'); // Usando el ID correcto del HTML
+            divFundamento.hidden = this.value !== 'Devuelto' && this.value !== 'Observaciones';
+
         });
+
         document.getElementById('enviarWhatsApp').addEventListener('click', () => {
 
             const mensaje = `
@@ -162,7 +164,6 @@
             });
         });
 
-
         // Funcion para Estatus = "RegistradoSAP" quitar hidden de los campos DocSAP e IntegraSAP
         document.getElementById('Estatus').addEventListener('change', function () {
             const docSAPInput = document.getElementById('divSap');
@@ -180,25 +181,94 @@
     </script>
 
     <script>
-        document.getElementById("DocSAP").addEventListener("input", function () {
+        // document.getElementById("DocSAP").addEventListener("input", function () {
 
+        //     const valor = this.value.trim();
+
+        //     // Si está vacío, es válido (opcional), pero hay que limpiar errores previos
+        //     if (!valor) {
+        //         this.setCustomValidity("");
+        //         return;
+        //     }
+        //     if (!valor) return;
+
+        //     const documentos = valor.split(",").map(doc => doc.trim());
+        //     // const regexSAP = /^(17|19|51|53)0000\d{4}$/;
+        //     // 1. Regla original: 10 dígitos que inician con 17, 19, 51 o 53.
+        //     const regexDiezDigitos = /^(17|19|51|53)0000\d{4}$/;
+        //     // 2. Nueva regla: 9 dígitos que inician con 1 o 2.
+        //     const regexNueveDigitos = /^(1|2)\d{8}$/;
+
+        //     let todosValidos = true;
+        //     let documentoInvalido = "";
+
+        //     // for (let doc of documentos) {
+        //     //     if (!regexSAP.test(doc)) {
+        //     //         todosValidos = false;
+        //     //         documentoInvalido = doc;
+        //     //         break;
+        //     //     }
+        //     // }
+
+        //     for (let doc of documentos) {
+        //         // CAMBIO: Se comprueba si el documento es válido bajo CUALQUIERA de las dos reglas.
+        //         const esValido = regexDiezDigitos.test(doc) || regexNueveDigitos.test(doc);
+
+        //         if (!esValido) {
+        //             todosValidos = false;
+        //             documentoInvalido = doc;
+        //             break; // Si uno no es válido, detenemos la revisión.
+        //         }
+        //     }
+
+        //     if (!todosValidos) {
+        //         this.setCustomValidity("Documento no válido: " + documentoInvalido + ". Debe comenzar con 17, 19, 51 o 53, tener 4 ceros y terminar en 4 dígitos (ej. 1900001234)");
+        //     } else {
+        //         this.setCustomValidity(""); // válido
+        //     }
+
+
+
+
+        //     const integraInput = document.getElementById("IntegraSAP");
+
+        //     integraInput.addEventListener("input", function () {
+        //         const valor = this.value.trim();
+        //         const regex = /^\d{6}$/; // exactamente 6 dígitos
+
+        //         if (!regex.test(valor)) {
+        //             this.setCustomValidity("El número Integra SAP debe tener exactamente 6 dígitos (ejemplo: 180138)");
+        //         } else {
+        //             this.setCustomValidity(""); // válido
+        //         }
+        //     });
+        // });
+
+
+        // --- Validador para el campo DocSAP ---
+        document.getElementById("DocSAP").addEventListener("input", function () {
             const valor = this.value.trim();
 
-            // Si está vacío, es válido (opcional), pero hay que limpiar errores previos
             if (!valor) {
                 this.setCustomValidity("");
+                // No es necesario llamar a reportValidity() aquí, ya que no hay error.
                 return;
             }
-            if (!valor) return;
 
-            const documentos = valor.split(",").map(doc => doc.trim());
-            const regexSAP = /^(17|19|51|53)0000\d{4}$/;
+            const documentos = valor.split(",").map(doc => doc.trim().replace(/\s/g, '')); // Limpia espacios intermedios
+            const regexDiezDigitos = /^(17|19|51|53)0000\d{4}$/;
+            const regexNueveDigitos = /^(1|2)\d{8}$/;
 
             let todosValidos = true;
             let documentoInvalido = "";
 
             for (let doc of documentos) {
-                if (!regexSAP.test(doc)) {
+                // Ignora cadenas vacías que pueden resultar de comas extra (ej. "123,,456")
+                if (doc === "") continue;
+
+                const esValido = regexDiezDigitos.test(doc) || regexNueveDigitos.test(doc);
+
+                if (!esValido) {
                     todosValidos = false;
                     documentoInvalido = doc;
                     break;
@@ -206,26 +276,35 @@
             }
 
             if (!todosValidos) {
-                this.setCustomValidity("Documento no válido: " + documentoInvalido + ". Debe comenzar con 17, 19, 51 o 53, tener 4 ceros y terminar en 4 dígitos (ej. 1900001234)");
+                this.setCustomValidity(`Documento no válido: ${documentoInvalido}. Revisa los formatos permitidos.`);
             } else {
-                this.setCustomValidity(""); // válido
+                this.setCustomValidity(""); // Válido
             }
 
+            // Muestra el mensaje de error al usuario inmediatamente
+            this.reportValidity();
+        });
 
 
+        // --- Validador para el campo IntegraSAP (SEPARADO) ---
+        document.getElementById("IntegraSAP").addEventListener("input", function () {
+            const valor = this.value.trim();
+            const regex = /^\d{6}$/;
 
-            const integraInput = document.getElementById("IntegraSAP");
+            // Permite que el campo esté vacío sin mostrar error
+            if (!valor) {
+                this.setCustomValidity("");
+                return;
+            }
 
-            integraInput.addEventListener("input", function () {
-                const valor = this.value.trim();
-                const regex = /^\d{6}$/; // exactamente 6 dígitos
+            if (!regex.test(valor)) {
+                this.setCustomValidity("El número Integra SAP debe tener exactamente 6 dígitos (ejemplo: 180138)");
+            } else {
+                this.setCustomValidity(""); // Válido
+            }
 
-                if (!regex.test(valor)) {
-                    this.setCustomValidity("El número Integra SAP debe tener exactamente 6 dígitos (ejemplo: 180138)");
-                } else {
-                    this.setCustomValidity(""); // válido
-                }
-            });
+            // Muestra el mensaje de error al usuario inmediatamente
+            this.reportValidity();
         });
     </script>
 
@@ -254,11 +333,8 @@
 
             // Define los textos a precargar, usando los IDs de tus opciones como claves
             const textosPrecargadosPorId = {
-                "Observaciones": `                1. Motivo/Por qué:
-                2. Fundamento/Con base en:`,
-                "Devuelto": `                1. Motivo/Por qué:
-                2. Fundamento/Con base en:
-                3. Volante/Referencia:`,
+                "Observaciones": ` `,
+                "Devuelto": `                1. Motivo/Por qué:`,
                 "RegistradoSAP": "Glosado de expediente concluido y registrado en SAP. Expediente devuelto al Operador para seguimiento.",
                 // Los IDs de estas opciones ahora son las claves para sus textos específicos
                 "SolicitudRecursoFinanciero": "Glosado de expediente concluido. Expediente devuelto al Operador para seguimiento.",
@@ -283,12 +359,6 @@
                     comentariosTextarea.value = '';
                 }
             });
-
-            // Opcional: Para cargar el texto si el formulario se precarga con una opción ya seleccionada
-            // const initialSelectedOption = estatusSelect.options[estatusSelect.selectedIndex];
-            // if (initialSelectedOption && initialSelectedOption.id && textosPrecargadosPorId[initialSelectedOption.id]) {
-            //     comentariosTextarea.value = textosPrecargadosPorId[initialSelectedOption.id];
-            // }
         });
     </script>
     <footer>

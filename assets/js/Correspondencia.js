@@ -707,7 +707,7 @@ function mostrarComentario(comentario) {
 // Filtrar trámites por estado
 function filtrarTramites(filtros) {
     let base = dataOficios;
-    console.log('Datos en Memoria:', base);
+    // console.log('Datos en Memoria:', base);
 
     const mapaCampos = {
         Solicitante: 'Solicitante',
@@ -755,7 +755,7 @@ function filtrarTramites(filtros) {
         return true;
     });
 
-    console.log('Filtrados:', filtrados);
+    // console.log('Filtrados:', filtrados);
     llenarTablaOficios(filtrados, 'tableOficios');
 }
 // Función para llenar el formulario de edición de contestaciones
@@ -763,7 +763,7 @@ function llenarformEditarCorrespondencia(correspondenciaID) {
     const idNumerico = Number(correspondenciaID);
     const correspondencia = dataOficios.find(item => item.ID === idNumerico);
 
-    console.log('Correspondencia: ', correspondencia);
+    // console.log('Correspondencia: ', correspondencia);
 
     if (!correspondencia) {
         console.error("No se encontró la correspondencia con ID:", correspondenciaID);

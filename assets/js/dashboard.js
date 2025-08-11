@@ -49,15 +49,19 @@ const ordenEstatus = [
     'CRF'
 ];
 let localStorageUser = JSON.parse(localStorage.getItem("usuario"));
-
 // Evento para cargar el contenido de la página
 document.addEventListener('DOMContentLoaded', () => {
+    gestionarEstadoBotonNuevoTramite();
     // Referencia al Select de Estado
     const estadoSelect = document.getElementById("estadoSelect");
     // Referencia a la tabla de trámites
     const tableTramitesJS = document.getElementById('tableTramites');
     // Referencia a la tabla de trámites turnados
     const tableTurnadosJS = document.getElementById('tableTurnados');
+    // Referencia a la tabla de trámites rezagados
+    const tableRezagadosJS = document.getElementById('tramitesRezagados');
+    // Referencia a la tabla de estimación de liquidez
+    const tablaEstimacionJS = document.getElementById('tablaEstimacion');
     // Referencia a la tabla de seguimiento de trámites por analista
     const tramitesTableJS = document.getElementById('tramitesTable');
     // Tabla de historico de trámites por mes
@@ -75,6 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Obtener la lista de trámites turnados
     if (tableTurnadosJS) {
         getTramitesTurnados();
+    }
+    // Verifica si la tabla de trámites rezagados existe
+    if (tableRezagadosJS) {
+        getTramitesRezagados();
+    }
+    // Verifica si la tabla de estimación de liquidez existe
+    if (tablaEstimacionJS) {
+        getEstimacionLiquidez();
     }
     // Agregar el evento al select de estado
     if (estadoSelect) {
@@ -108,7 +120,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Verifica si el botón existe antes de agregar el listener
     const downloadButton = document.getElementById("downloadExcelTramites");
     if (downloadButton) {
-        downloadButton.addEventListener("click", exportToExcel);
+        downloadButton.addEventListener("click", () => {
+            exportToExcel("tableTramites", "datos_tramites"); // 👈 Tabla 'tableTramites', Archivo 'datos_tramites.xlsx'
+        });
+    }
+    //
+    const downloadExcelLiquidez = document.getElementById("downloadExcelLiquidez");
+    if (downloadExcelLiquidez) {
+        downloadExcelLiquidez.addEventListener("click", () => {
+            exportToExcel("tablaEstimacion", "datos_liquidez"); // 👈 Tabla 'tableLiquidez', Archivo 'datos_liquidez.xlsx'
+        });
     }
     // Generar resumen con ChatGPT
     if (btnResumen) {
@@ -153,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 })
                 .catch(error => {
-                    console.error("Error en la solicitud:", error);
+                    // console.error("Error en la solicitud:", error);
                     document.getElementById("resumenGPT").innerHTML = "<b>Error al generar el resumen.</b>";
                 });
         });
@@ -267,7 +288,46 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
+    // MostrarRezagados
+    const btnTablasrezagados = document.getElementById('btn-mostrar-ocultar-tablasrezagados');
+    if (btnTablasrezagados) {
+        const filtrosTabla = document.querySelector('.tablasRezagados');
+        btnTablasrezagados.addEventListener('click', () => {
+            if (filtrosTabla.hasAttribute('hidden')) {
+                filtrosTabla.removeAttribute('hidden');
+            } else {
+                filtrosTabla.setAttribute('hidden', true);
+            }
+        });
+    }
+    // Mostrar/Ocultar sección de liquidez
+    const btnMostrarLiquidez = document.getElementById('btn-mostrar-ocultar-liquidez');
+    if (btnMostrarLiquidez) {
+        const seccionLiquidez = document.querySelector('.tablasLiquidez');
+        btnMostrarLiquidez.addEventListener('click', () => {
+            if (seccionLiquidez.hasAttribute('hidden')) {
+                seccionLiquidez.removeAttribute('hidden');
+            } else {
+                seccionLiquidez.setAttribute('hidden', true);
+            }
+        });
+    }
+    // 1. Obtiene el div que queremos mostrar/ocultar.
+    const divAnalista = document.getElementById("logicaAnalista");
+    if (divAnalista) {
+        // 4. Compara el rol del usuario. Usamos '===' para una comparación estricta.
+        if (localStorageUser.RolUser === 'Admin') {
+            // 5. Si es 'Admin', quita el atributo 'hidden' para hacer visible el div.
+            // La forma más moderna y sencilla es establecer la propiedad .hidden en false.
+            divAnalista.hidden = false;
+            console.log("Acceso de Administrador concedido. Mostrando panel.");
+        } else {
+            console.log("El usuario no es Administrador. El panel permanece oculto.");
+        }
+    } else {
+        // Mensaje en caso de que no haya usuario logeado o el div no se encuentre.
+        console.log("No hay sesión de usuario activa o el elemento #logicaAnalista no se encontró en la página.");
+    }
 });
 // Función para obtener la lista de trámites
 function getTramites() {
@@ -439,6 +499,8 @@ function actualizarTablaTramites(data, tableId) {
     });
     // Ordenar manualmente antes de pasar a la tabla
     data.sort((a, b) => {
+        // 1. Primer criterio: Estatus ('Observaciones' y 'Devuelto' primero)
+        const ordenEstatus = ["Observaciones", "Devuelto"]; // Asegúrate de que esta variable exista en tu código
         const estatusA = ordenEstatus.indexOf(a.Estatus) !== -1 ? ordenEstatus.indexOf(a.Estatus) : 99;
         const estatusB = ordenEstatus.indexOf(b.Estatus) !== -1 ? ordenEstatus.indexOf(b.Estatus) : 99;
 
@@ -446,7 +508,7 @@ function actualizarTablaTramites(data, tableId) {
             return estatusA - estatusB;
         }
 
-        // Segundo criterio: FechaRecepcion DESC
+        // 2. Segundo criterio: FechaCreacion DESC (de más reciente a más antiguo)
         const fechaA = new Date(a.FechaCreacion);
         const fechaB = new Date(b.FechaCreacion);
         return fechaB - fechaA;
@@ -535,16 +597,33 @@ function actualizarTablaTramites(data, tableId) {
             { data: "DocSAP" },
             { data: "IntegraSAP" },
             { data: "FK_SRF" },
-            { data: "NoTramite" }
+            {
+                data: "FlagVolante",
+                render: function (data, type, row) {
+                    // Creamos el mismo enlace, pero el contenido visual cambia.
+                    const url = `VolanteObsercacionesLista.html?tramite_search=${row.ID_CONTRATO}`;
+
+                    // Si FLAG_VOLANTE es verdadero (1), mostramos un badge de éxito.
+                    if (data) {
+                        return `<a href="${url}" title="Ver volantes para el trámite ${row.ID_CONTRATO}"><span class="badge bg-success">Sí</span></a>`;
+                    }
+                    // Si es falso (0 o null), mostramos un badge de peligro.
+                    else {
+                        return `<a href="${url}" title="Verificar volantes para el trámite ${row.ID_CONTRATO}"><span class="badge bg-danger">No</span></a>`;
+                    }
+                }
+            },
+            { data: "NoTramite" },
+            { data: "NumeroObra" }
         ],
         pageLength: 5, // Número de filas por página
         lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
-        responsive: true,
-        order: [[2, "DESC"]],
         paging: true,
         searching: true,
-        ordering: true,
+        ordering: false, // ya están ordenados antes
         info: true,
+        scrollX: true,
+        autoWidth: false,
         language: {
             processing: "Procesando...",
             search: "Buscar:",
@@ -581,14 +660,15 @@ function actualizarTablaTramites(data, tableId) {
 function actualizarTablaTurnados(data, tableId) {
     // filtrar data con el usuario actual logged in
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    console.log('Usuario actual:', usuario);
 
     // filtrar trámites turnados por el usuario AnalistaID
     if (usuario && usuario.InicioSesionID) {
         if (usuario.InicioSesionID == 1) {
             data;
+            actualizarBarraDeProgreso(data);
         } else {
             data = data.filter(tramite => tramite.AnalistaID === usuario.InicioSesionID);
+            actualizarBarraDeProgreso(data);
         }
     }
 
@@ -607,9 +687,11 @@ function actualizarTablaTurnados(data, tableId) {
         currency: "MXN",
         minimumFractionDigits: 2,
     });
-
+    // console.log('DATA actual:', data);
     // Ordenar manualmente antes de pasar a la tabla
     data.sort((a, b) => {
+        // 1. Primer criterio: Estatus ('Observaciones' y 'Devuelto' primero)
+        const ordenEstatus = ["Observaciones", "Devuelto"]; // Asegúrate de que esta variable exista en tu código
         const estatusA = ordenEstatus.indexOf(a.Estatus) !== -1 ? ordenEstatus.indexOf(a.Estatus) : 99;
         const estatusB = ordenEstatus.indexOf(b.Estatus) !== -1 ? ordenEstatus.indexOf(b.Estatus) : 99;
 
@@ -617,9 +699,9 @@ function actualizarTablaTurnados(data, tableId) {
             return estatusA - estatusB;
         }
 
-        // Segundo criterio: FechaRecepcion DESC
-        const fechaA = new Date(a.FechaRecepcion);
-        const fechaB = new Date(b.FechaRecepcion);
+        // 2. Segundo criterio: FechaCreacion DESC (de más reciente a más antiguo)
+        const fechaA = new Date(a.FechaCreacion);
+        const fechaB = new Date(b.FechaCreacion);
         return fechaB - fechaA;
     });
 
@@ -630,12 +712,9 @@ function actualizarTablaTurnados(data, tableId) {
                 data: null,
                 render: function (data) {
                     let botones = "";
-
-
-
                     if (localStorageUser.RolUser === "Analista" || localStorageUser.RolUser === "Admin" || localStorageUser.RolUser === "OP_Remesa" || localStorageUser.RolUser === "Operador" || localStorageUser.RolUser === "OP_KPI") {
                         if (["Devuelto", "Turnado", "Observaciones"].includes(data.Estatus)) {
-                            botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(
+                            botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(                            
                             decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
                             decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
                             decodeURIComponent('${encodeURIComponent(data.Concepto)}'),
@@ -643,7 +722,8 @@ function actualizarTablaTurnados(data, tableId) {
                             decodeURIComponent('${encodeURIComponent(data.FechaLimite)}'),
                             decodeURIComponent('${encodeURIComponent(data.FechaRecepcion)}'),
                             decodeURIComponent('${encodeURIComponent(data.Dependencia)}'),
-                            decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}')
+                            decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}'),
+                            decodeURIComponent('${encodeURIComponent(data.VolantesPorSolventar)}')
                         )"><i class="fa-solid fa-pen-to-square"></i></button>`;
                         }
                         // BTN ACCION DETALLE
@@ -683,7 +763,23 @@ function actualizarTablaTurnados(data, tableId) {
                 }
             },
             { data: "DocSAP" },
-            { data: "IntegraSAP" }
+            { data: "IntegraSAP" },
+            {
+                data: "FlagVolante",
+                render: function (data, type, row) {
+                    // Creamos el mismo enlace, pero el contenido visual cambia.
+                    const url = `VolanteObsercacionesLista.html?tramite_search=${row.ID_CONTRATO}`;
+
+                    // Si FLAG_VOLANTE es verdadero (1), mostramos un badge de éxito.
+                    if (data) {
+                        return `<a href="${url}" title="Ver volantes para el trámite ${row.ID_CONTRATO}"><span class="badge bg-success">Sí</span></a>`;
+                    }
+                    // Si es falso (0 o null), mostramos un badge de peligro.
+                    else {
+                        return `<a href="${url}" title="Verificar volantes para el trámite ${row.ID_CONTRATO}"><span class="badge bg-danger">No</span></a>`;
+                    }
+                }
+            }
         ],
         pageLength: 10, // Número de filas por página        
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
@@ -721,6 +817,66 @@ function actualizarTablaTurnados(data, tableId) {
         }
     });
 }
+/**
+ * Calcula y actualiza la barra de progreso del analista.
+ * @param {Array} tramitesDelAnalista - El array de trámites ya filtrado para el usuario actual.
+ */
+function actualizarBarraDeProgreso(tramitesDelAnalista) {
+    // Calcular el mes actual
+    const mesActual = getMesActualNombre();
+    // 3. Filtramos el arreglo
+    const tramitesDelMesActual = tramitesDelAnalista.filter(tramite => {
+        return tramite.Mes === mesActual;
+    });
+    const totalTramites = tramitesDelMesActual.length;
+    const barraProgreso = document.getElementById('barra-progreso-analista');
+    const contenedorProgreso = document.getElementById('progreso-container');
+
+    // Si no hay trámites, ocultamos la barra y detenemos la ejecución.
+    if (totalTramites === 0) {
+        contenedorProgreso.style.display = 'none';
+        return;
+    }
+
+    contenedorProgreso.style.display = 'block'; // Asegurarnos de que sea visible
+
+    // Definimos qué estados NO se consideran pendientes.
+    // Esta es tu lógica original: todo lo que no es Creado o Turnado es avance.
+    // const tramitesAvanzados = tramitesDelAnalista.filter(
+    //     t => t.Estatus !== 'Creado' && t.Estatus !== 'Turnado'
+    // ).length;
+
+    // **LÓGICA REFINADA (RECOMENDADA):**
+    // Se define explícitamente qué es un avance. Es más preciso.
+    const ESTADOS_AVANZADOS = [
+        'Observaciones', 'Devuelto', 'Rechazado', 'RegistradoSAP', 'Procesando',
+        'JuntasAuxiliares', 'Inspectoria', 'Remesa', 'RevisionRemesa', 'RemesaAprobada',
+        'DevueltoOrdenesPago', 'Pagado', 'Terminado', 'Cancelado', 'Cheque',
+        'ComprobacionRecursosFinancieros', 'OrdenesPago', 'CRF'
+    ];
+    const tramitesAvanzados = tramitesDelMesActual.filter(t => ESTADOS_AVANZADOS.includes(t.Estatus)).length;
+
+
+    // Cálculo del porcentaje
+    const porcentaje = Math.round((tramitesAvanzados / totalTramites) * 100);
+
+    // 1. Limpiamos las clases de color existentes para evitar conflictos
+    barraProgreso.classList.remove('bg-success', 'bg-warning', 'bg-danger');
+
+    // 2. Aplicamos la clase de color correcta según el porcentaje
+    if (porcentaje < 20) {
+        barraProgreso.classList.add('bg-danger');
+    } else if (porcentaje < 55) {
+        barraProgreso.classList.add('bg-warning');
+    } else { // Si es 50 o más
+        barraProgreso.classList.add('bg-success');
+    }
+
+    // Actualizar la barra de progreso en el DOM
+    barraProgreso.style.width = `${porcentaje}%`;
+    barraProgreso.setAttribute('aria-valuenow', porcentaje);
+    barraProgreso.textContent = `${porcentaje}% (${tramitesAvanzados} de ${totalTramites})`;
+}
 // Filtrar trámites por estado
 function filtrarTramites(filtros) {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -742,7 +898,7 @@ function filtrarTramites(filtros) {
         mes: 'Mes',
         tipoTramite: 'TipoTramite',
         analista: 'AnalistaID',
-        dependencia: 'Dependencia',
+        dependencia: 'DependenciaID',
         proveedor: 'Proveedor',
         concepto: 'Concepto',
         importe: 'Importe',
@@ -771,7 +927,7 @@ function filtrarTramites(filtros) {
         'fechaCreacion'
     ];
 
-    console.log('filtros aplicados:', filtros);
+    // console.log('filtros aplicados:', filtros);
 
     // 🔹 Aplicar filtros uno por uno
     const filtrados = base.filter(tramite => {
@@ -866,7 +1022,7 @@ function turnarTramite(id) {
     window.location.href = `turnarTramite.html?id=${id}`;
 }
 // Editar tramite por id
-function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia, nombreUser) {
+function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia, nombreUser, FlagVolante) {
     // Formatea las fechas eliminando la hora
     const formatoFecha = (fecha) => fecha.split(' ')[0];
 
@@ -875,7 +1031,7 @@ function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecep
 
     //console.log('Editar tramite:', id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia);
 
-    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}&nombreUser=${encodeURIComponent(nombreUser)}`;
+    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}&nombreUser=${encodeURIComponent(nombreUser)}&FlagVolante=${encodeURIComponent(FlagVolante)}`;
 }
 // Eliminar tramite por id
 function eliminarTramite(id) {
@@ -1070,46 +1226,158 @@ function renderTable(data) {
     });
 }
 // Tabla de historico de trámites por mes
+// function renderTablegetHistoricoMes(data) {
+//     const tableId = "rendimientoTable"; // ID de la tabla
+//     const table = document.getElementById(tableId);
+//     const tableHead = table.querySelector("thead tr");
+//     const tableBody = table.querySelector("tbody");
+//     // Limpiar la tabla antes de insertar nuevos datos
+//     tableHead.innerHTML = "<th>InicioSesionID</th>";
+//     tableBody.innerHTML = "";
+//     if (data.length === 0) {
+//         tableBody.innerHTML = "<tr><td colspan='99'>No hay datos disponibles</td></tr>";
+//         return;
+//     }
+//     // Obtener los nombres de los tipos de trámites dinámicamente
+//     const columns = Object.keys(data[0]).filter(key => key !== "InicioSesionID");
+//     // Generar encabezados de tabla dinámicos
+//     columns.forEach(col => {
+//         const th = document.createElement("th");
+//         th.textContent = col;
+//         tableHead.appendChild(th);
+//     });
+//     // Insertar filas con los datos
+//     data.forEach(row => {
+//         const tr = document.createElement("tr");
+//         // Celda del analista
+//         const tdAnalista = document.createElement("td");
+//         tdAnalista.textContent = row.InicioSesionID;
+//         tr.appendChild(tdAnalista);
+//         // Celdas de conteo de trámites
+//         columns.forEach(col => {
+//             const td = document.createElement("td");
+//             if (col === "Total") {
+//                 // Hacer el Total clickeable
+//                 const link = document.createElement("a");
+//                 link.href = `#`;
+//                 link.textContent = row[col] || 0;
+//                 link.style.cursor = "pointer";
+//                 link.style.color = "#007bff";
+//                 link.style.textDecoration = "underline";
+//                 link.style.fontWeight = "bold";
+//                 link.style.fontSize = "18px";
+//                 // Agregar evento click para mostrar detalles
+//                 link.addEventListener("click", function (e) {
+//                     e.preventDefault();
+//                     showHistoricoMes(row.InicioSesionID);
+//                 });
+//                 td.appendChild(link);
+//             } else {
+//                 td.textContent = row[col] || 0;
+//             }
+//             tr.appendChild(td);
+//         });
+//         tableBody.appendChild(tr);
+//     });
+//     // Destruir DataTable si ya estaba inicializado
+//     if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+//         $(`#${tableId}`).DataTable().clear().destroy();
+//     }
+//     // Inicializar DataTable con configuración en español
+//     $(`#${tableId}`).DataTable({
+//         language: {
+//             processing: "Procesando...",
+//             search: "Buscar:",
+//             lengthMenu: "Mostrar _MENU_ registros",
+//             info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+//             infoEmpty: "Mostrando 0 a 0 de 0 registros",
+//             infoFiltered: "(filtrado de _MAX_ registros totales)",
+//             infoPostFix: "",
+//             loadingRecords: "Cargando...",
+//             zeroRecords: "No se encontraron resultados",
+//             emptyTable: "No hay datos disponibles en la tabla",
+//             paginate: {
+//                 first: "Primero",
+//                 previous: "Anterior",
+//                 next: "Siguiente",
+//                 last: "Último"
+//             },
+//             aria: {
+//                 sortAscending: ": Activar para ordenar la columna de manera ascendente",
+//                 sortDescending: ": Activar para ordenar la columna de manera descendente"
+//             }
+//         },
+//         pageLength: 20, // Número de filas por página
+//         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+//         responsive: true,
+//         order: [[11, "DESC"]],
+//     });
+// }
 function renderTablegetHistoricoMes(data) {
     const tableId = "rendimientoTable"; // ID de la tabla
     const table = document.getElementById(tableId);
-    const tableHead = table.querySelector("thead tr");
+    
+    // NUEVO: Asegurarnos de que el tfoot exista, si no, lo creamos.
+    let tfoot = table.querySelector("tfoot");
+    if (!tfoot) {
+        tfoot = document.createElement("tfoot");
+        table.appendChild(tfoot);
+    }
+
+    const tableHead = table.querySelector("thead");
     const tableBody = table.querySelector("tbody");
 
     // Limpiar la tabla antes de insertar nuevos datos
-    tableHead.innerHTML = "<th>InicioSesionID</th>";
+    tableHead.innerHTML = "<tr></tr>"; // Fila para los encabezados
     tableBody.innerHTML = "";
+    tfoot.innerHTML = "<tr></tr>"; // NUEVO: Fila para los totales
 
     if (data.length === 0) {
         tableBody.innerHTML = "<tr><td colspan='99'>No hay datos disponibles</td></tr>";
         return;
     }
 
-    // Obtener los nombres de los tipos de trámites dinámicamente
-    const columns = Object.keys(data[0]).filter(key => key !== "InicioSesionID");
+    // --- NUEVO: Calcular los totales antes de construir la tabla ---
+    const totals = {};
+    const columns = Object.keys(data[0]); // Obtener todas las columnas, incluido InicioSesionID
+
+    // Inicializar totales en 0 para todas las columnas
+    columns.forEach(col => {
+        totals[col] = 0;
+    });
+
+    // Sumar los valores de cada fila a los totales
+    data.forEach(row => {
+        columns.forEach(col => {
+            // Sumamos solo si la columna no es el ID del analista
+            if (col !== "InicioSesionID" && col !== "Analista" && col !== "Apellido") {
+                totals[col] += parseInt(row[col], 10) || 0;
+            }
+        });
+    });
+    // --- Fin del cálculo de totales ---
 
     // Generar encabezados de tabla dinámicos
+    const headerRow = tableHead.querySelector("tr");
     columns.forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
-        tableHead.appendChild(th);
+        headerRow.appendChild(th);
+    });
+
+    // NUEVO: Generar las celdas vacías del footer para que coincidan con los headers
+    const footerRow = tfoot.querySelector("tr");
+    columns.forEach(() => {
+        const th = document.createElement("th");
+        footerRow.appendChild(th);
     });
 
     // Insertar filas con los datos
     data.forEach(row => {
         const tr = document.createElement("tr");
-
-        // Celda del analista
-        const tdAnalista = document.createElement("td");
-        tdAnalista.textContent = row.InicioSesionID;
-        tr.appendChild(tdAnalista);
-
-        // Celdas de conteo de trámites
         columns.forEach(col => {
             const td = document.createElement("td");
-
             if (col === "Total") {
-                // Hacer el Total clickeable
                 const link = document.createElement("a");
                 link.href = `#`;
                 link.textContent = row[col] || 0;
@@ -1118,24 +1386,19 @@ function renderTablegetHistoricoMes(data) {
                 link.style.textDecoration = "underline";
                 link.style.fontWeight = "bold";
                 link.style.fontSize = "18px";
-
-                // Agregar evento click para mostrar detalles
                 link.addEventListener("click", function (e) {
                     e.preventDefault();
                     showHistoricoMes(row.InicioSesionID);
                 });
-
                 td.appendChild(link);
             } else {
                 td.textContent = row[col] || 0;
             }
-
             tr.appendChild(td);
         });
-
         tableBody.appendChild(tr);
     });
-
+    
     // Destruir DataTable si ya estaba inicializado
     if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
         $(`#${tableId}`).DataTable().clear().destroy();
@@ -1143,35 +1406,31 @@ function renderTablegetHistoricoMes(data) {
 
     // Inicializar DataTable con configuración en español
     $(`#${tableId}`).DataTable({
-        language: {
-            processing: "Procesando...",
-            search: "Buscar:",
-            lengthMenu: "Mostrar _MENU_ registros",
-            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
-            infoEmpty: "Mostrando 0 a 0 de 0 registros",
-            infoFiltered: "(filtrado de _MAX_ registros totales)",
-            infoPostFix: "",
-            loadingRecords: "Cargando...",
-            zeroRecords: "No se encontraron resultados",
-            emptyTable: "No hay datos disponibles en la tabla",
-            paginate: {
-                first: "Primero",
-                previous: "Anterior",
-                next: "Siguiente",
-                last: "Último"
-            },
-            aria: {
-                sortAscending: ": Activar para ordenar la columna de manera ascendente",
-                sortDescending: ": Activar para ordenar la columna de manera descendente"
-            }
-        },
-        pageLength: 20, // Número de filas por página
+        language: { /* ... tu configuración de idioma ... */ },
+        pageLength: 20,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         responsive: true,
-        order: [[11, "DESC"]],
+        order: [[columns.indexOf('Total'), "DESC"]], // Ordenar por la columna Total
+
+        // --- NUEVO: La función que dibuja los totales en el footer ---
+        footerCallback: function (tfoot, data, start, end, display) {
+            const api = this.api();
+
+            api.columns().every(function (index) {
+                const column = this;
+                const headerText = $(column.header()).text();
+                
+                // Poner la etiqueta "TOTALES" en la primera columna visible
+                if (index === 0) {
+                    $(column.footer()).html('<strong>TOTALES</strong>');
+                } 
+                // Para el resto de las columnas, ponemos su total calculado
+                else if (headerText !== "Analista" && headerText !== "Apellido") {
+                    $(column.footer()).html('<strong>' + totals[headerText] + '</strong>');
+                }
+            });
+        }
     });
-
-
 }
 // Mostrar comentario en modal
 function mostrarComentario(comentario) {
@@ -1268,17 +1527,39 @@ function obtenerSemaforoTurnado(tramitesTurnados) {
 // Función para obtener solo la fecha en formato YYYY-MM-DD
 function obtenerFechaSinHora(fecha) {
     const nuevaFecha = new Date(fecha);
+    // console.log('Fecha original:', fecha);
     return `${nuevaFecha.getFullYear()}-${String(nuevaFecha.getMonth() + 1).padStart(2, '0')}-${String(nuevaFecha.getDate()).padStart(2, '0')}`;
 }
 // Función para generar y descargar el archivo Excel
-function exportToExcel() {
-    const table = document.querySelector("#tableTramites"); // Selecciona la tabla por su ID
-    if (table) { // Verifica si la tabla existe
-        const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" }); // Convierte la tabla en un libro de Excel
-        XLSX.writeFile(wb, "datos_oficios.xlsx"); // Descarga el archivo Excel con el nombre especificado
-    } else {
-        console.error("La tabla no existe en el DOM.");
+// function exportToExcel() {
+//     const table = document.querySelector("#tableTramites"); // Selecciona la tabla por su ID
+//     if (table) { // Verifica si la tabla existe
+//         const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" }); // Convierte la tabla en un libro de Excel
+//         XLSX.writeFile(wb, "datos_oficios.xlsx"); // Descarga el archivo Excel con el nombre especificado
+//     } else {
+//         console.error("La tabla no existe en el DOM.");
+//     }
+// }
+/**
+ * Exporta el contenido de una tabla HTML a un archivo Excel.
+ * @param {string} tableId - El ID del elemento <table> que se va a exportar.
+ * @param {string} fileName - El nombre deseado para el archivo Excel (sin la extensión).
+ */
+function exportToExcel(tableId, fileName) {
+    // 1. Selecciona la tabla usando el ID que se pasó como parámetro
+    const table = document.getElementById(tableId);
+
+    // 2. Verifica que la tabla exista en el DOM
+    if (!table) {
+        console.error(`Error: La tabla con el ID "${tableId}" no existe.`);
+        return; // Detiene la ejecución si no se encuentra la tabla
     }
+
+    // 3. Convierte la tabla en un libro de Excel
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+
+    // 4. Descarga el archivo Excel con el nombre dinámico
+    XLSX.writeFile(wb, `${fileName}.xlsx`);
 }
 function generarQR(id, nombreAnalista, noTramite) {
     const url = `https://pagotrack.mexiclientes.com/TramiteDetalle.html?id=${id}`;
@@ -1362,14 +1643,14 @@ function showTramitesDetails(filtro) {
         tramites = tramitesArray.filter(t =>
             t.AnalistaID === numFiltro && t.Mes === tramitesDelMes
         );
-        console.log(`Filtrando por AnalistaID = ${numFiltro} y Mes = ${tramitesDelMes}`, tramites);
+        // console.log(`Filtrando por AnalistaID = ${numFiltro} y Mes = ${tramitesDelMes}`, tramites);
     } else if (typeof filtro === "string") {
         tramites = tramitesArray.filter(t =>
             t.Estatus === filtro && t.Mes === tramitesDelMes
         );
-        console.log(`Filtrando por Estatus = "${filtro}" y Mes = ${tramitesDelMes}`, tramites);
+        // console.log(`Filtrando por Estatus = "${filtro}" y Mes = ${tramitesDelMes}`, tramites);
     } else {
-        console.warn("⚠ Tipo de filtro no reconocido:", filtro);
+        // console.warn("⚠ Tipo de filtro no reconocido:", filtro);
     }
 
 
@@ -1632,7 +1913,7 @@ function showHistoricoMes(InicioSesionID) {
             });
         })
         .catch(error => {
-            console.error('Error al obtener los trámites:', error);
+            // console.error('Error al obtener los trámites:', error);
             alert('Error al cargar los detalles de los trámites: ' + error.message);
         });
 }
@@ -1727,6 +2008,7 @@ function showTramitesModal(titulo, tramites) {
         $(this).remove();
     });
 }
+// Funcion Mes Actual Nombre
 function getMesActualNombre() {
     const meses = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -1735,6 +2017,384 @@ function getMesActualNombre() {
     const mesActual = new Date().getMonth(); // 0-based (0 = Enero)
     return meses[mesActual];
 }
+// Función para obtener la lista de trámites REZAGADOS desde la API
+function getTramitesRezagados() {
+    // Calcular el mes actual
+    const mesActual = getMesActualNombre();
+    // Payload para la consulta específica de trámites rezagados
+    const payload = {
+        "mes": mesActual, // Puedes hacer estos valores dinámicos si lo necesitas
+        "dias": 3,
+        "estatus": [
+            "Turnado", "Remesa", "Creado",
+            "Devuelto", "Rechazado", "Observaciones",
+            "RegistradoSAP", "RemesaAprobada", "OdenPago"
+        ]
+    };
+
+    // Usamos la variable Global.URL_BASE que ya tienes definida
+    fetch(Global.URL_BASE + 'consultarTramitesRezagados', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(result => {
+            if (result.data && Array.isArray(result.data)) {
+                // Llamamos a la función para pintar la tabla de rezagados
+                actualizarTablaRezagados(result.data, 'tramitesRezagados');
+            } else {
+                console.error('La respuesta para trámites rezagados no contiene un array en "data".', result);
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener los trámites rezagados:', error);
+            // alert(`Error al obtener los trámites rezagados: ${error.message}`);
+        });
+}
+// Función para actualizar la tabla de trámites REZAGADOS
+function actualizarTablaRezagados(data, tableId) {
+    if (!Array.isArray(data)) {
+        // console.error("Error: Los datos para la tabla de rezagados no son un array.", data);
+        return;
+    }
+
+    // Si la tabla DataTable ya existe, la destruimos para poder reinicializarla
+    if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+        $(`#${tableId}`).DataTable().clear().destroy();
+    }
+
+    // Obtenemos las columnas dinámicamente a partir de los datos recibidos
+    const columns = data.length > 0
+        ? Object.keys(data[0]).map(key => ({ data: key, title: key }))
+        : [];
+
+    // Inicializamos DataTable con una configuración similar a tus otras tablas
+    $(`#${tableId}`).DataTable({
+        data: data,
+        columns: columns,
+        pageLength: 10,
+        lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
+        responsive: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        language: { // Usamos la misma configuración de idioma que tus otras tablas
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            infoFiltered: "(filtrado de _MAX_ registros totales)",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "No hay datos disponibles en la tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            }
+        }
+    });
+}
+// Función para obtener los datos de la Estimación de Liquidez
+function getEstimacionLiquidez() {
+    // Calcular el mes actual
+    const mesActual = getMesActualNombre();
+    const payload = {
+        "mes": mesActual, // O puedes obtenerlo de un filtro
+        "estatus": ["Creado", "Turnado", "RegistradoSAP", "Remesa", "RemesaAprobada", "Observaciones", "Devuelto", "Rechazado"],
+        "tipoTramite": ["OP", "OPO", "SRF"]
+    };
+
+    fetch(Global.URL_BASE + 'estimacionLiquidez', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.json())
+        .then(result => {
+            if (result.data && Array.isArray(result.data)) {
+                renderTablaEstimacion(result.data, 'tablaEstimacion');
+            } else {
+                // console.error('La respuesta de estimacionLiquidez no es válida.', result);
+            }
+        })
+        .catch(error => console.error('Error al obtener la estimación de liquidez:', error));
+}
+/**
+ * Renderiza la tabla de Estimación de Liquidez usando datos anidados
+ * y creando columnas dinámicas para cada fondo.
+ * @param {Array} data El array de trámites desde la API.
+ * @param {string} tableId El ID del <table> donde se renderizará.
+ */
+// function renderTablaEstimacion(data, tableId) {
+//     const tableElement = $(`#${tableId}`);
+//     if (!Array.isArray(data)) {
+//         // console.error("Error: Los datos para la tabla no son un array.", data);
+//         return;
+//     }
+//     // Si la tabla DataTable ya existe, la destruimos
+//     if ($.fn.DataTable.isDataTable(tableElement)) {
+//         tableElement.DataTable().clear().destroy();
+//     }
+//     // Vaciamos el HTML para asegurarnos de que no hay encabezados viejos
+//     tableElement.empty();
+//     if (data.length === 0) {
+//         tableElement.html('<tbody><tr><td>No hay datos disponibles.</td></tr></tbody>');
+//         return;
+//     }
+//     // --- Lógica para construir la tabla dinámicamente ---
+//     // 1. Descubrir todas las columnas posibles
+//     const standardKeys = new Set();
+//     const fundKeys = new Set();
+//     data.forEach(row => {
+//         // Añadir claves estándar (todas excepto 'Fondos')
+//         Object.keys(row).forEach(key => {
+//             if (key !== 'Fondos') standardKeys.add(key);
+//         });
+//         // Añadir claves de los fondos desde el objeto anidado
+//         if (row.Fondos && typeof row.Fondos === 'object') {
+//             Object.keys(row.Fondos).forEach(fundKey => fundKeys.add(fundKey));
+//         }
+//     });
+//     // 2. Definir el orden final y construir las columnas para DataTables
+//     const desiredOrder = ['ID_CONTRATO', 'Secretaria', 'Proveedor', 'Concepto', 'Estatus', 'Mes', 'TipoTramite', 'Analista', 'Importe'];
+//     const orderedFunds = Array.from(fundKeys).sort();
+//     // Combinamos el orden deseado con los fondos descubiertos
+//     const finalHeaders = [...desiredOrder, ...orderedFunds];
+//     // 3. Crear la configuración de columnas para DataTables
+//     const formatoMoneda = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
+//     const dataTableColumns = finalHeaders.map(header => {
+//         // Caso especial para la columna calculada "Analista"
+//         if (header === 'Analista') {
+//             return {
+//                 title: 'Analista',
+//                 data: null,
+//                 render: (data, type, row) => `${row.NombreUser || ''} ${row.ApellidoUser || ''}`
+//             };
+//         }
+//         // Caso para columnas de Fondos
+//         if (header.startsWith('F')) {
+//             return {
+//                 title: header,
+//                 data: `Fondos.${header}`,
+//                 defaultContent: '$0.00',
+//                 render: (data) => (data && !isNaN(data)) ? formatoMoneda.format(data) : '$0.00'
+//             };
+//         }
+//         // Caso para la columna Importe (para formatear moneda)
+//         if (header === 'Importe') {
+//             return {
+//                 title: 'Importe',
+//                 data: 'Importe',
+//                 render: (data) => formatoMoneda.format(data)
+//             };
+//         }
+//         // Caso para todas las demás columnas estándar
+//         return {
+//             title: header,
+//             data: header
+//         };
+//     });
+//     // 4. Inicializar DataTables
+//     tableElement.DataTable({
+//         data: data,
+//         columns: dataTableColumns,
+//         pageLength: 10,
+//         scrollX: true, // Importante para tablas anchas
+//         responsive: true,
+//         // ...Pega aquí el resto de tu configuración de language, lengthMenu, etc.
+//         language: {
+//             search: "Buscar:",
+//             lengthMenu: "Mostrar _MENU_ registros",
+//             info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+//             infoEmpty: "Mostrando 0 a 0 de 0 registros",
+//             zeroRecords: "No se encontraron resultados",
+//             paginate: {
+//                 first: "Primero",
+//                 previous: "Anterior",
+//                 next: "Siguiente",
+//                 last: "Último"
+//             }
+//         }
+//     });
+// }
+function renderTablaEstimacion(data, tableId) {
+    const tableElement = $(`#${tableId}`);
+
+    if (!Array.isArray(data)) {
+        return;
+    }
+
+    if ($.fn.DataTable.isDataTable(tableElement)) {
+        tableElement.DataTable().clear().destroy();
+    }
+    tableElement.empty(); // Se vacía la tabla para reconstruir <thead> y <tfoot>
+
+    if (data.length === 0) {
+        tableElement.html('<tbody><tr><td colspan="100%">No hay datos disponibles.</td></tr></tbody>'); // colspan al 100%
+        return;
+    }
+
+    // --- Lógica para construir la tabla dinámicamente ---
+
+    const standardKeys = new Set();
+    const fundKeys = new Set();
+
+    // --- NUEVO: Inicialización de variables para los totales ---
+    let totalImporte = 0;
+    const totalesFondos = {};
+
+    data.forEach(row => {
+        Object.keys(row).forEach(key => {
+            if (key !== 'Fondos') standardKeys.add(key);
+        });
+        if (row.Fondos && typeof row.Fondos === 'object') {
+            Object.keys(row.Fondos).forEach(fundKey => {
+                fundKeys.add(fundKey);
+                // --- NUEVO: Acumular totales de los fondos ---
+                totalesFondos[fundKey] = (totalesFondos[fundKey] || 0) + (parseFloat(row.Fondos[fundKey]) || 0);
+            });
+        }
+        // --- NUEVO: Acumular total del Importe ---
+        totalImporte += parseFloat(row.Importe) || 0;
+    });
+
+    const desiredOrder = ['ID_CONTRATO', 'Secretaria', 'Proveedor', 'Concepto', 'Estatus', 'Mes', 'TipoTramite', 'Analista', 'Importe'];
+    const orderedFunds = Array.from(fundKeys).sort();
+    const finalHeaders = [...desiredOrder, ...orderedFunds];
+    const formatoMoneda = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
+
+    // --- NUEVO: Construir el HTML de la tabla con thead y tfoot ---
+    const headerRow = `<tr>${finalHeaders.map(h => `<th>${h}</th>`).join('')}</tr>`;
+    const footerRow = `<tr>${finalHeaders.map(() => `<th></th>`).join('')}</tr>`; // Celdas vacías para el pie
+    tableElement.html(`<thead>${headerRow}</thead><tbody></tbody><tfoot>${footerRow}</tfoot>`);
+
+
+    const dataTableColumns = finalHeaders.map(header => {
+        if (header === 'Analista') {
+            return {
+                title: 'Analista',
+                data: null, // No se necesita, se usa render
+                render: (data, type, row) => `${row.NombreUser || ''} ${row.ApellidoUser || ''}`
+            };
+        }
+        if (header.startsWith('F')) {
+            return {
+                title: header,
+                data: `Fondos.${header}`,
+                defaultContent: '$0.00',
+                render: (data) => (data && !isNaN(data)) ? formatoMoneda.format(data) : '$0.00'
+            };
+        }
+        if (header === 'Importe') {
+            return {
+                title: 'Importe',
+                data: 'Importe',
+                render: (data) => formatoMoneda.format(data)
+            };
+        }
+        return {
+            title: header, // El title ya se puso en el <th>, pero es buena práctica mantenerlo
+            data: header
+        };
+    });
+
+    tableElement.DataTable({
+        data: data,
+        columns: dataTableColumns,
+        pageLength: 800,
+        scrollX: true,
+        responsive: true,
+        language: {
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            zeroRecords: "No se encontraron resultados",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            }
+        },
+
+        // --- NUEVO: footerCallback para dibujar los totales ---
+        footerCallback: function (tfoot, data, start, end, display) {
+            const api = this.api();
+
+            // Itera sobre cada columna visible para poner el total correspondiente
+            api.columns().every(function () {
+                const columnIndex = this.index();
+                const headerText = $(this.header()).text(); // Obtiene el nombre de la columna
+
+                let totalValue = null;
+
+                if (headerText === 'Importe') {
+                    totalValue = totalImporte;
+                } else if (totalesFondos.hasOwnProperty(headerText)) {
+                    totalValue = totalesFondos[headerText];
+                }
+
+                // Si encontramos un total para esta columna, lo formateamos y lo escribimos
+                if (totalValue !== null) {
+                    $(this.footer()).html(formatoMoneda.format(totalValue));
+                }
+            });
+
+            // Poner una etiqueta en la primera columna del footer
+            // Buscamos la columna 'ID_CONTRATO' para poner la etiqueta "TOTAL"
+            const idColIndex = finalHeaders.indexOf('ID_CONTRATO');
+            if (idColIndex !== -1) {
+                $(api.column(idColIndex).footer()).html('<strong>TOTALES</strong>');
+            }
+        }
+    });
+}
+/**
+ * Verifica la fecha actual y deshabilita el botón "Nuevo Trámite"
+ * si se ha pasado la fecha de corte mensual.
+ */
+function gestionarEstadoBotonNuevoTramite() {
+    // Día del mes para el cierre. Puedes ajustar este valor si es necesario.
+    const DIA_DE_CIERRE = 25;
+
+    // Obtenemos la fecha y día actual desde el navegador del cliente.
+    const hoy = new Date();
+    const diaActual = hoy.getDate(); // Devuelve el día del mes (1-31)
+
+    // Obtenemos la referencia al botón por su nuevo ID.
+    const botonNuevoTramite = document.getElementById('btn-nuevo-tramite');
+
+    // Si el botón no existe en la página, no hacemos nada.
+    if (!botonNuevoTramite) {
+        return;
+    }
+
+    // Comparamos el día actual con el día de cierre.
+    // Si hoy es día 25 o superior, deshabilitamos el botón.
+    if (diaActual >= DIA_DE_CIERRE) {
+        // En enlaces <a>, la clase 'disabled' de Bootstrap previene clics y cambia el estilo.
+        botonNuevoTramite.classList.add('disabled');
+
+        // Es una buena práctica añadir un 'title' para informar al usuario por qué está deshabilitado.
+        botonNuevoTramite.setAttribute('title', 'La creación de nuevos trámites está cerrada por fin de mes.');
+
+        // También es bueno para la accesibilidad.
+        botonNuevoTramite.setAttribute('aria-disabled', 'true');
+    }
+}
+
+
+
 window.modificarTramite = modificarTramite;
 window.eliminarTramite = eliminarTramite;
 window.generarQR = generarQR;

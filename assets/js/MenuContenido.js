@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-
           <li id="Glosa" class="nav-item dropdown" style="display: none;">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">Glosa</a>
@@ -23,12 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
               <li id="OP_Tramite" style="display: none;"><a class="dropdown-item" href="dashboard.html">Trámites</a></li>          
               <li id="OP_Tramite" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Listado de Turnados</a></li>
               <li id="OP_Tramite" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesa</a></li>
+              <li id="OP_Tramite" ><a class="nav-link" href="VolanteObsercacionesLista.html">Volantes Observaciones</a></li>
 
               <li id="OP_Remesa" style="display: none;"><a class="dropdown-item" href="dashboard.html">Trámites</a></li> 
               <li id="OP_Remesa" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesa</a></li>
+              <li id="OP_Remesa" ><a class="nav-link" href="VolanteObsercacionesLista.html">Volantes Observaciones</a></li>>
               <hr>
               <li id="OP_Remesa" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Listado de Turnados</a></li>    
-
               <li id="Analista" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Listado de Turnados</a></li>
             </ul>
           </li>
@@ -42,8 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
               <li id="OP_KPI" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a></li>
               <li id="OP_KPI" style="display: none;"><a class="dropdown-item" href="CorrespondenciaPanelControl.html">Correspondencia</a></li>
               <li id="OP_KPI" style="display: none;"><a class="dropdown-item" href="ContestacionPanelControl.html">Respuestas</a></li>
+              <li id="OP_KPI" ><a class="nav-link" href="VolanteObsercacionesLista.html">Volantes Observaciones</a></li>
+
               <li id="OP_Seguimiento" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a></li>
               <li id="OP_Seguimiento" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Trámites</a></li>
+              <li id="OP_Seguimiento" ><a class="nav-link" href="VolanteObsercacionesLista.html">Volantes Observaciones</a></li>>
               <hr>
               <li id="OP_KPI" style="display: none;"><a class="dropdown-item" href="listadoTurnados.html">Tramites Turnados</a></li>
               <li id="OP_KPI" style="display: none;"><a class="dropdown-item" href="ContestacionPanelControl.html">Respuestas Turnadas</a></li>
@@ -55,7 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
               aria-expanded="false">OrdenesPago</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> 
               <li id="OP_OrdenesPago" style="display: none;"><a class="dropdown-item" href="dashboard.html">Trámites</a></li>          
-              <li id="OP_OrdenesPago" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a></li>
+              <li id="OP_OrdenesPago" style="display: none;"><a class="dropdown-item" href="seguimientoRemesas.html">Remesas</a></li>              
+              <li id="OP_OrdenesPago" ><a class="nav-link" href="VolanteObsercacionesLista.html">Volantes Observaciones</a></li>>
             </ul>
           </li>
 
@@ -77,8 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </li>
           
           <li><a class="nav-link" href="obtenerReportePrioridadTramites.html">Prioridad</a></li>
-          <li><a class="nav-link" href="manual.html">Manual</a></li>
-          <li><a class="nav-link" href="help.html">Estados</a></li>
+          
           <li><a class="nav-link" href="wiki.html">WIKI</a></li>
           <li><a class="nav-link" href="#" onclick='cerrarSesion(); window.location.href = "index.html";'>Cerrar Sesión</a></li>
         </ul>

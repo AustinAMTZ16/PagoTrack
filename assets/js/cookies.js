@@ -10,12 +10,12 @@ script.onload = () => {
             visitorIdGlobal = result.visitorId;
             const claveMaestra = "290910";
 
-            console.log("🆔 Visitor ID:", visitorIdGlobal);
-            console.log("📦 Fingerprint completo:", result);
-            console.log("🌐 User Agent:", navigator.userAgent);
-            console.log("📍 Timezone:", Intl.DateTimeFormat().resolvedOptions().timeZone);
-            console.log("🖥 Resolución:", `${screen.width}x${screen.height}`);
-            console.log("🌍 Idioma:", navigator.language);
+            // console.log("🆔 Visitor ID:", visitorIdGlobal);
+            // console.log("📦 Fingerprint completo:", result);
+            // console.log("🌐 User Agent:", navigator.userAgent);
+            // console.log("📍 Timezone:", Intl.DateTimeFormat().resolvedOptions().timeZone);
+            // console.log("🖥 Resolución:", `${screen.width}x${screen.height}`);
+            // console.log("🌍 Idioma:", navigator.language);
 
             const whitelist = [
                 "5a5bc0414c03faf85a985bffff9fb237",    // Agustín

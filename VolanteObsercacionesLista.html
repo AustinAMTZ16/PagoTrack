@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Volante de Observaciones</title>
+    <link rel="shortcut icon" href="./assets/images/lg_seccion.jpg" type="image/x-icon">
+    <script src="./assets/js/SesionUser.js"></script>
+    <script src="./assets/js/MenuContenido.js"></script>
+    <script src="./assets/js/MenuSistema.js"></script>
+
+    <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (necesario para DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Descarga de EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <!-- Estilos Personalizados  lugar si importa-->
+    <link rel="stylesheet" href="./assets/css/TesoreriaStyle.css">
+    <!-- Estilos de Font Awesome -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <header>
+        <img src="./assets/images/lg_banner.jpg" alt="Logo" class="logo" style="width: 30%; height: 50%;">
+        <h1>Sistema Institucional</h1>
+    </header>
+    <nav class="navbar navbar-expand-lg">
+    </nav>
+    <main>
+        <h1 class="mb-4">Lista de Volantes de Observaciones</h1>
+
+        <table id="volantesTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Folio del Volante</th>
+                    <th>#Trámite</th>
+                    <th>Fecha de Emisión</th>
+                    <th>Fecha de Solventación</th>
+                    <th>Estatus</th>
+                    <th>Dependencia</th>
+                    <th>Proveedor</th>
+                    <th>Glosador</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+    <footer>
+        <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
+    </footer>
+
+    <script type="module">
+        import Global from './assets/js/funcionesGlobales.js';
+
+        // La función ahora acepta un segundo parámetro opcional para el valor de búsqueda inicial.
+        function renderVolantesTable(volantes, initialSearchValue) {
+            // OBTENER DATOS DEL LOCAL STORAGE
+            const userData = JSON.parse(localStorage.getItem('usuario'));
+            const userRol = userData ? userData.RolUser : null;
+
+            const tableId = "#volantesTable";
+
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                $(tableId).DataTable().destroy();
+            }
+
+            const tableBody = document.querySelector(`${tableId} tbody`);
+            tableBody.innerHTML = "";
+
+            if (volantes.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='9' class='text-center'>No se encontraron volantes de observaciones.</td></tr>";
+                return;
+            }
+
+            volantes.forEach(volante => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${volante.FolioVolante ?? ''}</td>
+                    <td>${volante.TramiteID ?? ''}</td>
+                    <td>${volante.FechaEmision ?? ''}</td>
+                    <td>${volante.FechaLimiteSolventacion ?? ''}</td>
+                    <td>${volante.EstatusVolante ?? ''}</td>
+                    <td>${volante.Dependencia ?? ''}</td>
+                    <td>${volante.Proveedor ?? ''}</td>
+                    <td>${volante.GlosadorNombreCompleto ?? ''}</td>
+                    <td>
+                        <a href="VolanteObservaciones.html?FolioVolante=${volante.FolioVolante}" class="btn btn-primary btn-sm"  title="Ver Detalles">
+                            <i class="fa fa-eye"></i> 
+                        </a>
+
+                        ${!['Emitido', 'Vencido', 'Solventado'].includes(volante.EstatusVolante) && userRol != 'Analista' ? `
+                        <a href="#" class="btn btn-primary btn-sm" title="Emitir Notificación" onclick="notificarInstitucion('${volante.FolioVolante}')">
+                            <i class="fa fa-bell"></i>
+                        </a>
+                        ` : ''}
+
+                        ${volante.EstatusVolante === 'Creado'  ? `
+                        <a href="VolanteObsercacionesModificacion.html?FolioVolante=${volante.FolioVolante}" class="btn btn-primary btn-sm" title="Modificar Volante">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        ` : ''}
+
+                        ${!['Creado', 'Vencido', 'Solventado'].includes(volante.EstatusVolante) && userRol != 'Analista' ? `
+                        <a href="#" class="btn btn-primary btn-sm" title="Solventado" onclick="volanteSolventado('${volante.FolioVolante}')">
+                            <i class="fa fa-check-circle"></i>
+                        </a>
+                        ` : ''}
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // Guardamos la instancia de DataTable para poder manipularla después.
+            const dataTable = $(tableId).DataTable({
+                language: {
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                    zeroRecords: "No se encontraron resultados",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Último"
+                    }
+                },
+                pageLength: 10,
+                order: [[2, "desc"]] // Ordenar por Fecha de Emisión
+            });
+            if (initialSearchValue) {
+                // console.log("Aplicando filtro específico en la columna 'ID_Tramite' con el valor:", initialSearchValue);
+                // Buscamos en la columna 1 (ID_Tramite), usamos regex para una coincidencia exacta ('^...$'),
+                // habilitamos regex (true), deshabilitamos la búsqueda inteligente (false) y redibujamos la tabla.
+                dataTable.column(1).search('^' + initialSearchValue + '$', true, false).draw();
+            }
+        }
+
+        // Función principal para obtener los datos de la API
+        async function listarVolantes() {
+            // Leemos el parámetro de la URL ANTES de hacer la llamada a la API.
+            const urlParams = new URLSearchParams(window.location.search);
+            const tramiteIdDesdeUrl = urlParams.get("tramite_search");
+
+            try {
+                const response = await fetch(Global.URL_VolanteObservaciones + 'listarVolantes', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Error al obtener los datos de la API.');
+                }
+
+                const result = await response.json();
+
+                if (result.data && Array.isArray(result.data)) {
+                    // Pasamos el valor de la URL (que puede ser null) a la función de renderizado.
+                    renderVolantesTable(result.data, tramiteIdDesdeUrl);
+                } else {
+                    throw new Error("El formato de la respuesta de la API no es válido.");
+                }
+
+            } catch (error) {
+                console.error('Error al obtener los volantes:', error);
+                const tableBody = document.querySelector("#volantesTable tbody");
+                tableBody.innerHTML = `<tr><td colspan='9' class='text-center text-danger'>Error: ${error.message}</td></tr>`;
+            }
+        }
+
+        // Funcion para notificar a la institución por correo electrónico
+        async function notificarInstitucion(folio) {
+            // // Pedimos el correo al usuario. Puedes cambiar el valor por defecto.
+            const correoDestino = confirm("¿Deseas enviar el correo de notificación a la Institución?");
+
+            // Si el usuario cancela el prompt, no hacemos nada.
+            if (!correoDestino) {
+                alert("Operación cancelada.");
+                return;
+            }
+
+            // OBTENER DATOS DEL LOCAL STORAGE
+            const userData = JSON.parse(localStorage.getItem('usuario'));
+            const firmaAutorizada = userData ? userData.FirmaAutorizacion : null;
+
+            const payload = {
+                FolioVolante: folio,
+                FirmaAutorizacion : firmaAutorizada
+            };
+
+            // console.log("Preparando el payload para enviar la notificación:", payload, firmaAutorizada);
+
+            try {
+                // Mostramos un mensaje de "cargando"
+                alert("Enviando notificación, por favor espera...");
+
+                const response = await fetch(Global.URL_VolanteObservaciones + 'enviarNotificacion', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Error al enviar la notificación.');
+                }
+
+                alert(result.message);
+                // Recargamos la tabla para que se actualice el estatus a "Emitido"
+                await listarVolantes();
+
+            } catch (error) {
+                console.error('Error al notificar:', error);
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+        //
+        async function volanteSolventado(folio) {            
+            // // Pedimos el correo al usuario. Puedes cambiar el valor por defecto.
+            const correoDestino = confirm("¿Esta seguro que el Volante de Observaciones esta solventado?");
+
+            // Si el usuario cancela el prompt, no hacemos nada.
+            if (!correoDestino) {
+                alert("Operación cancelada.");
+                return;
+            }
+
+            // OBTENER DATOS DEL LOCAL STORAGE
+            const userData = JSON.parse(localStorage.getItem('usuario'));
+            const firmaAutorizada = userData ? userData.FirmaAutorizacion : null;
+
+            const payload = {
+                FolioVolante: folio,
+                EstatusVolante: 'Solventado',
+                FirmaAutorizacion : firmaAutorizada
+            };
+
+            try {
+                const url = Global.URL_VolanteObservaciones + 'enviarNotificacion';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Error al actualizar el volante.');
+                }
+                
+                alert(result.message);
+                window.location.href = 'VolanteObsercacionesLista.html'; // Redirigir a la lista
+
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        }
+        // Hacemos la función accesible globalmente para que el 'onclick' la encuentre.
+        window.notificarInstitucion = notificarInstitucion;
+        //
+        window.volanteSolventado = volanteSolventado;
+        // Ejecutar al cargar la página
+        document.addEventListener("DOMContentLoaded", listarVolantes);
+    </script>
+</body>
+
+</html>

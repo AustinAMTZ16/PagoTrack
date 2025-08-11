@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volante de Observaciones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <!-- PASO 1: Incluir la librería para generar Códigos QR -->
+  <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+  <style>
+    /* Tu CSS de la versión elegante va aquí... (lo he omitido por brevedad, pero debe estar) */
+    body {
+      font-family: 'Lato', Arial, sans-serif;
+      background-color: #e9ecef;
+      margin: 0;
+      padding: 20px;
+      color: #343a40
+    }
+
+    .document-container {
+      max-width: 850px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
+      padding: 40px
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #dee2e6;
+      padding-bottom: 20px;
+      margin-bottom: 20px
+    }
+
+    .header .logo img {
+      width: 180px
+    }
+
+    .header .title {
+      text-align: right;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.4
+    }
+
+    .title .main-title {
+      font-size: 18px;
+      color: #730104
+    }
+
+    .folio-info {
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 30px
+    }
+
+    .folio-info strong {
+      color: #000
+    }
+
+    .observations-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-bottom: 30px
+    }
+
+    .observations-table th,
+    .observations-table td {
+      padding: 12px 15px;
+      text-align: left
+    }
+
+    .observations-table thead th {
+      background-color: #730104;
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-bottom: none
+    }
+
+    .observations-table th:first-child {
+      border-radius: 6px 0 0 6px
+    }
+
+    .observations-table th:last-child {
+      border-radius: 0 6px 6px 0
+    }
+
+    .observations-table tbody tr {
+      border-bottom: 1px solid #dee2e6
+    }
+
+    .observations-table tbody tr:last-child {
+      border-bottom: none
+    }
+
+    .observations-table td {
+      vertical-align: top
+    }
+
+    .notes-section {
+      font-size: 9.5px;
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #730104;
+      line-height: 1.5;
+      margin-top: 20px;
+      text-align: justify;
+    }
+
+    .footer-signatures {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+      font-size: 12px
+    }
+
+    .signature-item img {
+      width: 120px
+    }
+
+    .signature-line {
+      border-top: 1px solid #343a40;
+      width: 200px;
+      margin: 50px auto 10px auto;
+      padding-top: 5px
+    }
+
+    .qr-block {
+      text-align: center;
+      font-size: 8px;
+    }
+
+    .firma-autorizador {
+      text-align: center;      
+      /* Centra el texto */
+      font-weight: bold;
+      /* Pone el texto en negritas */
+      font-size: 8px;
+      /* Establece el tamaño de la fuente */
+      margin-top: 25px;
+      /* Añade espacio arriba para separarlo de los QR */
+      word-wrap: break-word;
+      /* Evita que el texto largo se desborde */
+    }
+
+    .concepto-class {
+      border-collapse: collapse;
+      color: rgb(52, 58, 64);
+      display: inline;
+      font-family: Lato, Arial, sans-serif;
+      font-size: 8px;
+      height: auto;
+      text-align: left;
+      text-indent: 0px;
+      width: auto;
+      -webkit-border-horizontal-spacing: 1.92px;
+      -webkit-border-vertical-spacing: 1.92px;
+    }
+
+    @media print {
+      .observations-table thead th {
+        background-color: #730104 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="document-container">
+    <header class="header">
+      <div class="logo">
+        <img src="assets/images/lg_banner.jpg" alt="Logo Tesorería" />
+      </div>
+      <div class="title">
+        Tesorería Municipal <br />
+        Dirección General de Egresos <br />
+        Dirección de Egresos y Control Presupuestal<br />
+        Departamento de Presupuesto<br />
+        <span class="main-title">Volante de Observaciones</span>
+      </div>
+    </header>
+
+    <section class="folio-info">
+      <strong>Institución:</strong> <span id="institucion"></span><br />
+      <strong>Folio Volante:</strong> <span id="folioVolante"></span><br />
+      <strong>Fecha de Emisión:</strong> <span id="fechaEmision"></span><br />
+      <strong>Fecha Límite de Solventación:</strong> <span id="fechaLimite"></span>
+    </section>
+
+    <table class="observations-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Trámite</th>
+          <th>Beneficiario</th>
+          <th>Importe</th>
+          <th>Fundamento y Observación</th>
+          <th>Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="tramiteId"></td>
+          <td id="tramiteNumero"></td>
+          <td id="beneficiario"></td>
+          <td id="importe"></td>
+          <td>
+            <strong>Fundamento:</strong> <span id="fundamentoLegal"></span>
+            <br><br>
+            <strong>Observación:</strong> <span id="observacion"></span>
+          </td>
+          <td id="glosador"></td>
+        </tr>
+      </tbody>
+    </table>
+    <p id="concepto" class="concepto-class"></p>
+    <section class="notes-section">
+      <strong id="reincidencia"></strong><br><br>
+      <strong>Notá:</strong> De conformidad con el Artículo 46 de la Normatividad para el Ejercicio del Gasto y Control
+      Presupuestal vigente, los expedientes con observaciones no podrán continuar su flujo ni contabilizarse dentro del
+      periodo de tiempo para su atención, hasta que éstas hayan sido solventadas ante la Dirección de Egresos y Control
+      Presupuestal (DECP); las observaciones deberán ser solventadas en un plazo máximo de 2 días hábiles posteriores a
+      la fecha de emisión del volante; salvo en periodo de cierre, entendiéndose por éste a los días posteriores al
+      último día de recepción de trámites del mes. No habrá prórroga alguna para la recepción de trámites. Durante ese
+      periodo, la solventación de observaciones deberá ser en el mismo día; cuando el expediente de trámite tenga alguna
+      observación, es responsabilidad del Ejecutor de Gasto recoger el expediente físico en la DECP, debido a que ésta
+      se deslinda de toda responsabilidad de los expedientes físicos.
+    </section>
+
+    <footer class="footer-signatures">
+      <div class="qr-block">
+        <p>Código QR Validación</p>
+        <div id="qrValidacion" class="qr-container"></div>
+      </div>
+
+      <div class="qr-block">
+        <p>Código QR Detalle</p>
+        <div id="qrDetalle" class="qr-container"></div>
+      </div>
+    </footer>
+    <div class="firma-autorizador">
+      <span><p id="datafirmaAutorizador"></p></span><span><p id="dataEstatusVolante"></p></span>
+    </div>
+  </div>
+
+  <script type="module">
+    import Global from './assets/js/funcionesGlobales.js';
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const formatoMoneda = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const folioDesdeUrl = urlParams.get('FolioVolante');
+
+      if (!folioDesdeUrl) {
+        document.body.innerHTML = '<h1>Error: No se proporcionó un FolioVolante en la URL.</h1>';
+        return;
+      }
+
+      async function cargarDatosDelVolante(folio) {
+        try {
+          const respuestaApi = await fetch(Global.URL_VolanteObservaciones + 'generarVolanteEspecifico', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "FolioVolante": folio }),
+          });
+
+          if (!respuestaApi.ok) {
+            const error = await respuestaApi.json();
+            throw new Error(error.message || 'Error al conectar con la API.');
+          }
+
+          const resultado = await respuestaApi.json();
+          pintarDatosEnHtml(resultado.data);
+
+        } catch (error) {
+          console.error('Error en la operación:', error);
+          document.body.innerHTML = `<h1>Error: ${error.message}</h1>`;
+        }
+      }
+
+      function pintarDatosEnHtml(data) {
+        // Cargar datos del encabezado del volante
+        document.getElementById('institucion').textContent = data.Dependencia;
+        document.getElementById('folioVolante').textContent = data.FolioVolante;
+        document.getElementById('fechaEmision').textContent = data.FechaEmision;
+        document.getElementById('fechaLimite').textContent = data.FechaLimiteSolventacion;
+
+        // Cargar datos de la tabla
+        document.getElementById('tramiteId').textContent = data.ID_CONTRATO;
+        document.getElementById('tramiteNumero').textContent = `${data.NoTramite} - ${data.TipoTramite}`;
+        document.getElementById('beneficiario').textContent = data.Proveedor;
+        document.getElementById('importe').textContent = formatoMoneda.format(data.Importe);
+        document.getElementById('glosador').textContent = data.GlosadorNombreCompleto;
+        document.getElementById('observacion').textContent = data.ObservacionEspecifica.trim();
+        document.getElementById('fundamentoLegal').textContent = data.FundamentoLegalVolante.trim();
+        document.getElementById('datafirmaAutorizador').textContent = data.FirmaAutorizacion?.trim() || '';
+        document.getElementById('dataEstatusVolante').textContent = data.EstatusVolante?.trim() || '';
+        document.getElementById('concepto').textContent = `CONCEPTO: ${data.Concepto}`;
+
+        // Cargar datos de reincidencia
+        if (data.EsReincidencia) {
+          document.getElementById('reincidencia').innerHTML = `Reincidencia: <strong>Si</strong> (${data.NumeroReincidenciasInstitucion} Reincidencias de la Institución)`;
+        } else {
+          document.getElementById('reincidencia').innerHTML = `Reincidencia: <strong>No</strong>`;
+        }
+
+        // --- PASO 3: GENERAR LOS CÓDIGOS QR DINÁMICAMENTE ---
+
+        // Limpiar contenedores por si acaso
+        document.getElementById('qrValidacion').innerHTML = '';
+        document.getElementById('qrDetalle').innerHTML = '';
+
+        // Generar QR de Validación (URL estática)
+        new QRCode(document.getElementById('qrValidacion'), {
+          text: 'https://pagotrack.mexiclientes.com/ContestacionAnalistaActualizar.html',
+          width: 120,
+          height: 120
+        });
+
+        // Generar QR de Detalle (URL dinámica)
+        const urlDetalle = `https://pagotrack.mexiclientes.com/TramiteDetalle.html?id=${data.ID_CONTRATO}`;
+        new QRCode(document.getElementById('qrDetalle'), {
+          text: urlDetalle,
+          width: 120,
+          height: 120
+        });
+      }
+
+      // Iniciar el proceso
+      cargarDatosDelVolante(folioDesdeUrl);
+    });
+  </script>
+
+</body>
+
+</html>

@@ -128,7 +128,7 @@
           <label for="Estatus" class="form-label">Estatus</label>
           <select name="Estatus" id="Estatus" class="form-select" required>
             <option value="" disabled selected>Estatus</option>
-            <option value="Creado">Creado</option>
+            <option value="Creado" selected>Creado</option>
             <!-- <option value="Turnado">Turnado</option> -->
           </select>
         </div>
@@ -205,7 +205,7 @@
           <label for="FechaRecepcion" class="form-label">Fecha Recepción <span class="small-text">(sello de la caratula
               del
               oficio)</span></label>
-          <input type="date" name="FechaRecepcion" id="FechaRecepcion" class="form-control" required>
+          <input type="datetime-local" name="FechaRecepcion" id="FechaRecepcion" class="form-control" required>
         </div>
 
         <div class="col-md-6">
@@ -237,7 +237,8 @@
         </div>
 
         <div class="col-md-6">
-          <label for="NumeroObra" class="form-label">Numero Obra</label> <span class="small-text">(Representa el folio del oficio de respuesta.)</span>
+          <label for="NumeroObra" class="form-label">Numero Obra</label> <span class="small-text">(Representa el folio
+            del oficio de respuesta.)</span>
           <input type="text" name="NumeroObra" id="NumeroObra" class="form-control">
         </div>
 
@@ -251,7 +252,8 @@
 
         <div class="col-12">
           <label for="Comentarios" class="form-label">Comentarios</label>
-          <textarea name="Comentarios" id="Comentarios" class="form-control" rows="4" required>SE VALIDA CHECK LIST Y REGISTRADO EN PAGOTRACK.</textarea>
+          <textarea name="Comentarios" id="Comentarios" class="form-control" rows="4"
+            required>SE VALIDA CHECK LIST Y REGISTRADO EN PAGOTRACK.</textarea>
         </div>
 
         <!-- 🚀 BOTONES -->
@@ -266,7 +268,7 @@
 
   <script>
     // LOGICA PARA AGREGAR FONDOS
-    let importesFF = {};    
+    let importesFF = {};
     document.getElementById('addFondoBtn').addEventListener('click', function () {
       let fondo = document.getElementById('FondoInput').value.trim();
       let importe = document.getElementById('ImporteInput').value.trim();
@@ -334,6 +336,26 @@
 
       // Si ya quieres calcular al cargar la página con la fecha actual
       window.addEventListener('load', function () {
+        // --- Mes automático ---
+        const selectMes = document.getElementById('Mes');
+        const MESES = [
+          'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+
+        function setMesFromDate(date) {
+          if (!selectMes) return;
+          const nombreMes = MESES[date.getMonth()];
+          // Asegura que exista esa opción y selecciónala
+          const opt = Array.from(selectMes.options).find(o => o.value === nombreMes);
+          if (opt) selectMes.value = nombreMes;
+        }
+
+        // 1) Al cargar: mes de HOY
+        setMesFromDate(new Date());
+
+
+
         if (!inputFechaRecepcion.value) {
           const hoy = new Date();
           const fechaLimite = sumarDiasHabiles(hoy, 7);

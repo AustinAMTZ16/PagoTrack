@@ -4,13 +4,15 @@ import Global from './funcionesGlobales.js';
 const usuario = JSON.parse(localStorage.getItem('usuario'));
 const NombreUser = usuario.NombreUser + ' ' + usuario.ApellidoUser;
 const idUser = usuario.InicioSesionID;
+// obetener estaus del url 
+const urlFlagVolante = new URLSearchParams(window.location.search);
+const FlagVolante = urlFlagVolante.get('FlagVolante');
+const VolantesVencidos = urlFlagVolante.get('VolantesVencidos');
+
+// console.log("Estatus del URL:", FlagVolante);
+// console.log("VolantesVencidos del URL:", VolantesVencidos);
 // Evento para cargar el contenido de la página
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("localStorage:", usuario);
-    // obetener estaus del url 
-    const urlFlagVolante = new URLSearchParams(window.location.search);
-    const FlagVolante = urlFlagVolante.get('FlagVolante');
-    // console.log("Estatus del URL:", FlagVolante);
     // FlagVolante != 0 inabilita el select estatus del tramite Estatus  y el btn guardar tramite  btnGuardar
     if (FlagVolante) {
         if (FlagVolante != 0) {
@@ -23,6 +25,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 btnGuardar.disabled = true; // Deshabilita el botón
             }
         }
+
+        // Tambien se valida VolantesVencidos != 0  si es diferente a 0 solo mostrara en Estatus Devuelto
+
+        // Regla 2: si hay vencidos, mostrar SÓLO "Devuelto" y seleccionarlo
+        if (Number(VolantesVencidos) !== 0) {
+
+            const selectEstatus = document.getElementById("Estatus");
+            const btnGuardar = document.getElementById("btnGuardar");
+            if (!selectEstatus.dataset.originalHtml) {
+                selectEstatus.dataset.originalHtml = selectEstatus.innerHTML;
+            }
+
+
+            // Intenta tomar la opción Devuelto de las opciones actuales;
+            // si no existe (por cambios previos), la recrea.
+            let devuelto = selectEstatus.querySelector('option#Devuelto') || null;
+
+            // Limpia todas las opciones
+            selectEstatus.innerHTML = "";
+
+            // Si no estaba, créala
+            if (!devuelto) {
+                devuelto = document.createElement("option");
+                devuelto.id = "Devuelto";
+                devuelto.value = "Devuelto";
+                devuelto.textContent = "Devuelto";
+            }
+
+            // Añade sólo Devuelto y selecciónalo
+            selectEstatus.appendChild(devuelto);
+            devuelto.selected = true;
+
+            // Dado que sólo hay una opción válida, puedes mantener habilitado el select
+            // para que el usuario vea el valor, o deshabilitarlo si así lo deseas:
+            // selectEstatus.disabled = true; // opcional
+        } 
     }
     // Evento para crear un trámite
     const formTramite = document.getElementById("formcreateTramite");
@@ -108,12 +146,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             e.preventDefault(); // Evita la recarga de la página
+            // 👇 Fuerza que TinyMCE copie el contenido al <textarea>
+            tinymce.triggerSave();
 
             const formData = new FormData(formUpdateTramite);
             const data = {};
             formData.forEach((value, key) => {
                 data[key] = value;
             });
+
+            console.log('Datos enviados para actualizar el trámite:', data);
 
             updateTramite(data);
         });
@@ -207,70 +249,6 @@ function turnarTramite(data) {
             console.error('Error al crear el trámite:', error.message);
         });
 }
-async function updateTramite(data) {
-    try {
-        // --- 1. PRIMERA LLAMADA: ACTUALIZAR EL TRÁMITE PRINCIPAL ---
-
-        // Añadimos el nombre del analista a los datos.
-        data.Analista = NombreUser;
-
-        const responseUpdate = await fetch(Global.URL_BASE + 'updateTramite', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-
-        if (!responseUpdate.ok) {
-            // Si esta llamada falla, lanzamos un error y nos detenemos.
-            const errorData = await responseUpdate.json();
-            throw new Error(errorData.message || `Error al actualizar el trámite: ${responseUpdate.status}`);
-        }
-
-        const resultUpdate = await responseUpdate.json();
-
-        // --- 2. LÓGICA CONDICIONAL: CREAR VOLANTE SI ES NECESARIO ---
-        if (data.Estatus === 'Observaciones') {
-            // console.log("Estatus es 'Observaciones', procediendo a crear volante...");
-
-            // Mapeamos los datos del trámite al formato que espera la API del volante.
-            const volanteData = {
-                TramiteID: data.ID_CONTRATO,
-                ErrorID: 4,
-                Observaciones: data.Comentarios.trim(),
-                GlosadorNombre: idUser,
-                FundamentoLegal: data.FundamentoLegal || '',
-            };
-
-            // --- SEGUNDA LLAMADA: CREAR EL VOLANTE ---
-            const responseCrear = await fetch(Global.URL_VolanteObservaciones + 'crearNuevoVolante', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(volanteData)
-            });
-
-            if (!responseCrear.ok) {
-                const errorData = await responseCrear.json();
-                // Si la creación del volante falla, informamos al usuario.
-                // Aquí yace el riesgo de inconsistencia.
-                throw new Error(`El trámite se actualizó, pero falló la creación del volante: ${errorData.message}`);
-            }
-
-            const resultCrear = await responseCrear.json();
-            // console.log("Volante creado exitosamente:", resultCrear);
-        }
-
-        // --- 3. FINALIZAR CON ÉXITO ---
-        // Si todo fue bien, mostramos el mensaje de la primera llamada y redirigimos.
-        alert(resultUpdate.message);
-        window.location.href = 'listadoTurnados.html';
-
-    } catch (error) {
-        // Un único bloque 'catch' maneja cualquier error de ambas llamadas a la API.
-        console.error("Error en la operación completa:", error);
-        alert(`Error: ${error.message}`);
-        // No redirigimos si hay un error, para que el usuario no pierda su trabajo.
-    }
-}
 // Función Actualizar Tramite Completo
 async function updateTramiteCompleto(data) {
     data.Analista = NombreUser;
@@ -344,7 +322,7 @@ async function obtenerTramite(ID_CONTRATO) {
                     document.getElementById("FK_SRF").value = tramite.FK_SRF || "";
                     renderComentariosEnTextarea(tramite.Comentarios);
                     document.getElementById("Fondo").value = tramite.Fondo || "";
-                    
+
                     if (tramite.Fondo) {
                         try {
                             importesFF = JSON.parse(tramite.Fondo);
@@ -435,5 +413,68 @@ function renderComentariosEnTextarea(comentariosJSON) {
         textarea.value = "⚠️ No se pudieron cargar los comentarios correctamente.";
     }
 }
+// Función para actualizar un trámite
+async function updateTramite(data) {
+    try {
+        // --- 1. PRIMERA LLAMADA: ACTUALIZAR EL TRÁMITE PRINCIPAL ---
 
+        // Añadimos el nombre del analista a los datos.
+        data.Analista = NombreUser;
 
+        const responseUpdate = await fetch(Global.URL_BASE + 'updateTramite', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!responseUpdate.ok) {
+            // Si esta llamada falla, lanzamos un error y nos detenemos.
+            const errorData = await responseUpdate.json();
+            throw new Error(errorData.message || `Error al actualizar el trámite: ${responseUpdate.status}`);
+        }
+
+        const resultUpdate = await responseUpdate.json();
+
+        // --- 2. LÓGICA CONDICIONAL: CREAR VOLANTE SI ES NECESARIO ---
+        if (data.Estatus === 'Observaciones') {
+            // console.log("Estatus es 'Observaciones', procediendo a crear volante...");
+
+            // Mapeamos los datos del trámite al formato que espera la API del volante.
+            const volanteData = {
+                TramiteID: data.ID_CONTRATO,
+                ErrorID: 4,
+                Observaciones: data.Comentarios.trim(),
+                GlosadorNombre: idUser,
+                FundamentoLegal: data.FundamentoLegal || '',
+            };
+
+            // --- SEGUNDA LLAMADA: CREAR EL VOLANTE ---
+            const responseCrear = await fetch(Global.URL_VolanteObservaciones + 'crearNuevoVolante', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(volanteData)
+            });
+
+            if (!responseCrear.ok) {
+                const errorData = await responseCrear.json();
+                // Si la creación del volante falla, informamos al usuario.
+                // Aquí yace el riesgo de inconsistencia.
+                throw new Error(`El trámite se actualizó, pero falló la creación del volante: ${errorData.message}`);
+            }
+
+            const resultCrear = await responseCrear.json();
+            // console.log("Volante creado exitosamente:", resultCrear);
+        }
+
+        // --- 3. FINALIZAR CON ÉXITO ---
+        // Si todo fue bien, mostramos el mensaje de la primera llamada y redirigimos.
+        alert(resultUpdate.message);
+        window.location.href = 'listadoTurnados.html';
+
+    } catch (error) {
+        // Un único bloque 'catch' maneja cualquier error de ambas llamadas a la API.
+        console.error("Error en la operación completa:", error);
+        alert(`Error: ${error.message}`);
+        // No redirigimos si hay un error, para que el usuario no pierda su trabajo.
+    }
+}

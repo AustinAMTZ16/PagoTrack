@@ -8,6 +8,7 @@
     <script src="./assets/js/SesionUser.js"></script>
     <script src="./assets/js/MenuContenido.js"></script>
     <script src="./assets/js/MenuSistema.js"></script>
+    <script src="assets/js/tinymce/tinymce.min.js"></script>
 
     <!-- Bootstrap 5 (CSS + Bundle con Popper) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -43,8 +44,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <h1 class="mb-4">Modificar Volante de Observaciones</h1>
-
-                    <form id="formModificarVolante">
+                    <form id="formModificarVolante" novalidate>
                         <!-- SECCIÓN DE DATOS NO MODIFICABLES -->
                         <h3 class="mb-3">Información del Volante</h3>
                         <div class="row g-3 mb-4">
@@ -114,17 +114,20 @@
                             </div>
                             <div class="col-12">
                                 <label for="observaciones" class="form-label">Observaciones</label>
-                                <textarea class="form-control" id="observaciones" rows="4" required></textarea>
+                                <textarea class="form-control" id="observaciones" name="observaciones" rows="4"
+                                    required></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="fundamentoLegal" class="form-label">Fundamento Legal</label>
-                                <textarea class="form-control" id="fundamentoLegal" rows="2" required></textarea>
+                                <textarea class="form-control" id="fundamentoLegal" name="fundamentoLegal" rows="2"
+                                    required></textarea>
                             </div>
                         </div>
 
                         <!-- BOTONES DE ACCIÓN -->
                         <div class="mt-4 d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary me-2" onclick="window.history.back();">Cancelar</button>
+                            <button type="button" class="btn btn-secondary me-2"
+                                onclick="window.history.back();">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         </div>
                     </form>
@@ -135,8 +138,8 @@
     <footer>
         <p>© 2025 Sistema PagoTrack - Gestión de Pagos</p>
     </footer>
-    
-    
+
+
 
     <script type="module">
         import Global from './assets/js/funcionesGlobales.js';
@@ -191,21 +194,40 @@
             document.getElementById('estatusVolante').value = data.EstatusVolante;
             document.getElementById('glosadorNombre').value = data.GlosadorNombre;
             document.getElementById('errorId').value = data.ErrorID;
-            document.getElementById('observaciones').value = data.ObservacionEspecifica;
-            document.getElementById('fundamentoLegal').value = data.FundamentoLegalVolante;
+            // document.getElementById('observaciones').value = data.ObservacionEspecifica;
+            // document.getElementById('fundamentoLegal').value = data.FundamentoLegalVolante;
+            // Observaciones
+            const obsEditor = tinymce?.get('observaciones');
+            if (obsEditor) { obsEditor.setContent(data.ObservacionEspecifica || ''); }
+            else { document.getElementById('observaciones').value = data.ObservacionEspecifica || ''; }
+
+            // Fundamento Legal
+            const funEditor = tinymce?.get('fundamentoLegal');
+            if (funEditor) { funEditor.setContent(data.FundamentoLegalVolante || ''); }
+            else { document.getElementById('fundamentoLegal').value = data.FundamentoLegalVolante || ''; }
         }
 
         // --- ENVIAR ACTUALIZACIÓN ---
         form.addEventListener('submit', async (event) => {
             event.preventDefault(); // Evitar el envío tradicional del formulario
+            // 👇 Fuerza que TinyMCE copie el contenido al <textarea>
+            tinymce.triggerSave();
+            // Opción A (recomendada): leer directo del editor
+            const obs = tinymce?.get('observaciones')?.getContent()
+                ?? document.getElementById('observaciones').value;
+            const fun = tinymce?.get('fundamentoLegal')?.getContent()
+                ?? document.getElementById('fundamentoLegal').value;
+
 
             const payload = {
                 FolioVolante: document.getElementById('folioVolante').value,
                 EstatusVolante: document.getElementById('estatusVolante').value,
                 GlosadorNombre: document.getElementById('glosadorNombre').value,
                 ErrorID: parseInt(document.getElementById('errorId').value, 10),
-                Observaciones: document.getElementById('observaciones').value,
-                FundamentoLegal: document.getElementById('fundamentoLegal').value,
+                // Observaciones: document.getElementById('observaciones').value,
+                // FundamentoLegal: document.getElementById('fundamentoLegal').value,
+                Observaciones: obs,
+                FundamentoLegal: fun,
             };
 
             try {
@@ -221,13 +243,13 @@
                 if (!response.ok) {
                     throw new Error(result.message || 'Error al actualizar el volante.');
                 }
-                
+
                 alert(result.message);
-                
+
                 // 1. Obtienes el ID del trámite directamente del campo del formulario
                 const idDelTramite = document.getElementById('tramiteId').value;
                 // 2. Usas ese valor para construir la URL dinámicamente con template literals (``)            
-                window.location.href = `VolanteObsercacionesLista.html?tramite_search=${idDelTramite}`; 
+                window.location.href = `VolanteObsercacionesLista.html?tramite_search=${idDelTramite}`;
 
             } catch (error) {
                 alert(`Error: ${error.message}`);
@@ -238,6 +260,29 @@
             const mainContent = document.querySelector('main');
             mainContent.innerHTML = `<div class="container text-center"><div class="alert alert-danger"><h1>Error</h1><p>${mensaje}</p></div></div>`;
         }
+    </script>
+
+    <script>
+        tinymce.init({
+            selector: '#observaciones',    // ojo: verifica que el id esté bien escrito
+            language: 'es_MX',
+            menubar: false,
+            branding: false,
+            plugins: 'lists',               // v5/v6: color no requiere plugin extra; para v4 añade 'textcolor'
+            toolbar: 'undo redo | bold italic forecolor | bullist numlist',
+            statusbar: false,
+            promotion: false
+        });
+        tinymce.init({
+            selector: '#fundamentoLegal',    // ojo: verifica que el id esté bien escrito
+            language: 'es_MX',
+            menubar: false,
+            branding: false,
+            plugins: 'lists',               // v5/v6: color no requiere plugin extra; para v4 añade 'textcolor'
+            toolbar: 'undo redo | bold italic forecolor | bullist numlist',
+            statusbar: false,
+            promotion: false
+        });
     </script>
 
 </body>

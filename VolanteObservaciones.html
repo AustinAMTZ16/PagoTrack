@@ -197,7 +197,7 @@
     <section class="folio-info">
       <strong>Institución:</strong> <span id="institucion"></span><br />
       <strong>Folio Volante:</strong> <span id="folioVolante"></span><br />
-      <strong>Fecha de Emisión:</strong> <span id="fechaEmision"></span><br />
+      <strong>Fecha de Creación:</strong> <span id="fechaEmision"></span><br />
       <strong>Fecha Límite de Solventación:</strong> <span id="fechaLimite"></span>
     </section>
 
@@ -227,7 +227,8 @@
         </tr>
       </tbody>
     </table>
-    <p id="concepto" class="concepto-class"></p>
+    <p id="concepto" class="concepto-class"></p> <br>
+    <P id="fechaRecepcion" class="concepto-class"></P>
     <section class="notes-section">
       <strong id="reincidencia"></strong><br><br>
       <strong>Notá:</strong> De conformidad con el Artículo 46 de la Normatividad para el Ejercicio del Gasto y Control
@@ -306,11 +307,12 @@
         document.getElementById('beneficiario').textContent = data.Proveedor;
         document.getElementById('importe').textContent = formatoMoneda.format(data.Importe);
         document.getElementById('glosador').textContent = data.GlosadorNombreCompleto;
-        document.getElementById('observacion').textContent = data.ObservacionEspecifica.trim();
-        document.getElementById('fundamentoLegal').textContent = data.FundamentoLegalVolante.trim();
+        document.getElementById('observacion').innerHTML  = data.ObservacionEspecifica.trim();
+        document.getElementById('fundamentoLegal').innerHTML  = data.FundamentoLegalVolante.trim();
         document.getElementById('datafirmaAutorizador').textContent = data.FirmaAutorizacion?.trim() || '';
         document.getElementById('dataEstatusVolante').textContent = data.EstatusVolante?.trim() || '';
         document.getElementById('concepto').textContent = `CONCEPTO: ${data.Concepto}`;
+        document.getElementById('fechaRecepcion').textContent = `FECHA RECEPCIÓN: ${data.FechaRecepcion}`;
 
         // Cargar datos de reincidencia
         if (data.EsReincidencia) {

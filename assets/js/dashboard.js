@@ -328,6 +328,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mensaje en caso de que no haya usuario logeado o el div no se encuentre.
         console.log("No hay sesión de usuario activa o el elemento #logicaAnalista no se encontró en la página.");
     }
+
+    //syncTramites
+    const syncTramites = document.getElementById("syncTramites");
+    if (syncTramites) {
+        syncTramites.addEventListener("click", () => {
+            obtenerTramitesConAnalistaTodo();
+            alert("Trámites sincronizados correctamente.");
+        });
+    }
 });
 // Función para obtener la lista de trámites
 function getTramites() {
@@ -350,6 +359,33 @@ function getTramites() {
                 //console.log('Trámites:', tramitesArray);
                 // console.log('Array de trámites:', tramitesArray);
                 //actualizarTablaTramites(tramitesArray, 'tableTramites'); // Pasar el array a la función
+                filtrarTramitesOperador();
+            } else {
+                console.error('No se encontró un array en la propiedad "data".');
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener los trámites:', error.message);
+            alert(`Error al obtener los trámites: ${error.message}`);
+        });
+}
+// Función para obtener la lista de trámites todos
+function obtenerTramitesConAnalistaTodo() {
+    fetch(Global.URL_BASE + 'obtenerTramitesConAnalistaTodo', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(async (response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+            }
+            return await response.json();
+        })
+        .then(result => {
+            if (result.data && Array.isArray(result.data)) {
+                tramitesArray = result.data;
                 filtrarTramitesOperador();
             } else {
                 console.error('No se encontró un array en la propiedad "data".');
@@ -500,7 +536,7 @@ function actualizarTablaTramites(data, tableId) {
     // Ordenar manualmente antes de pasar a la tabla
     data.sort((a, b) => {
         // 1. Primer criterio: Estatus ('Observaciones' y 'Devuelto' primero)
-        const ordenEstatus = ["Observaciones", "Devuelto"]; // Asegúrate de que esta variable exista en tu código
+        const ordenEstatus = ["Creado","Observaciones", "Devuelto"]; // Asegúrate de que esta variable exista en tu código
         const estatusA = ordenEstatus.indexOf(a.Estatus) !== -1 ? ordenEstatus.indexOf(a.Estatus) : 99;
         const estatusB = ordenEstatus.indexOf(b.Estatus) !== -1 ? ordenEstatus.indexOf(b.Estatus) : 99;
 
@@ -713,7 +749,7 @@ function actualizarTablaTurnados(data, tableId) {
                 render: function (data) {
                     let botones = "";
                     if (localStorageUser.RolUser === "Analista" || localStorageUser.RolUser === "Admin" || localStorageUser.RolUser === "OP_Remesa" || localStorageUser.RolUser === "Operador" || localStorageUser.RolUser === "OP_KPI") {
-                        if (["Devuelto", "Turnado", "Observaciones"].includes(data.Estatus)) {
+                        if (["Devuelto", "Turnado", "Observaciones","ObservacionesInternas"].includes(data.Estatus)) {
                             botones += `<button class="btn-icon primary" title="Actualizar" onclick="editarTramite(                            
                             decodeURIComponent('${encodeURIComponent(data.ID_CONTRATO)}'),
                             decodeURIComponent('${encodeURIComponent(data.Proveedor)}'),
@@ -723,7 +759,8 @@ function actualizarTablaTurnados(data, tableId) {
                             decodeURIComponent('${encodeURIComponent(data.FechaRecepcion)}'),
                             decodeURIComponent('${encodeURIComponent(data.Dependencia)}'),
                             decodeURIComponent('${encodeURIComponent(data.NombreUser + ' ' + data.ApellidoUser)}'),
-                            decodeURIComponent('${encodeURIComponent(data.VolantesPorSolventar)}')
+                            decodeURIComponent('${encodeURIComponent(data.VolantesPorSolventar)}'),
+                            decodeURIComponent('${encodeURIComponent(data.VolantesVencidos)}')
                         )"><i class="fa-solid fa-pen-to-square"></i></button>`;
                         }
                         // BTN ACCION DETALLE
@@ -1022,7 +1059,7 @@ function turnarTramite(id) {
     window.location.href = `turnarTramite.html?id=${id}`;
 }
 // Editar tramite por id
-function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia, nombreUser, FlagVolante) {
+function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia, nombreUser, FlagVolante, VolantesVencidos) {
     // Formatea las fechas eliminando la hora
     const formatoFecha = (fecha) => fecha.split(' ')[0];
 
@@ -1031,7 +1068,7 @@ function editarTramite(id, proveedor, concepto, importe, fechaLimite, fechaRecep
 
     //console.log('Editar tramite:', id, proveedor, concepto, importe, fechaLimite, fechaRecepcion, dependencia);
 
-    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}&nombreUser=${encodeURIComponent(nombreUser)}&FlagVolante=${encodeURIComponent(FlagVolante)}`;
+    window.location.href = `turnadoUpdateTramite.html?id=${id}&proveedor=${encodeURIComponent(proveedor)}&concepto=${encodeURIComponent(concepto)}&importe=${importe}&fechaLimite=${fechaLimiteFormateada}&fechaRecepcion=${fechaRecepcionFormateada}&dependencia=${encodeURIComponent(dependencia)}&nombreUser=${encodeURIComponent(nombreUser)}&FlagVolante=${encodeURIComponent(FlagVolante)}&VolantesVencidos=${encodeURIComponent(VolantesVencidos)}`;
 }
 // Eliminar tramite por id
 function eliminarTramite(id) {

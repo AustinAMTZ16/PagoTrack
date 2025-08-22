@@ -498,6 +498,10 @@ function llenarformEditarOficios(oficioID) {
     setValueIfExists("Comentarios", oficio.Comentarios);
     setValueIfExists("FechaEntregaAcuse", oficio.FechaEntregaAcuse?.substring(0, 10));
     setValueIfExists("FKOficio", oficio.FKOficio);
+    setValueIfExists("FechaLimitePago", oficio.FechaLimitePago);
+    setValueIfExists("FechaEntregaDGAnalista", oficio.FechaEntregaDGAnalista);
+    setValueIfExists("FechaRecepcionDependencia", oficio.FechaRecepcionDependencia);
+    setValueIfExists("FechaEntregaAnalistaOperador", oficio.FechaEntregaAnalistaOperador);
 }
 // Función para actualizar un oficio
 function actualizarOficio(data) {
@@ -579,7 +583,10 @@ function logicaEstatusTarjetaInformativa() {
         const estatus = this.value;
 
         // Mostrar/ocultar campo SAP
-        grupoRespuestaConocimiento.hidden = estatus !== 'PROCESO-FIRMA-TITULAR';
+        // grupoRespuestaConocimiento.hidden = estatus !== 'PROCESO-FIRMA-TITULAR', 'APLICADO';
+
+        const visibles = ['PROCESO-FIRMA-TITULAR', 'APLICADO'];
+        grupoRespuestaConocimiento.hidden = !visibles.includes(estatus);
 
         // Mostrar/ocultar botón de WhatsApp
         botonWhatsApp.hidden = !['DEVUELTO', 'OBSERVACIONES'].includes(estatus);

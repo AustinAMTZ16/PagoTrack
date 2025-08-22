@@ -47,21 +47,23 @@
             <div class="d-flex gap-2 flex-wrap">
                 <button class="btn btn-outline-success" id="btn-mostrar-ocultar-tablas" title="Mostrar Tablas/Ocultar">
                     <i class="fa-solid fa-table"></i> Indicadores
-                <button class="btn btn-outline-success" id="btn-mostrar-ocultar-tablasrezagados" title="Mostrar Rezagados">
-                    <i class="fa-solid fa-hourglass-half"></i> Rezagados
-                </button>   
-                <button class="btn btn-outline-success" id="btn-mostrar-ocultar-liquidez" title="Mostrar Estimación de Liquidez">
-                    <i class="fa-solid fa-chart-line"></i>Liquidez
-                </button>             
-                <button class="btn btn-outline-secondary" id="btn-mostrar-ocultar">
-                    <i class="fa-solid fa-eye"></i> Filtros
-                </button>
-                <button class="btn btn-outline-primary" id="btn-filtrar">
-                    <i class="fas fa-search"></i> Buscar
-                </button>
-                <button class="btn btn-outline-danger" id="btn-limpiar">
-                    <i class="fas fa-undo"></i> Limpiar Filtros
-                </button>
+                    <button class="btn btn-outline-success" id="btn-mostrar-ocultar-tablasrezagados"
+                        title="Mostrar Rezagados">
+                        <i class="fa-solid fa-hourglass-half"></i> Rezagados
+                    </button>
+                    <button class="btn btn-outline-success" id="btn-mostrar-ocultar-liquidez"
+                        title="Mostrar Estimación de Liquidez">
+                        <i class="fa-solid fa-chart-line"></i>Liquidez
+                    </button>
+                    <button class="btn btn-outline-secondary" id="btn-mostrar-ocultar">
+                        <i class="fa-solid fa-eye"></i> Filtros
+                    </button>
+                    <button class="btn btn-outline-primary" id="btn-filtrar">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <button class="btn btn-outline-danger" id="btn-limpiar">
+                        <i class="fas fa-undo"></i> Limpiar Filtros
+                    </button>
             </div>
 
             <!-- Acciones Globales -->
@@ -99,9 +101,10 @@
                 </table>
             </div>
             <!-- Tabla de Trámites Rezagados -->
-            <div hidden class="tablasRezagados"> 
+            <div hidden class="tablasRezagados">
                 <h2 style="text-align: center;">Trámites Rezagados</h2>
-                <table id="tramitesRezagados" class="table table-bordered table-hover display nowrap" style="width:100%">
+                <table id="tramitesRezagados" class="table table-bordered table-hover display nowrap"
+                    style="width:100%">
                     <thead>
                         <tr id="tableHead">
                         </tr>
@@ -232,7 +235,8 @@
                             <option value="9">Instituto Municipal de Arte y Cultura de Puebla</option>
                             <option value="5">Instituto Municipal de Planeación</option>
                             <option value="23">Instituto Municipal del Deporte de Puebla</option>
-                            <option value="11">Organismo Operador del Servicio de Limpia del municipio de Puebla</option>
+                            <option value="11">Organismo Operador del Servicio de Limpia del municipio de Puebla
+                            </option>
                             <option value="2">Presidencia Municipal</option>
                             <option value="1">Secretaría de Administración y Tecnologías de la Información</option>
                             <option value="7">Secretaría de Bienestar y Participación Ciudadna</option>
@@ -308,6 +312,9 @@
                 <h2 class="text-center">Listado de Trámites</h2>
                 <table id="tableTramites" class="table table-bordered table-hover display nowrap"
                     style="width:100%; table-layout: auto;">
+                    <button id="syncTramites" class="btn btn-primary" title="Sincronizar trámites">
+                        <i class="fas fa-cloud-download-alt"></i> Sincronizar
+                    </button>
                     <thead>
                         <tr>
                             <th>Acciones</th>

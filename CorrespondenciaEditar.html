@@ -38,7 +38,7 @@
 
     <main class="container py-4">
         <h2 class="mb-4">Editar Oficio</h2>
-        <form id="formEditarOficios" method="POST" enctype="multipart/form-data">
+        <form id="formEditarOficios" method="POST" enctype="multipart/form-data" novalidate>
             <!-- DATOS GENERALES -->
             <div class="mb-4 p-3 rounded bg-white shadow-sm border">
                 <h5 class="mb-3 text-primary">Datos Generales</h5>
@@ -217,6 +217,21 @@
                     <div class="col-md-6">
                         <label for="FechaLimitePago">Fecha Límite de Pago</label>
                         <input type="datetime-local" class="form-control" id="FechaLimitePago" name="FechaLimitePago">
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        <label for="FechaEntregaDGAnalista">Fecha Entrega DECP Analista</label>
+                        <input type="datetime-local" class="form-control" id="FechaEntregaDGAnalista" name="FechaEntregaDGAnalista">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="FechaRecepcionDependencia">Fecha Recepción Dependencia</label>
+                        <input type="datetime-local" class="form-control" id="FechaRecepcionDependencia" name="FechaRecepcionDependencia">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="FechaEntregaAnalistaOperador">Fecha Entrega Analista Operador</label>
+                        <input type="datetime-local" class="form-control" id="FechaEntregaAnalistaOperador" name="FechaEntregaAnalistaOperador">
                     </div>
                 </div>
             </div>
